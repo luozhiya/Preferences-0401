@@ -42,7 +42,12 @@ return {
   { 'p00f/godbolt.nvim', cmd = { 'Godbolt' }, config = config('p00f/godbolt.nvim') },
   { 'luukvbaal/nnn.nvim', cmd = { 'NnnExplorer', 'NnnPicker' }, config = config('luukvbaal/nnn.nvim') },
   -- LSP Core
-  { 'neovim/nvim-lspconfig', ft = { 'c', 'cpp', 'lua' }, config = require('module.lsp').setup, dependencies = { 'j-hui/fidget.nvim', 'ray-x/lsp_signature.nvim' } },
+  { 'neovim/nvim-lspconfig', ft = { 'c', 'cpp', 'lua' }, config = require('module.lsp').lsp, dependencies = { 'j-hui/fidget.nvim', 'ray-x/lsp_signature.nvim' } },
   { 'lvimuser/lsp-inlayhints.nvim', event = 'LspAttach', config = config('lvimuser/lsp-inlayhints.nvim') },
   { 'folke/neodev.nvim' },
+  -- Debug
+  { 'mfussenegger/nvim-dap', ft = { 'c', 'cpp' }, config = require('module.lsp').dap, dependencies = { 'theHamsta/nvim-dap-virtual-text', 'rcarriga/nvim-dap-ui', 'Weissle/persistent-breakpoints.nvim' } },
+  { 'theHamsta/nvim-dap-virtual-text' },
+  { 'rcarriga/nvim-dap-ui' },
+  { 'Weissle/persistent-breakpoints.nvim' },
 }

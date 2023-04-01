@@ -15,5 +15,6 @@ require('lazy').setup('module.plugins', {
   concurrency = 2,
   defaults = { lazy = true },
   readme = { enabled = false },
+  change_detection = { enabled = false },
 })
 opt.after()

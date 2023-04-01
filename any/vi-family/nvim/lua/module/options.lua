@@ -52,7 +52,8 @@ function M.before()
 
   vim.cmd([[
     autocmd Filetype log if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif
-    au FocusGained * :checktime
+    au FocusGained,BufEnter * :checktime
+    au CursorHold,CursorHoldI * checktime
     aunmenu PopUp.How-to\ disable\ mouse
     aunmenu PopUp.-1-
   ]])

@@ -110,6 +110,32 @@ M.wk = function(wk)
   local _reveal_cwd_in_file_explorer = function() M.open(vim.fn.getcwd()) end
   local _reveal_file_in_file_explorer = function() M.open(M.get_contain_directory()) end
   local _open_with_default_app = function() M.open(M.get_current_buffer_name()) end
+  local _dap_continue = function()
+    local dap = require('dap')
+    if not dap.session() then
+      local input_opts = { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
+      vim.ui.input(input_opts, function(input)
+        if not input then
+          return
+        end
+        dap.configurations.cpp = {
+          {
+            name = 'Launch',
+            type = 'lldb',
+            request = 'launch',
+            program = function() return input end,
+            cwd = '${workspaceFolder}',
+            stopOnEntry = false,
+            args = {},
+          },
+        }
+        dap.configurations.c = dap.configurations.cpp
+        dap.continue()
+      end)
+    else
+      dap.continue()
+    end
+  end
   -- stylua: ignore start
   local wk_ve = function()
     return {
@@ -167,6 +193,24 @@ M.wk = function(wk)
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols' },
       S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols' },
     },
+    b = {
+      name = 'Breakpoint',
+      b = { function() require('persistent-breakpoints.api').toggle_breakpoint() end, 'Toggle Breakpoint' },
+      c = { function() require('persistent-breakpoints.api').set_conditional_breakpoint() end, 'Toggle Condition Breakpoint' },
+      l = { function() require('persistent-breakpoints.api').load_breakpoints() end, 'Load Saved Breakpoint' },
+      d = { function() require('persistent-breakpoints.api').clear_all_breakpoints() end, 'Clear All Breakpoint' },
+    },
+    d = {
+      name = 'Debug',
+      c = { function() _dap_continue() end, 'Continue' },
+      o = { function() require('dap').step_over() end, 'Step Over' },
+      i = { function() require('dap').step_into() end, 'Step Into' },
+      f = { function() require('dap').step_out() end, 'Step Out' },
+      r = { function() require('dap').run_last() end, 'Run last' },
+      l = { function() require('dap').run_to_cursor() end, 'Run To Cursor' },
+      x = { function() require('dap').terminate() end, 'Terminate' },
+      u = { function() require('dapui').toggle({}) end, 'Dap UI' },
+    },
     t = {
       name = 'Run In Command Terminal',
       h = { '<cmd>ToggleTerm direction=horizontal<cr>', 'Terminal Horizontal' },
@@ -184,7 +228,7 @@ M.wk = function(wk)
       w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
       c = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
       m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
-      s = { '<cmd>SublimeText<cr>', 'Sublime Text' },      
+      s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
     },
     f = {
       name = 'File Explorer',
@@ -324,7 +368,7 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('CommentLine', function() _any_comment(require('Comment.api').toggle.linewise) end, { desc = 'Comment Line' })
   vim.api.nvim_create_user_command('CommentBlock', function() _any_comment(require('Comment.api').toggle.blockwise) end, { desc = 'Comment Block' })
   vim.api.nvim_create_user_command('SublimeMerge', function() require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Merge' })
-  vim.api.nvim_create_user_command('SublimeText', function() require('plenary.job'):new({ command = 'sublime_text', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Text' })  
+  vim.api.nvim_create_user_command('SublimeText', function() require('plenary.job'):new({ command = 'sublime_text', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Text' })
   vim.api.nvim_create_user_command('CloseView', function() _close_view() end, { desc = 'Close View' })
 end
 
