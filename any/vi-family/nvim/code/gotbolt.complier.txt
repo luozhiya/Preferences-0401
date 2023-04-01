@@ -1,0 +1,1875 @@
+Compiler Name                         | Name
+dotnettrunkcsharp                     | .NET (main)
+dotnettrunkfsharp                     | .NET (main)
+dotnettrunkvb                         | .NET (main)
+dotnet6011csharp                      | .NET 6.0.110
+dotnet6011fsharp                      | .NET 6.0.110
+dotnet6011vb                          | .NET 6.0.110
+dotnet6014csharp                      | .NET 6.0.113
+dotnet6014fsharp                      | .NET 6.0.113
+dotnet6014vb                          | .NET 6.0.113
+dotnet701csharp                       | .NET 7.0.100
+dotnet701fsharp                       | .NET 7.0.100
+dotnet701vb                           | .NET 7.0.100
+dotnet703csharp                       | .NET 7.0.102
+dotnet703fsharp                       | .NET 7.0.102
+dotnet703vb                           | .NET 7.0.102
+cuclang1000                           | 10.0.0 sm_75 CUDA-10.2
+cuclang1001                           | 10.0.1 sm_75 CUDA-10.2
+cuclang1100                           | 11.0.0 sm_75 CUDA-10.2
+cc65_217                              | 6502 cc65 2.17
+cc65_218                              | 6502 cc65 2.18
+cc65_219                              | 6502 cc65 2.19
+cc65_trunk                            | 6502 cc65 trunk
+gcc6502_1110                          | 6502-c++ 11.1.0
+farm64g1210                           | AARCH64 gfortran 12.1.0
+farm64g1220                           | AARCH64 gfortran 12.2.0
+farm64g640                            | AARCH64 gfortran 6.4
+farm64g730                            | AARCH64 gfortran 7.3
+farm64g820                            | AARCH64 gfortran 8.2
+gnuasarm64g630                        | AArch64 binutils 2.28
+gnuasarm64g820                        | AArch64 binutils 2.31.1
+gnuasarm64g930                        | AArch64 binutils 2.33.1
+gnuasarm64g1020                       | AArch64 binutils 2.35.1
+farmg1220                             | ARM (32bit) gfortran 12.2.0
+farmg640                              | ARM (32bit) gfortran 6.4
+farmg730                              | ARM (32bit) gfortran 7.3
+farmg820                              | ARM (32bit) gfortran 8.2
+gnuasarmg464                          | ARM binutils 2.25
+gnuasarmg630                          | ARM binutils 2.28
+gnuasarmg820                          | ARM binutils 2.31.1
+arm_gltip                             | ARM gc (tip)
+arm_gl114                             | ARM gc 1.14
+arm_gl115                             | ARM gc 1.15
+arm_gl116                             | ARM gc 1.16
+arm_gl117                             | ARM gc 1.17
+arm_gl118                             | ARM gc 1.18
+arm_gl119                             | ARM gc 1.19
+arm1020                               | ARM gcc 10.2 (linux)
+gnuasarm1020                          | ARM gcc 10.2 (linux)
+carm1020                              | ARM gcc 10.2 (linux)
+arm1021                               | ARM gcc 10.2.1 (none)
+carm1021                              | ARM gcc 10.2.1 (none)
+arm1030                               | ARM gcc 10.3 (linux)
+carm1030                              | ARM gcc 10.3 (linux)
+arm1031_07                            | ARM gcc 10.3.1 (2021.07 none)
+carm1031_07                           | ARM gcc 10.3.1 (2021.07 none)
+arm1031_10                            | ARM gcc 10.3.1 (2021.10 none)
+carm1031_10                           | ARM gcc 10.3.1 (2021.10 none)
+arm1040                               | ARM gcc 10.4 (linux)
+arm1100                               | ARM gcc 11.1 (linux)
+carm1100                              | ARM gcc 11.1 (linux)
+arm1120                               | ARM gcc 11.2 (linux)
+carm1120                              | ARM gcc 11.2 (linux)
+arm1121                               | ARM gcc 11.2.1 (none)
+carm1121                              | ARM gcc 11.2.1 (none)
+arm1130                               | ARM gcc 11.3 (linux)
+carm1130                              | ARM gcc 11.3 (linux)
+arm1210                               | ARM gcc 12.1 (linux)
+carm1210                              | ARM gcc 12.1 (linux)
+armg1220                              | ARM gcc 12.2 (linux)
+carmg1220                             | ARM gcc 12.2 (linux)
+objcarmg1220                          | ARM gcc 12.2.0
+armg454                               | ARM gcc 4.5.4 (linux)
+carmg454                              | ARM gcc 4.5.4 (linux)
+armg464                               | ARM gcc 4.6.4 (linux)
+carmg464                              | ARM gcc 4.6.4 (linux)
+armhfg54                              | ARM gcc 5.4 (linux)
+carmhfg54                             | ARM gcc 5.4 (linux)
+arm541                                | ARM gcc 5.4.1 (none)
+carm541                               | ARM gcc 5.4.1 (none)
+armg630                               | ARM gcc 6.3.0 (linux)
+carmg630                              | ARM gcc 6.3.0 (linux)
+armg640                               | ARM gcc 6.4 (linux)
+carmg640                              | ARM gcc 6.4 (linux)
+arm710                                | ARM gcc 7.2.1 (none)
+carm710                               | ARM gcc 7.2.1 (none)
+armg730                               | ARM gcc 7.3 (linux)
+carmg730                              | ARM gcc 7.3 (linux)
+armg750                               | ARM gcc 7.5 (linux)
+carmg750                              | ARM gcc 7.5 (linux)
+armce820                              | ARM gcc 8.2 (WinCE)
+carmce820                             | ARM gcc 8.2 (WinCE)
+armg820                               | ARM gcc 8.2 (linux)
+carmg820                              | ARM gcc 8.2 (linux)
+arm831                                | ARM gcc 8.3.1 (none)
+carm831                               | ARM gcc 8.3.1 (none)
+armg850                               | ARM gcc 8.5 (linux)
+carmg850                              | ARM gcc 8.5 (linux)
+arm921                                | ARM gcc 9.2.1 (none)
+carm921                               | ARM gcc 9.2.1 (none)
+arm930                                | ARM gcc 9.3 (linux)
+gnuasarm930                           | ARM gcc 9.3 (linux)
+carm930                               | ARM gcc 9.3 (linux)
+arm940                                | ARM gcc 9.4 (linux)
+arm950                                | ARM gcc 9.5 (linux)
+gccgoarm1220                          | ARM gccgo 12.2.0
+cl19_2015_u3_arm                      | ARM msvc v19.0 (WINE)
+ccl19_2015_u3_arm                     | ARM msvc v19.0 (WINE)
+cl19_arm                              | ARM msvc v19.10 (WINE)
+ccl19_arm                             | ARM msvc v19.10 (WINE)
+cl_new_arm32                          | ARM msvc v19.14 (WINE)
+ccl_new_arm32                         | ARM msvc v19.14 (WINE)
+objcarm64g1220                        | ARM64 GCC 12.2.0
+objcarm64gtrunk                       | ARM64 GCC trunk
+carm64gm101a1                         | ARM64 Morello gcc 10.1 Alpha 1
+arm64gm101a2                          | ARM64 Morello gcc 10.1 Alpha 2
+carm64gm101a2                         | ARM64 Morello gcc 10.1 Alpha 2
+arm64_gltip                           | ARM64 gc (tip)
+arm64_gl114                           | ARM64 gc 1.14
+arm64_gl115                           | ARM64 gc 1.15
+arm64_gl116                           | ARM64 gc 1.16
+arm64_gl117                           | ARM64 gc 1.17
+arm64_gl118                           | ARM64 gc 1.18
+arm64_gl119                           | ARM64 gc 1.19
+arm64g1020                            | ARM64 gcc 10.2
+carm64g1020                           | ARM64 gcc 10.2
+arm64g1030                            | ARM64 gcc 10.3
+carm64g1030                           | ARM64 gcc 10.3
+arm64g1040                            | ARM64 gcc 10.4
+carm64g1040                           | ARM64 gcc 10.4
+arm64g1100                            | ARM64 gcc 11.1
+carm64g1100                           | ARM64 gcc 11.1
+arm64g1120                            | ARM64 gcc 11.2
+carm64g1120                           | ARM64 gcc 11.2
+arm64g1130                            | ARM64 gcc 11.3
+carm64g1130                           | ARM64 gcc 11.3
+arm64g1210                            | ARM64 gcc 12.1
+carm64g1210                           | ARM64 gcc 12.1
+carm64g1220                           | ARM64 gcc 12.2
+arm64g1220                            | ARM64 gcc 12.2.0
+aarchg54                              | ARM64 gcc 5.4
+caarchg54                             | ARM64 gcc 5.4
+arm64g630                             | ARM64 gcc 6.3
+carm64g630                            | ARM64 gcc 6.3
+arm64g640                             | ARM64 gcc 6.4
+carm64g640                            | ARM64 gcc 6.4
+arm64g730                             | ARM64 gcc 7.3
+carm64g730                            | ARM64 gcc 7.3
+arm64g750                             | ARM64 gcc 7.5
+carm64g750                            | ARM64 gcc 7.5
+arm64g820                             | ARM64 gcc 8.2
+carm64g820                            | ARM64 gcc 8.2
+arm64g850                             | ARM64 gcc 8.5
+carm64g850                            | ARM64 gcc 8.5
+arm64g930                             | ARM64 gcc 9.3
+carm64g930                            | ARM64 gcc 9.3
+arm64g940                             | ARM64 gcc 9.4
+carm64g940                            | ARM64 gcc 9.4
+arm64g950                             | ARM64 gcc 9.5
+carm64g950                            | ARM64 gcc 9.5
+arm64gtrunk                           | ARM64 gcc trunk
+carm64gtrunk                          | ARM64 gcc trunk
+gccgoarm641220                        | ARM64 gccgo 12.2.0
+cl_new_arm64                          | ARM64 msvc v19.14 (WINE)
+ccl_new_arm64                         | ARM64 msvc v19.14 (WINE)
+gnuasarmhfg54                         | ARMhf binutils 2.28
+avrg1030                              | AVR gcc 10.3.0
+cavrg1030                             | AVR gcc 10.3.0
+avrg1100                              | AVR gcc 11.1.0
+cavrg1100                             | AVR gcc 11.1.0
+avrg1210                              | AVR gcc 12.1.0
+avrg1220                              | AVR gcc 12.2.0
+cavrg1220                             | AVR gcc 12.2.0
+avrg454                               | AVR gcc 4.5.4
+cavrg454                              | AVR gcc 4.5.4
+avrg464                               | AVR gcc 4.6.4
+cavrg464                              | AVR gcc 4.6.4
+avrg540                               | AVR gcc 5.4.0
+cavrg540                              | AVR gcc 5.4.0
+avrg920                               | AVR gcc 9.2.0
+cavrg920                              | AVR gcc 9.2.0
+avrg930                               | AVR gcc 9.3.0
+cavrg930                              | AVR gcc 9.3.0
+arduinomega189                        | Arduino Mega (1.8.9)
+carduinomega189                       | Arduino Mega (1.8.9)
+arduinouno189                         | Arduino Uno (1.8.9)
+carduinouno189                        | Arduino Uno (1.8.9)
+bpfclangtrunk                         | BPF clang (trunk)
+cbpfclangtrunk                        | BPF clang (trunk)
+bpfclang1300                          | BPF clang 13.0.0
+cbpfclang1300                         | BPF clang 13.0.0
+bpfclang1400                          | BPF clang 14.0.0
+cbpfclang1400                         | BPF clang 14.0.0
+bpfclang1500                          | BPF clang 15.0.0
+cbpfclang1500                         | BPF clang 15.0.0
+bpfclang1600                          | BPF clang 16.0.0
+cbpfclang1600                         | BPF clang 16.0.0
+rustbpfgtrunk                         | BPF gcc (trunk)
+bpfgtrunk                             | BPF gcc trunk
+cbpfgtrunk                            | BPF gcc trunk
+beebasm109                            | BeebAsm 1.09
+circle128                             | Build 128
+circle129                             | Build 129
+circle131                             | Build 131
+circtopt-trunk                        | CIRCT opt (trunk)
+chibicc-trunk                         | Chibicc 2020-12-07
+hlsl_clang_trunk                      | Clang (trunk)
+cppx010                               | CppCon 2017
+cppx_20180922                         | CppCon 2018
+crystal029                            | Crystal 0.29.0
+crystal030                            | Crystal 0.30.1
+crystal031                            | Crystal 0.31.1
+crystal032                            | Crystal 0.32.1
+crystal033                            | Crystal 0.33.0
+crystal034                            | Crystal 0.34.0
+crystal035                            | Crystal 0.35.1
+crystal036                            | Crystal 0.36.1
+crystal10                             | Crystal 1.0.0
+crystal11                             | Crystal 1.1.1
+crystal122                            | Crystal 1.2.2
+crystal132                            | Crystal 1.3.2
+crystal141                            | Crystal 1.4.1
+crystal151                            | Crystal 1.5.1
+crystal162                            | Crystal 1.6.2
+crystal173                            | Crystal 1.7.3
+dxc_trunk                             | DXC (trunk)
+dxc_1_6_2112                          | DXC 1.6.2112
+dxc_1_7_2207                          | DXC 1.7.2207
+dart2105                              | Dart 2.10.5
+dart2124                              | Dart 2.12.4
+dart2134                              | Dart 2.13.4
+dart2144                              | Dart 2.14.4
+dart2151                              | Dart 2.15.1
+dart2161                              | Dart 2.16.1
+dart2171                              | Dart 2.17.1
+dart2185                              | Dart 2.18.5
+dart284                               | Dart 2.8.4
+dart293                               | Dart 2.9.3
+dartdev                               | Dart dev
+erl2416                               | Erlang 21.1.6
+carbon-trunk                          | Explorer (trunk)
+frc2019                               | FRC 2019
+cfrc2019                              | FRC 2019
+frc2020                               | FRC 2020
+cfrc2020                              | FRC 2020
+gnucobol22                            | GnuCOBOL 2.2
+gnucobol31                            | GnuCOBOL 3.1
+gnucobol32rc2                         | GnuCOBOL 3.2 rc2
+hook010                               | Hook 0.1.0
+julia_1_7_3                           | Julia 1.7.3
+julia_1_8_5                           | Julia 1.8.5
+ck1cg741                              | K1C gcc 7.4
+k1cg741                               | K1C gcc 7.4 (obsolete)
+ck1cg750                              | K1C gcc 7.5
+k1cg750                               | K1C gcc 7.5 (obsolete)
+kvxg750_v410                          | KVX ACB 4.1.0 (GCC 7.5.0)
+ckvxg750_v410                         | KVX ACB 4.1.0 (GCC 7.5.0)
+kvxg750                               | KVX ACB 4.1.0-cd1 (GCC 7.5.0)
+ckvxg750                              | KVX ACB 4.1.0-cd1 (GCC 7.5.0)
+kvxg1031_v4100                        | KVX ACB 4.10.0 (GCC 10.3.1)
+ckvxg1031_v4100                       | KVX ACB 4.10.0 (GCC 10.3.1)
+kvxg1031_v4111                        | KVX ACB 4.11.1 (GCC 10.3.1)
+ckvxg1031_v4111                       | KVX ACB 4.11.1 (GCC 10.3.1)
+kvxg750_v420                          | KVX ACB 4.2.0 (GCC 7.5.0)
+ckvxg750_v420                         | KVX ACB 4.2.0 (GCC 7.5.0)
+kvxg750_v430                          | KVX ACB 4.3.0 (GCC 7.5.0)
+ckvxg750_v430                         | KVX ACB 4.3.0 (GCC 7.5.0)
+kvxg750_v440                          | KVX ACB 4.4.0 (GCC 7.5.0)
+ckvxg750_v440                         | KVX ACB 4.4.0 (GCC 7.5.0)
+kvxg941_v460                          | KVX ACB 4.6.0 (GCC 9.4.1)
+ckvxg941_v460                         | KVX ACB 4.6.0 (GCC 9.4.1)
+kvxg941_v480                          | KVX ACB 4.8.0 (GCC 9.4.1)
+ckvxg941_v480                         | KVX ACB 4.8.0 (GCC 9.4.1)
+kvxg941_v490                          | KVX ACB 4.9.0 (GCC 9.4.1)
+ckvxg941_v490                         | KVX ACB 4.9.0 (GCC 9.4.1)
+floongarch64g1220                     | LOONGARCH64 gfortran 12.2.0
+circlelatest                          | Latest
+cppx_blue_trunk                       | Latest trunk
+cppx_gold_trunk                       | Latest trunk
+mips_gltip                            | MIPS gc (tip)
+mips_gl114                            | MIPS gc 1.14
+mips_gl115                            | MIPS gc 1.15
+mips_gl116                            | MIPS gc 1.16
+mips_gl117                            | MIPS gc 1.17
+mips_gl118                            | MIPS gc 1.18
+mips_gl119                            | MIPS gc 1.19
+gccgomips1220                         | MIPS gccgo 12.2.0
+fmipsg1210                            | MIPS gfortran 12.1.0
+fmipsg1220                            | MIPS gfortran 12.2.0
+mips64_gltip                          | MIPS64 gc (tip)
+mips64_gl114                          | MIPS64 gc 1.14
+mips64_gl115                          | MIPS64 gc 1.15
+mips64_gl116                          | MIPS64 gc 1.16
+mips64_gl117                          | MIPS64 gc 1.17
+mips64_gl118                          | MIPS64 gc 1.18
+mips64_gl119                          | MIPS64 gc 1.19
+objcmips64g1220                       | MIPS64 gcc 12.2.0
+cmips564el                            | MIPS64 gcc 5.4 (el)
+gccgomips641220                       | MIPS64 gccgo 12.2.0
+fmips64g1210                          | MIPS64 gfortran 12.1.0
+fmips64g1220                          | MIPS64 gfortran 12.2.0
+gccgomips64el1220                     | MIPS64EL gccgo 12.2.0
+mips64le_gltip                        | MIPS64LE gc (tip)
+mips64le_gl114                        | MIPS64LE gc 1.14
+mips64le_gl115                        | MIPS64LE gc 1.15
+mips64le_gl116                        | MIPS64LE gc 1.16
+mips64le_gl117                        | MIPS64LE gc 1.17
+mips64le_gl118                        | MIPS64LE gc 1.18
+mips64le_gl119                        | MIPS64LE gc 1.19
+fmips64elg1210                        | MIPS64el gfortran 12.1.0
+fmips64elg1220                        | MIPS64el gfortran 12.2.0
+gccgomipsel1220                       | MIPSEL gccgo 12.2.0
+mipsle_gltip                          | MIPSLE gc (tip)
+mipsle_gl114                          | MIPSLE gc 1.14
+mipsle_gl115                          | MIPSLE gc 1.15
+mipsle_gl116                          | MIPSLE gc 1.16
+mipsle_gl117                          | MIPSLE gc 1.17
+mipsle_gl118                          | MIPSLE gc 1.18
+mipsle_gl119                          | MIPSLE gc 1.19
+fmipselg1210                          | MIPSel gfortran 12.1.0
+fmipselg1220                          | MIPSel gfortran 12.2.0
+mliropt1400                           | MLIR opt 14.0.0
+mliropt1405                           | MLIR opt 14.0.5
+mrisc32-gcc-trunk                     | MRISC32 gcc (trunk)
+cmrisc32-gcc-trunk                    | MRISC32 gcc (trunk)
+cmsp430g1220                          | MSP430 gcc 12.2.0
+msp430g453                            | MSP430 gcc 4.5.3
+cmsp430g453                           | MSP430 gcc 4.5.3
+msp430g530                            | MSP430 gcc 5.3.0
+cmsp430g530                           | MSP430 gcc 5.3.0
+msp430g621                            | MSP430 gcc 6.2.1
+cmsp430g621                           | MSP430 gcc 6.2.1
+mingw64_ucrt_clang_1403               | MinGW clang 14.0.3
+cmingw64_ucrt_clang_1403              | MinGW clang 14.0.3
+mingw64_ucrt_clang_1406               | MinGW clang 14.0.6
+cmingw64_ucrt_clang_1406              | MinGW clang 14.0.6
+mingw64_ucrt_clang_1507               | MinGW clang 15.0.7
+cmingw64_ucrt_clang_1507              | MinGW clang 15.0.7
+mingw64_ucrt_gcc_1130                 | MinGW gcc 11.3.0
+cmingw64_ucrt_gcc_1130                | MinGW gcc 11.3.0
+mingw64_ucrt_gcc_1210                 | MinGW gcc 12.1.0
+cmingw64_ucrt_gcc_1210                | MinGW gcc 12.1.0
+mingw64_ucrt_gcc_1220                 | MinGW gcc 12.2.0
+cmingw64_ucrt_gcc_1220                | MinGW gcc 12.2.0
+nasm21202                             | NASM 2.12.02
+nasm21302                             | NASM 2.13.02
+nasm21303                             | NASM 2.13.03
+nasm21402                             | NASM 2.14.02
+nvcc100                               | NVCC 10.0.130
+nvcc101                               | NVCC 10.1.105
+nvcc101u1                             | NVCC 10.1.168
+nvcc101u2                             | NVCC 10.1.243
+nvcc102                               | NVCC 10.2.89
+nvcc11                                | NVCC 11.0.2
+nvcc11u1                              | NVCC 11.0.3
+nvcc111                               | NVCC 11.1.0
+nvcc111u1                             | NVCC 11.1.1
+nvcc112                               | NVCC 11.2.0
+nvcc112u1                             | NVCC 11.2.1
+nvcc112u2                             | NVCC 11.2.2
+nvcc113                               | NVCC 11.3.0
+nvcc113u1                             | NVCC 11.3.1
+nvcc114                               | NVCC 11.4.0
+nvcc114u1                             | NVCC 11.4.1
+nvcc114u2                             | NVCC 11.4.2
+nvcc114u3                             | NVCC 11.4.3
+nvcc114u4                             | NVCC 11.4.4
+nvcc115                               | NVCC 11.5.0
+nvcc115u1                             | NVCC 11.5.1
+nvcc115u2                             | NVCC 11.5.2
+nvcc116                               | NVCC 11.6.0
+nvcc116u1                             | NVCC 11.6.1
+nvcc116u2                             | NVCC 11.6.2
+nvcc117                               | NVCC 11.7.0
+nvcc117u1                             | NVCC 11.7.1
+nvcc118                               | NVCC 11.8.0
+nvcc120                               | NVCC 12.0.0
+nvcc120u1                             | NVCC 12.0.1
+nvcc121                               | NVCC 12.1.0
+nvcc91                                | NVCC 9.1.85
+nvcc92                                | NVCC 9.2.88
+nvrtc11                               | NVRTC 11.0.2
+nvrtc11u1                             | NVRTC 11.0.3
+nvrtc111                              | NVRTC 11.1.0
+nvrtc111u1                            | NVRTC 11.1.1
+nvrtc112                              | NVRTC 11.2.0
+nvrtc112u1                            | NVRTC 11.2.1
+nvrtc112u2                            | NVRTC 11.2.2
+nvrtc113                              | NVRTC 11.3.0
+nvrtc113u1                            | NVRTC 11.3.1
+nvrtc114                              | NVRTC 11.4.0
+nvrtc114u1                            | NVRTC 11.4.1
+nvrtc115                              | NVRTC 11.5.0
+nvrtc115u1                            | NVRTC 11.5.1
+nvrtc115u2                            | NVRTC 11.5.2
+nvrtc116                              | NVRTC 11.6.0
+nvrtc116u1                            | NVRTC 11.6.1
+nvrtc116u2                            | NVRTC 11.6.2
+nvrtc117                              | NVRTC 11.7.0
+nvrtc117u1                            | NVRTC 11.7.1
+nvrtc118                              | NVRTC 11.8.0
+nvrtc120                              | NVRTC 12.0.0
+nvrtc120u1                            | NVRTC 12.0.1
+osacatrunk                            | OSACA (0.4.8)
+objcppcg1220                          | POWER GCC 12.2.0
+gccgoppc1220                          | POWER gccgo 12.2.0
+fppcg1210                             | POWER gfortran 12.1.0
+fppcg1220                             | POWER gfortran 12.2.0
+objcppc64g1220                        | POWER64 GCC 12.2.0
+ppc64_gltip                           | POWER64 gc (tip)
+ppc64_gl114                           | POWER64 gc 1.14
+ppc64_gl115                           | POWER64 gc 1.15
+ppc64_gl116                           | POWER64 gc 1.16
+ppc64_gl117                           | POWER64 gc 1.17
+ppc64_gl118                           | POWER64 gc 1.18
+ppc64_gl119                           | POWER64 gc 1.19
+gccgoppc641220                        | POWER64 gccgo 12.2.0
+gppc64g8                              | POWER64 gccgo AT12.0
+gppc64g9                              | POWER64 gccgo AT13.0
+fppc64g1210                           | POWER64 gfortran 12.1.0
+fppc64g1220                           | POWER64 gfortran 12.2.0
+objcppc64leg1220                      | POWER64LE GCC 12.2.0
+ppc64le_gltip                         | POWER64LE gc (tip)
+ppc64le_gl114                         | POWER64LE gc 1.14
+ppc64le_gl115                         | POWER64LE gc 1.15
+ppc64le_gl116                         | POWER64LE gc 1.16
+ppc64le_gl117                         | POWER64LE gc 1.17
+ppc64le_gl118                         | POWER64LE gc 1.18
+ppc64le_gl119                         | POWER64LE gc 1.19
+gccgoppc64le1220                      | POWER64LE gccgo 12.2.0
+gppc64leg8                            | POWER64LE gccgo AT12.0
+gppc64leg9                            | POWER64LE gccgo AT13.0
+fppc64leg1210                         | POWER64le gfortran 12.1.0
+fppc64leg1220                         | POWER64le gfortran 12.2.0
+ptxasnvcc100                          | PTX Assembler 10.0.130
+ptxasnvcc101                          | PTX Assembler 10.1.105
+ptxasnvcc101u1                        | PTX Assembler 10.1.168
+ptxasnvcc101u2                        | PTX Assembler 10.1.243
+ptxasnvcc102                          | PTX Assembler 10.2.89
+ptxasnvcc11                           | PTX Assembler 11.0.2
+ptxasnvcc11u1                         | PTX Assembler 11.0.3
+ptxasnvcc111                          | PTX Assembler 11.1.0
+ptxasnvcc111u1                        | PTX Assembler 11.1.1
+ptxasnvcc112                          | PTX Assembler 11.2.0
+ptxasnvcc112u1                        | PTX Assembler 11.2.1
+ptxasnvcc112u2                        | PTX Assembler 11.2.2
+ptxasnvcc113                          | PTX Assembler 11.3.0
+ptxasnvcc113u1                        | PTX Assembler 11.3.1
+ptxasnvcc114                          | PTX Assembler 11.4.0
+ptxasnvcc114u1                        | PTX Assembler 11.4.1
+ptxasnvcc115                          | PTX Assembler 11.5.0
+ptxasnvcc91                           | PTX Assembler 9.1.85
+ptxasnvcc92                           | PTX Assembler 9.2.88
+python310                             | Python 3.10
+python311                             | Python 3.11
+python35                              | Python 3.5
+python36                              | Python 3.6
+python37                              | Python 3.7
+python38                              | Python 3.8
+python39                              | Python 3.9
+rga261_dxc162112                      | RGA 2.6.1 (DXC 1.6.2112)
+rga261_dxc172207                      | RGA 2.6.1 (DXC 1.7.2207)
+rga262_dxc162112                      | RGA 2.6.2 (DXC 1.6.2112)
+rga262_dxc172207                      | RGA 2.6.2 (DXC 1.7.2207)
+rga262_dxctrunk                       | RGA 2.6.2 (DXC trunk)
+objcrv32g1220                         | RISC-V 32 GCC 12.2.0
+objcrv64g1220                         | RISC-V 64 GCC 12.2.0
+riscv64_gltip                         | RISC-V 64 gc (tip)
+riscv64_gl114                         | RISC-V 64 gc 1.14
+riscv64_gl115                         | RISC-V 64 gc 1.15
+riscv64_gl116                         | RISC-V 64 gc 1.16
+riscv64_gl117                         | RISC-V 64 gc 1.17
+riscv64_gl118                         | RISC-V 64 gc 1.18
+riscv64_gl119                         | RISC-V 64 gc 1.19
+gccgoriscv641220                      | RISC-V 64 gccgo 12.2.0
+rv32-clang                            | RISC-V rv32gc clang (trunk)
+rv32-cclang                           | RISC-V rv32gc clang (trunk)
+rv32-clang1000                        | RISC-V rv32gc clang 10.0.0
+rv32-cclang1000                       | RISC-V rv32gc clang 10.0.0
+rv32-clang1001                        | RISC-V rv32gc clang 10.0.1
+rv32-cclang1001                       | RISC-V rv32gc clang 10.0.1
+rv32-clang1100                        | RISC-V rv32gc clang 11.0.0
+rv32-cclang1100                       | RISC-V rv32gc clang 11.0.0
+rv32-clang1101                        | RISC-V rv32gc clang 11.0.1
+rv32-cclang1101                       | RISC-V rv32gc clang 11.0.1
+rv32-clang1200                        | RISC-V rv32gc clang 12.0.0
+rv32-cclang1200                       | RISC-V rv32gc clang 12.0.0
+rv32-clang1201                        | RISC-V rv32gc clang 12.0.1
+rv32-cclang1201                       | RISC-V rv32gc clang 12.0.1
+rv32-clang1300                        | RISC-V rv32gc clang 13.0.0
+rv32-cclang1300                       | RISC-V rv32gc clang 13.0.0
+rv32-clang1301                        | RISC-V rv32gc clang 13.0.1
+rv32-cclang1301                       | RISC-V rv32gc clang 13.0.1
+rv32-clang1400                        | RISC-V rv32gc clang 14.0.0
+rv32-cclang1400                       | RISC-V rv32gc clang 14.0.0
+rv32-clang1500                        | RISC-V rv32gc clang 15.0.0
+rv32-cclang1500                       | RISC-V rv32gc clang 15.0.0
+rv32-clang1600                        | RISC-V rv32gc clang 16.0.0
+rv32-cclang1600                       | RISC-V rv32gc clang 16.0.0
+rv32-clang900                         | RISC-V rv32gc clang 9.0.0
+rv32-cclang900                        | RISC-V rv32gc clang 9.0.0
+rv32-clang901                         | RISC-V rv32gc clang 9.0.1
+rv32-cclang901                        | RISC-V rv32gc clang 9.0.1
+rv32-gcc1020                          | RISC-V rv32gc gcc 10.2.0
+rv32-cgcc1020                         | RISC-V rv32gc gcc 10.2.0
+rv32-gcc1030                          | RISC-V rv32gc gcc 10.3.0
+rv32-cgcc1030                         | RISC-V rv32gc gcc 10.3.0
+rv32-gcc1120                          | RISC-V rv32gc gcc 11.2.0
+rv32-cgcc1120                         | RISC-V rv32gc gcc 11.2.0
+rv32-gcc1130                          | RISC-V rv32gc gcc 11.3.0
+rv32-cgcc1130                         | RISC-V rv32gc gcc 11.3.0
+rv32-gcc1210                          | RISC-V rv32gc gcc 12.1.0
+rv32-cgcc1210                         | RISC-V rv32gc gcc 12.1.0
+rv32-gcc1220                          | RISC-V rv32gc gcc 12.2.0
+rv32-cgcc1220                         | RISC-V rv32gc gcc 12.2.0
+rv32-gcc820                           | RISC-V rv32gc gcc 8.2.0
+rv32-cgcc820                          | RISC-V rv32gc gcc 8.2.0
+rv32-gcc850                           | RISC-V rv32gc gcc 8.5.0
+rv32-cgcc850                          | RISC-V rv32gc gcc 8.5.0
+rv32-gcc940                           | RISC-V rv32gc gcc 9.4.0
+rv32-cgcc940                          | RISC-V rv32gc gcc 9.4.0
+rv64-clang                            | RISC-V rv64gc clang (trunk)
+rv64-cclang                           | RISC-V rv64gc clang (trunk)
+rv64-clang1000                        | RISC-V rv64gc clang 10.0.0
+rv64-cclang1000                       | RISC-V rv64gc clang 10.0.0
+rv64-clang1001                        | RISC-V rv64gc clang 10.0.1
+rv64-cclang1001                       | RISC-V rv64gc clang 10.0.1
+rv64-clang1100                        | RISC-V rv64gc clang 11.0.0
+rv64-cclang1100                       | RISC-V rv64gc clang 11.0.0
+rv64-clang1101                        | RISC-V rv64gc clang 11.0.1
+rv64-cclang1101                       | RISC-V rv64gc clang 11.0.1
+rv64-clang1200                        | RISC-V rv64gc clang 12.0.0
+rv64-cclang1200                       | RISC-V rv64gc clang 12.0.0
+rv64-clang1201                        | RISC-V rv64gc clang 12.0.1
+rv64-cclang1201                       | RISC-V rv64gc clang 12.0.1
+rv64-clang1300                        | RISC-V rv64gc clang 13.0.0
+rv64-cclang1300                       | RISC-V rv64gc clang 13.0.0
+rv64-clang1301                        | RISC-V rv64gc clang 13.0.1
+rv64-cclang1301                       | RISC-V rv64gc clang 13.0.1
+rv64-clang1400                        | RISC-V rv64gc clang 14.0.0
+rv64-cclang1400                       | RISC-V rv64gc clang 14.0.0
+rv64-clang1500                        | RISC-V rv64gc clang 15.0.0
+rv64-cclang1500                       | RISC-V rv64gc clang 15.0.0
+rv64-clang1600                        | RISC-V rv64gc clang 16.0.0
+rv64-cclang1600                       | RISC-V rv64gc clang 16.0.0
+rv64-clang900                         | RISC-V rv64gc clang 9.0.0
+rv64-cclang900                        | RISC-V rv64gc clang 9.0.0
+rv64-clang901                         | RISC-V rv64gc clang 9.0.1
+rv64-cclang901                        | RISC-V rv64gc clang 9.0.1
+rv64-gcc1020                          | RISC-V rv64gc gcc 10.2.0
+rv64-cgcc1020                         | RISC-V rv64gc gcc 10.2.0
+rv64-gcc1030                          | RISC-V rv64gc gcc 10.3.0
+rv64-cgcc1030                         | RISC-V rv64gc gcc 10.3.0
+rv64-gcc1120                          | RISC-V rv64gc gcc 11.2.0
+rv64-cgcc1120                         | RISC-V rv64gc gcc 11.2.0
+rv64-gcc1130                          | RISC-V rv64gc gcc 11.3.0
+rv64-cgcc1130                         | RISC-V rv64gc gcc 11.3.0
+rv64-gcc1210                          | RISC-V rv64gc gcc 12.1.0
+rv64-cgcc1210                         | RISC-V rv64gc gcc 12.1.0
+rv64-gcc1220                          | RISC-V rv64gc gcc 12.2.0
+rv64-cgcc1220                         | RISC-V rv64gc gcc 12.2.0
+rv64-gcc820                           | RISC-V rv64gc gcc 8.2.0
+rv64-cgcc820                          | RISC-V rv64gc gcc 8.2.0
+rv64-gcc850                           | RISC-V rv64gc gcc 8.5.0
+rv64-cgcc850                          | RISC-V rv64gc gcc 8.5.0
+rv64-gcc940                           | RISC-V rv64gc gcc 9.4.0
+rv64-cgcc940                          | RISC-V rv64gc gcc 9.4.0
+friscvg1220                           | RISCV (32bit) gfortran 12.2.0
+friscv64g1220                         | RISCV64 gfortran 12.2.0
+racket86                              | Racket 8.6
+raspbian10                            | Raspbian Buster
+craspbian10                           | Raspbian Buster
+raspbian9                             | Raspbian Stretch
+craspbian9                            | Raspbian Stretch
+ruby259                               | Ruby 2.5.9
+ruby268                               | Ruby 2.6.8
+ruby274                               | Ruby 2.7.4
+ruby302                               | Ruby 3.0.2
+s390x_gltip                           | S390X gc (tip)
+s390x_gl114                           | S390X gc 1.14
+s390x_gl115                           | S390X gc 1.15
+s390x_gl116                           | S390X gc 1.16
+s390x_gl117                           | S390X gc 1.17
+s390x_gl118                           | S390X gc 1.18
+s390x_gl119                           | S390X gc 1.19
+gccgos390x1220                        | S390X gccgo 12.2.0
+sdcc400                               | SDCC 4.0.0
+sdcc410                               | SDCC 4.1.0
+sparcleong1220                        | SPARC LEON gcc 12.2.0
+csparcleong1220                       | SPARC LEON gcc 12.2.0
+objcsparcleong1220                    | SPARC LEON gcc 12.2.0
+fsparcleong1220                       | SPARC LEON gfortran 12.2.0
+sparcg1220                            | SPARC gcc 12.2.0
+csparcg1220                           | SPARC gcc 12.2.0
+objcsparcg1220                        | SPARC gcc 12.2.0
+gccgosparc1220                        | SPARC gccgo 12.2.0
+fsparcg1220                           | SPARC gfortran 12.2.0
+sparc64g1220                          | SPARC64 gcc 12.2.0
+csparc64g1220                         | SPARC64 gcc 12.2.0
+objcsparc64g1220                      | SPARC64 gcc 12.2.0
+gccgosparc641220                      | SPARC64 gccgo 12.2.0
+fsparc64g1220                         | SPARC64 gfortran 12.2.0
+tinycctrunk                           | TCC (trunk)
+tinycc0927                            | TCC 0.9.27
+c6xg1220                              | TI C6x gcc 12.2.0
+cc6xg1220                             | TI C6x gcc 12.2.0
+cl4302161                             | TI CL430 21.6.1
+ccl4302161                            | TI CL430 21.6.1
+tsc_0_0_20_gc                         | TypeScript Native Compiler 0.0.pre20 JIT (GC)
+tsc_0_0_20_nogc                       | TypeScript Native Compiler 0.0.pre20 JIT (No GC)
+wasm_gltip                            | WASM gc (tip)
+wasm_gl114                            | WASM gc 1.14
+wasm_gl115                            | WASM gc 1.15
+wasm_gl116                            | WASM gc 1.16
+wasm_gl117                            | WASM gc 1.17
+wasm_gl118                            | WASM gc 1.18
+wasm_gl119                            | WASM gc 1.19
+wasm32clang                           | WebAssembly clang (trunk)
+wasm32cclang                          | WebAssembly clang (trunk)
+esp32g2022r1                          | Xtensa ESP32 gcc 11.2.0 (2022r1)
+esp32g2019r2                          | Xtensa ESP32 gcc 8.2.0 (2019r2)
+cesp32g2019r2                         | Xtensa ESP32 gcc 8.2.0 (2019r2)
+esp32g2020r1                          | Xtensa ESP32 gcc 8.2.0 (2020r1)
+cesp32g2020r1                         | Xtensa ESP32 gcc 8.2.0 (2020r1)
+esp32g2020r2                          | Xtensa ESP32 gcc 8.2.0 (2020r2)
+cesp32g2020r2                         | Xtensa ESP32 gcc 8.2.0 (2020r2)
+esp32g2020r3                          | Xtensa ESP32 gcc 8.4.0 (2020r3)
+cesp32g2020r3                         | Xtensa ESP32 gcc 8.4.0 (2020r3)
+esp32g2021r1                          | Xtensa ESP32 gcc 8.4.0 (2021r1)
+cesp32g2021r1                         | Xtensa ESP32 gcc 8.4.0 (2021r1)
+esp32g2021r2                          | Xtensa ESP32 gcc 8.4.0 (2021r2)
+cesp32g2021r2                         | Xtensa ESP32 gcc 8.4.0 (2021r2)
+esp32s2g2022r1                        | Xtensa ESP32-S2 gcc 11.2.0 (2022r1)
+esp32s2g2019r2                        | Xtensa ESP32-S2 gcc 8.2.0 (2019r2)
+cesp32s2g2019r2                       | Xtensa ESP32-S2 gcc 8.2.0 (2019r2)
+esp32s2g2020r1                        | Xtensa ESP32-S2 gcc 8.2.0 (2020r1)
+cesp32s2g2020r1                       | Xtensa ESP32-S2 gcc 8.2.0 (2020r1)
+esp32s2g2020r2                        | Xtensa ESP32-S2 gcc 8.2.0 (2020r2)
+cesp32s2g2020r2                       | Xtensa ESP32-S2 gcc 8.2.0 (2020r2)
+esp32s2g2020r3                        | Xtensa ESP32-S2 gcc 8.4.0 (2020r3)
+cesp32s2g2020r3                       | Xtensa ESP32-S2 gcc 8.4.0 (2020r3)
+esp32s2g2021r1                        | Xtensa ESP32-S2 gcc 8.4.0 (2021r1)
+cesp32s2g2021r1                       | Xtensa ESP32-S2 gcc 8.4.0 (2021r1)
+esp32s2g2021r2                        | Xtensa ESP32-S2 gcc 8.4.0 (2021r2)
+cesp32s2g2021r2                       | Xtensa ESP32-S2 gcc 8.4.0 (2021r2)
+esp32s3g2022r1                        | Xtensa ESP32-S3 gcc 11.2.0 (2022r1)
+esp32s3g2020r3                        | Xtensa ESP32-S3 gcc 8.4.0 (2020r3)
+cesp32s3g2020r3                       | Xtensa ESP32-S3 gcc 8.4.0 (2020r3)
+esp32s3g2021r1                        | Xtensa ESP32-S3 gcc 8.4.0 (2021r1)
+cesp32s3g2021r1                       | Xtensa ESP32-S3 gcc 8.4.0 (2021r1)
+esp32s3g2021r2                        | Xtensa ESP32-S3 gcc 8.4.0 (2021r2)
+cesp32s3g2021r2                       | Xtensa ESP32-S3 gcc 8.4.0 (2021r2)
+gdcarm1220                            | arm 12.2.0
+gnatarm103                            | arm gnat 10.3.0-2 (Alire)
+gnatarm112                            | arm gnat 11.2.0-3 (Alire)
+gdcarm641220                          | arm64 12.2.0
+gnatarm641210                         | arm64 gnat 12.1.0
+gnatarm641220                         | arm64 gnat 12.2.0
+vcpp_v19_28_VS16_9_arm64              | arm64 msvc v19.28 VS16.9
+vc_v19_28_VS16_9_arm64                | arm64 msvc v19.28 VS16.9
+vcpp_v19_29_VS16_10_arm64             | arm64 msvc v19.29 VS16.10
+vc_v19_29_VS16_10_arm64               | arm64 msvc v19.29 VS16.10
+vcpp_v19_29_VS16_11_arm64             | arm64 msvc v19.29 VS16.11
+vc_v19_29_VS16_11_arm64               | arm64 msvc v19.29 VS16.11
+vcpp_v19_30_arm64                     | arm64 msvc v19.30
+vc_v19_30_arm64                       | arm64 msvc v19.30
+vcpp_v19_31_arm64                     | arm64 msvc v19.31
+vc_v19_31_arm64                       | arm64 msvc v19.31
+vcpp_v19_32_arm64                     | arm64 msvc v19.32
+vc_v19_32_arm64                       | arm64 msvc v19.32
+vcpp_v19_33_arm64                     | arm64 msvc v19.33
+vc_v19_33_arm64                       | arm64 msvc v19.33
+vcpp_v19_latest_arm64                 | arm64 msvc v19.latest
+vc_v19_latest_arm64                   | arm64 msvc v19.latest
+armv7-clang-trunk                     | armv7-a clang (trunk)
+armv7-cclang-trunk                    | armv7-a clang (trunk)
+armv7-cpp4oclclang-trunk              | armv7-a clang (trunk)
+armv7-oclcclang-trunk                 | armv7-a clang (trunk)
+armv7-cpp4oclclang-trunk-assertions   | armv7-a clang (trunk, assertions)
+armv7-oclcclang-trunk-assertions      | armv7-a clang (trunk, assertions)
+armv7-clang1000                       | armv7-a clang 10.0.0
+armv7-cclang1000                      | armv7-a clang 10.0.0
+armv7-cpp4oclclang1000                | armv7-a clang 10.0.0
+armv7-oclcclang1000                   | armv7-a clang 10.0.0
+armv7-clang1001                       | armv7-a clang 10.0.1
+armv7-cclang1001                      | armv7-a clang 10.0.1
+armv7-cpp4oclclang1001                | armv7-a clang 10.0.1
+armv7-oclcclang1001                   | armv7-a clang 10.0.1
+armv7-clang1100                       | armv7-a clang 11.0.0
+armv7-cclang1100                      | armv7-a clang 11.0.0
+armv7-cpp4oclclang1100                | armv7-a clang 11.0.0
+armv7-oclcclang1100                   | armv7-a clang 11.0.0
+armv7-clang1101                       | armv7-a clang 11.0.1
+armv7-cclang1101                      | armv7-a clang 11.0.1
+armv7-cpp4oclclang1101                | armv7-a clang 11.0.1
+armv7-oclcclang1101                   | armv7-a clang 11.0.1
+armv7-cclang1200                      | armv7-a clang 12.0.0
+armv7-cpp4oclclang1200                | armv7-a clang 12.0.0
+armv7-oclcclang1200                   | armv7-a clang 12.0.0
+armv7-cclang1201                      | armv7-a clang 12.0.1
+armv7-cclang1300                      | armv7-a clang 13.0.0
+armv7-cpp4oclclang1300                | armv7-a clang 13.0.0
+armv7-oclcclang1300                   | armv7-a clang 13.0.0
+armv7-cclang1301                      | armv7-a clang 13.0.1
+armv7-cclang1400                      | armv7-a clang 14.0.0
+armv7-cpp4oclclang1400                | armv7-a clang 14.0.0
+armv7-oclcclang1400                   | armv7-a clang 14.0.0
+armv7-cclang1500                      | armv7-a clang 15.0.0
+armv7-cpp4oclclang1500                | armv7-a clang 15.0.0
+armv7-oclcclang1500                   | armv7-a clang 15.0.0
+armv7-cclang1600                      | armv7-a clang 16.0.0
+armv7-clang900                        | armv7-a clang 9.0.0
+armv7-cclang900                       | armv7-a clang 9.0.0
+armv7-oclcclang900                    | armv7-a clang 9.0.0
+armv7-clang901                        | armv7-a clang 9.0.1
+armv7-cclang901                       | armv7-a clang 9.0.1
+armv7-oclcclang901                    | armv7-a clang 9.0.1
+armv8-clang-trunk                     | armv8-a clang (trunk)
+armv8-cclang-trunk                    | armv8-a clang (trunk)
+armv8-cpp4oclclang-trunk              | armv8-a clang (trunk)
+armv8-oclcclang-trunk                 | armv8-a clang (trunk)
+armv8-full-clang-trunk                | armv8-a clang (trunk, all architectural features)
+armv8-full-cclang-trunk               | armv8-a clang (trunk, all architectural features)
+armv8-full-cpp4oclclang-trunk         | armv8-a clang (trunk, all architectural features)
+armv8-full-oclcclang-trunk            | armv8-a clang (trunk, all architectural features)
+armv8-cpp4oclclang-trunk-assertions   | armv8-a clang (trunk, assertions)
+armv8-oclcclang-trunk-assertions      | armv8-a clang (trunk, assertions)
+armv8-clang1000                       | armv8-a clang 10.0.0
+armv8-cclang1000                      | armv8-a clang 10.0.0
+armv8-cpp4oclclang1000                | armv8-a clang 10.0.0
+armv8-oclcclang1000                   | armv8-a clang 10.0.0
+armv8-clang1001                       | armv8-a clang 10.0.1
+armv8-cclang1001                      | armv8-a clang 10.0.1
+armv8-cpp4oclclang1001                | armv8-a clang 10.0.1
+armv8-oclcclang1001                   | armv8-a clang 10.0.1
+armv8-clang1100                       | armv8-a clang 11.0.0
+armv8-cclang1100                      | armv8-a clang 11.0.0
+armv8-cpp4oclclang1100                | armv8-a clang 11.0.0
+armv8-oclcclang1100                   | armv8-a clang 11.0.0
+armv8-clang1101                       | armv8-a clang 11.0.1
+armv8-cclang1101                      | armv8-a clang 11.0.1
+armv8-cpp4oclclang1101                | armv8-a clang 11.0.1
+armv8-oclcclang1101                   | armv8-a clang 11.0.1
+armv8-clang1200                       | armv8-a clang 12.0.0
+armv8-cclang1200                      | armv8-a clang 12.0.0
+armv8-cpp4oclclang1200                | armv8-a clang 12.0.0
+armv8-oclcclang1200                   | armv8-a clang 12.0.0
+armv8-cclang1201                      | armv8-a clang 12.0.1
+armv8-clang1300                       | armv8-a clang 13.0.0
+armv8-cclang1300                      | armv8-a clang 13.0.0
+armv8-cpp4oclclang1300                | armv8-a clang 13.0.0
+armv8-oclcclang1300                   | armv8-a clang 13.0.0
+armv8-cclang1301                      | armv8-a clang 13.0.1
+armv8-clang1400                       | armv8-a clang 14.0.0
+armv8-cclang1400                      | armv8-a clang 14.0.0
+armv8-cpp4oclclang1400                | armv8-a clang 14.0.0
+armv8-oclcclang1400                   | armv8-a clang 14.0.0
+armv8-clang1500                       | armv8-a clang 15.0.0
+armv8-cclang1500                      | armv8-a clang 15.0.0
+armv8-cpp4oclclang1500                | armv8-a clang 15.0.0
+armv8-oclcclang1500                   | armv8-a clang 15.0.0
+armv8-clang1600                       | armv8-a clang 16.0.0
+armv8-cclang1600                      | armv8-a clang 16.0.0
+armv8-clang900                        | armv8-a clang 9.0.0
+armv8-cclang900                       | armv8-a clang 9.0.0
+armv8-oclcclang900                    | armv8-a clang 9.0.0
+armv8-clang901                        | armv8-a clang 9.0.1
+armv8-cclang901                       | armv8-a clang 9.0.1
+armv8-oclcclang901                    | armv8-a clang 9.0.1
+spirv32-cpp4oclclang-trunk            | clang & llvm-spirv (trunk)
+spirv64-cpp4oclclang-trunk            | clang & llvm-spirv (trunk)
+spirv32-oclcclang-trunk               | clang & llvm-spirv (trunk)
+spirv64-oclcclang-trunk               | clang & llvm-spirv (trunk)
+spirv32-cpp4oclclang-trunk-assertions | clang & llvm-spirv (trunk, assertions)
+spirv64-cpp4oclclang-trunk-assertions | clang & llvm-spirv (trunk, assertions)
+spirv32-oclcclang-trunk-assertions    | clang & llvm-spirv (trunk, assertions)
+spirv64-oclcclang-trunk-assertions    | clang & llvm-spirv (trunk, assertions)
+irclang-assertions-trunk              | clang (assertions trunk)
+irclangtrunk                          | clang (trunk)
+irclang1000                           | clang 10.0.0
+irclang1001                           | clang 10.0.1
+irclang1100                           | clang 11.0.0
+irclang1101                           | clang 11.0.1
+irclang1200                           | clang 12.0.0
+irclang1201                           | clang 12.0.1
+irclang1300                           | clang 13.0.0
+irclang1400                           | clang 14.0.0
+irclang1500                           | clang 15.0.0
+irclang1600                           | clang 16.0.0
+irclang401                            | clang 4.0.1
+irclang500                            | clang 5.0.0
+irclang600                            | clang 6.0.0
+irclang700                            | clang 7.0.0
+cuclang700                            | clang 7.0.0 sm_70 CUDA-9.1
+irclang800                            | clang 8.0.0
+cuclang800                            | clang 8.0.0 sm_75 CUDA-10.0
+irclang900                            | clang 9.0.0
+cuclang900                            | clang 9.0.0 sm_75 CUDA-10.1
+hipclang-rocm-40502                   | clang rocm-4.5.2
+hipclang-rocm-50002                   | clang rocm-5.0.2
+hipclang-rocm-50103                   | clang rocm-5.1.3
+hipclang-rocm-50203                   | clang rocm-5.2.3
+hipclang-rocm-50302                   | clang rocm-5.3.2
+hiptrunk                              | clang trunk
+cpp4oclclspv                          | clspv (trunk)
+clspv                                 | clspv (trunk)
+cpp4oclclvk                           | clvk-like (based on clspv trunk)
+clvk                                  | clvk-like (based on clspv trunk)
+cppfront_trunk                        | cppfront trunk
+cproc-master                          | cproc-master
+dmd20783                              | dmd 2.078.3
+dmd20790                              | dmd 2.079.0
+dmd20791                              | dmd 2.079.1
+dmd20801                              | dmd 2.080.1
+dmd20812                              | dmd 2.081.2
+dmd20820                              | dmd 2.082.0
+dmd20890                              | dmd 2.089.0
+dmd20920                              | dmd 2.092.0
+dmd20942                              | dmd 2.094.2
+dmd2nightly                           | dmd nightly
+ellcc0133                             | ellcc 0.1.33
+ellcc0134                             | ellcc 0.1.34
+ellcc170716                           | ellcc 2017-07-16
+flangtrunknew                         | flang-trunk (flang-new)
+flangtrunk                            | flang-trunk (old)
+gdctrunk                              | gdc (trunk)
+gdc101                                | gdc 10.1
+gdc102                                | gdc 10.2
+gdc111                                | gdc 11.1
+gdc113                                | gdc 11.3
+gdc121                                | gdc 12.1
+gdc122                                | gdc 12.2
+gdc48                                 | gdc 4.8.2
+gdc49                                 | gdc 4.9.3
+gdc52                                 | gdc 5.2.0
+gdc92                                 | gdc 9.2
+gdc93                                 | gdc 9.3
+gdc95                                 | gdc 9.5
+gdcmips1210                           | gdc mips 12.1.0
+gdcmips1220                           | gdc mips 12.2.0
+gdcmips641210                         | gdc mips64 12.1.0
+gdcmips641220                         | gdc mips64 12.2.0
+gdcmipsel1210                         | gdc mipsel 12.1.0
+gdcmipsel1220                         | gdc mipsel 12.2.0
+gdcppc1210                            | gdc powerpc 12.1.0
+gdcppc1220                            | gdc powerpc 12.2.0
+gdcppc641210                          | gdc powerpc64 12.1.0
+gdcppc641220                          | gdc powerpc64 12.2.0
+gdcppc64le1210                        | gdc powerpc64le 12.1.0
+gdcppc64le1220                        | gdc powerpc64le 12.2.0
+gdcs390x1210                          | gdc s390x 12.1.0
+gdcs390x1220                          | gdc s390x 12.2.0
+ispc-templates_new-trunk              | ispc (templates_new)
+ispc-trunk                            | ispc (trunk)
+ispc1100                              | ispc 1.10.0
+ispc1110                              | ispc 1.11.0
+ispc1120                              | ispc 1.12.0
+ispc1130                              | ispc 1.13.0
+ispc1140                              | ispc 1.14.0
+ispc1141                              | ispc 1.14.1
+ispc1150                              | ispc 1.15.0
+ispc1160                              | ispc 1.16.0
+ispc1161                              | ispc 1.16.1
+ispc1170                              | ispc 1.17.0
+ispc1180                              | ispc 1.18.0
+ispc1190                              | ispc 1.19.0
+ispc191                               | ispc 1.9.1
+ispc192                               | ispc 1.9.2
+selfhosted                            | jakt (trunk)
+java1102                              | jdk 11.0.2
+java1201                              | jdk 12.0.1
+java1302                              | jdk 13.0.2
+java1402                              | jdk 14.0.2
+java1502                              | jdk 15.0.2
+java1601                              | jdk 16.0.1
+java1700                              | jdk 17.0.0
+java1800                              | jdk 18.0.0
+kotlinc1400                           | kotlinc 1.4.0
+kotlinc1410                           | kotlinc 1.4.10
+kotlinc1420                           | kotlinc 1.4.20
+kotlinc1421                           | kotlinc 1.4.21
+kotlinc1430                           | kotlinc 1.4.30
+kotlinc1431                           | kotlinc 1.4.31
+kotlinc1432                           | kotlinc 1.4.32
+kotlinc1500                           | kotlinc 1.5.0
+kotlinc1510                           | kotlinc 1.5.10
+kotlinc1520                           | kotlinc 1.5.20
+kotlinc1521                           | kotlinc 1.5.21
+kotlinc1530                           | kotlinc 1.5.30
+kotlinc1531                           | kotlinc 1.5.31
+kotlinc1600                           | kotlinc 1.6.0
+kotlinc1610                           | kotlinc 1.6.10
+kotlinc1620                           | kotlinc 1.6.20
+kotlinc1700                           | kotlinc 1.7.0
+kotlinc1800                           | kotlinc 1.8.0
+kotlinc1810                           | kotlinc 1.8.10
+ldc017                                | ldc 0.17.2
+ldc100                                | ldc 1.0.0
+ldc110                                | ldc 1.1.0
+ldc1_10                               | ldc 1.10.0
+ldc1_11                               | ldc 1.11.0
+ldc1_12                               | ldc 1.12.0
+ldc1_13                               | ldc 1.13.0
+ldc1_14                               | ldc 1.14.0
+ldc1_15                               | ldc 1.15.0
+ldc1_16                               | ldc 1.16.0
+ldc1_17                               | ldc 1.17.0
+ldc1_18                               | ldc 1.18.0
+ldc1_19                               | ldc 1.19.0
+ldc120                                | ldc 1.2.0
+ldc1_20                               | ldc 1.20.0
+ldc1_21                               | ldc 1.21.0
+ldc1_22                               | ldc 1.22.0
+ldc1_23                               | ldc 1.23.0
+ldc1_24                               | ldc 1.24.0
+ldc1_25                               | ldc 1.25.1
+ldc1_26                               | ldc 1.26.0
+ldc1_27                               | ldc 1.27.1
+ldc1_28                               | ldc 1.28.1
+ldc1_29                               | ldc 1.29.0
+ldc130                                | ldc 1.3.0
+ldc1_30                               | ldc 1.30.0
+ldc1_31                               | ldc 1.31.0
+ldc140                                | ldc 1.4.0
+ldc150                                | ldc 1.5.0
+ldc160                                | ldc 1.6.0
+ldc170                                | ldc 1.7.0
+ldc180                                | ldc 1.8.0
+ldc190                                | ldc 1.9.0
+ldcbeta                               | ldc beta
+ldclatestci                           | ldc latest CI
+llc-assertions-trunk                  | llc (assertions trunk)
+mirllc-assertions-trunk               | llc (assertions trunk)
+llctrunk                              | llc (trunk)
+mirllctrunk                           | llc (trunk)
+llc1000                               | llc 10.0.0
+mirllc1000                            | llc 10.0.0
+llc1001                               | llc 10.0.1
+mirllc1001                            | llc 10.0.1
+llc1100                               | llc 11.0.0
+mirllc1100                            | llc 11.0.0
+llc1101                               | llc 11.0.1
+mirllc1101                            | llc 11.0.1
+llc1200                               | llc 12.0.0
+mirllc1200                            | llc 12.0.0
+llc1201                               | llc 12.0.1
+mirllc1201                            | llc 12.0.1
+llc1300                               | llc 13.0.0
+mirllc1300                            | llc 13.0.0
+llc1400                               | llc 14.0.0
+mirllc1400                            | llc 14.0.0
+llc1500                               | llc 15.0.0
+mirllc1500                            | llc 15.0.0
+llc1600                               | llc 16.0.0
+llc32                                 | llc 3.2
+mirllc32                              | llc 3.2
+llc33                                 | llc 3.3
+mirllc33                              | llc 3.3
+llc391                                | llc 3.9.1
+mirllc391                             | llc 3.9.1
+llc400                                | llc 4.0.0
+mirllc400                             | llc 4.0.0
+llc401                                | llc 4.0.1
+mirllc401                             | llc 4.0.1
+llc500                                | llc 5.0.0
+mirllc500                             | llc 5.0.0
+llc600                                | llc 6.0.0
+mirllc600                             | llc 6.0.0
+llc700                                | llc 7.0.0
+mirllc700                             | llc 7.0.0
+llc800                                | llc 8.0.0
+mirllc800                             | llc 8.0.0
+llc900                                | llc 9.0.0
+mirllc900                             | llc 9.0.0
+llvm-mca-assertions-trunk             | llvm-mca (assertions trunk)
+llvm-mcatrunk                         | llvm-mca (trunk)
+mos-atari8-trunk                      | llvm-mos atari 8-bit
+cmos-atari8-trunk                     | llvm-mos atari 8-bit
+mos-cx16-trunk                        | llvm-mos commander X16
+cmos-cx16-trunk                       | llvm-mos commander X16
+mos-c64-trunk                         | llvm-mos commodore 64
+cmos-c64-trunk                        | llvm-mos commodore 64
+mos-mega65-trunk                      | llvm-mos mega65
+cmos-mega65-trunk                     | llvm-mos mega65
+mos-nes-cnrom-trunk                   | llvm-mos nes-cnrom
+cmos-nes-cnrom-trunk                  | llvm-mos nes-cnrom
+mos-nes-mmc1-trunk                    | llvm-mos nes-mmc1
+cmos-nes-mmc1-trunk                   | llvm-mos nes-mmc1
+mos-nes-mmc3-trunk                    | llvm-mos nes-mmc3
+cmos-nes-mmc3-trunk                   | llvm-mos nes-mmc3
+mos-nes-nrom-trunk                    | llvm-mos nes-nrom
+cmos-nes-nrom-trunk                   | llvm-mos nes-nrom
+mos-osi-c1p-trunk                     | llvm-mos osi-c1p
+cmos-osi-c1p-trunk                    | llvm-mos osi-c1p
+loongarch64g1220                      | loongarch64 gcc 12.2.0
+cloongarch64g1220                     | loongarch64 gcc 12.2.0
+objcloongarch64g1220                  | loongarch64 gcc 12.2.0
+cmipselg1210                          | mips (el) gcc 12.1.0
+cmipselg1220                          | mips (el) gcc 12.2.0
+objcmipselg1220                       | mips (el) gcc 12.2.0
+cmips5el                              | mips (el) gcc 5.4
+mips-clang1300                        | mips clang 13.0.0
+mips-cclang1300                       | mips clang 13.0.0
+mips-clang1400                        | mips clang 14.0.0
+mips-cclang1400                       | mips clang 14.0.0
+mips-clang1500                        | mips clang 15.0.0
+mips-cclang1500                       | mips clang 15.0.0
+mips-clang1600                        | mips clang 16.0.0
+mips-cclang1600                       | mips clang 16.0.0
+mips1120                              | mips gcc 11.2.0
+cmips1120                             | mips gcc 11.2.0
+mipsg1210                             | mips gcc 12.1.0
+cmipsg1210                            | mips gcc 12.1.0
+mipsg1220                             | mips gcc 12.2.0
+cmipsg1220                            | mips gcc 12.2.0
+objcmipsg1220                         | mips gcc 12.2.0
+mips5                                 | mips gcc 5.4
+cmips5                                | mips gcc 5.4
+mips930                               | mips gcc 9.3.0 (codescape)
+cmips930                              | mips gcc 9.3.0 (codescape)
+gnatmips1120                          | mips gnat 11.2.0
+gnatmips1210                          | mips gnat 12.1.0
+gnatmips1220                          | mips gnat 12.2.0
+mips64elg1210                         | mips64 (el) gcc 12.1.0
+cmips64elg1210                        | mips64 (el) gcc 12.1.0
+mips64elg1220                         | mips64 (el) gcc 12.2.0
+cmips64elg1220                        | mips64 (el) gcc 12.2.0
+objcmips64elg1220                     | mips64 (el) gcc 12.2.0
+mips564el                             | mips64 (el) gcc 5.4
+mips64-clang1300                      | mips64 clang 13.0.0
+mips64-cclang1300                     | mips64 clang 13.0.0
+mips64-clang1400                      | mips64 clang 14.0.0
+mips64-cclang1400                     | mips64 clang 14.0.0
+mips64-clang1500                      | mips64 clang 15.0.0
+mips64-cclang1500                     | mips64 clang 15.0.0
+mips64-clang1600                      | mips64 clang 16.0.0
+mips64-cclang1600                     | mips64 clang 16.0.0
+mips112064                            | mips64 gcc 11.2.0
+cmips112064                           | mips64 gcc 11.2.0
+mips64g1210                           | mips64 gcc 12.1.0
+cmips64g1210                          | mips64 gcc 12.1.0
+mips64g1220                           | mips64 gcc 12.2.0
+cmips64g1220                          | mips64 gcc 12.2.0
+mips564                               | mips64 gcc 5.4
+cmips564                              | mips64 gcc 5.4
+gnatmips641120                        | mips64 gnat 11.2.0
+gnatmips641210                        | mips64 gnat 12.1.0
+gnatmips641220                        | mips64 gnat 12.2.0
+mips64el-clang1300                    | mips64el clang 13.0.0
+mips64el-cclang1300                   | mips64el clang 13.0.0
+mips64el-clang1400                    | mips64el clang 14.0.0
+mips64el-cclang1400                   | mips64el clang 14.0.0
+mips64el-clang1500                    | mips64el clang 15.0.0
+mips64el-cclang1500                   | mips64el clang 15.0.0
+mips64el-clang1600                    | mips64el clang 16.0.0
+mips64el-cclang1600                   | mips64el clang 16.0.0
+mipsel-clang1300                      | mipsel clang 13.0.0
+mipsel-cclang1300                     | mipsel clang 13.0.0
+mipsel-clang1400                      | mipsel clang 14.0.0
+mipsel-cclang1400                     | mipsel clang 14.0.0
+mipsel-clang1500                      | mipsel clang 15.0.0
+mipsel-cclang1500                     | mipsel clang 15.0.0
+mipsel-clang1600                      | mipsel clang 16.0.0
+mipsel-cclang1600                     | mipsel clang 16.0.0
+mipselg1210                           | mipsel gcc 12.1.0
+mipselg1220                           | mipsel gcc 12.2.0
+mips5el                               | mipsel gcc 5.4
+mrustc-master                         | mrustc (master)
+cnanomips630                          | nanoMIPS gcc 6.3.0
+nanomips630                           | nanoMIPS gcc 6.3.0 (mtk)
+nimtrunk                              | nim (trunk)
+nim104                                | nim 1.0.4
+nim106                                | nim 1.0.6
+nim120                                | nim 1.2.0
+nim142                                | nim 1.4.2
+nim144                                | nim 1.4.4
+nim146                                | nim 1.4.6
+nim148                                | nim 1.4.8
+nim160                                | nim 1.6.0
+opt-assertions-trunk                  | opt (assertions trunk)
+opttrunk                              | opt (trunk)
+opt1000                               | opt 10.0.0
+opt1001                               | opt 10.0.1
+opt1100                               | opt 11.0.0
+opt1101                               | opt 11.0.1
+opt1200                               | opt 12.0.0
+opt1201                               | opt 12.0.1
+opt1300                               | opt 13.0.0
+opt1400                               | opt 14.0.0
+opt1500                               | opt 15.0.0
+opt1600                               | opt 16.0.0
+opt32                                 | opt 3.2
+opt33                                 | opt 3.3
+opt391                                | opt 3.9.1
+opt400                                | opt 4.0.0
+opt401                                | opt 4.0.1
+opt500                                | opt 5.0.0
+opt600                                | opt 6.0.0
+opt700                                | opt 7.0.0
+opt800                                | opt 8.0.0
+opt900                                | opt 9.0.0
+cppx_p1240r1                          | p1240r1
+cppx_p1240r2                          | p1240r2 trunk
+cppx_p2320                            | p2320 trunk
+p0332                                 | ponyc 0.33.2
+p0341                                 | ponyc 0.34.1
+p0351                                 | ponyc 0.35.1
+p0360                                 | ponyc 0.36.0
+p0370                                 | ponyc 0.37.0
+p0383                                 | ponyc 0.38.3
+p0391                                 | ponyc 0.39.1
+p0400                                 | ponyc 0.40.0
+p0412                                 | ponyc 0.41.2
+p0420                                 | ponyc 0.42.0
+p0432                                 | ponyc 0.43.2
+p0440                                 | ponyc 0.44.0
+p0452                                 | ponyc 0.45.2
+p0460                                 | ponyc 0.46.0
+p0470                                 | ponyc 0.47.0
+p0480                                 | ponyc 0.48.0
+p0491                                 | ponyc 0.49.1
+p0500                                 | ponyc 0.50.0
+p0511                                 | ponyc 0.51.1
+ponynightly                           | ponyc nightly
+ppcg1120                              | power gcc 11.2.0
+cppcg1120                             | power gcc 11.2.0
+ppcg1210                              | power gcc 12.1.0
+cppcg1210                             | power gcc 12.1.0
+ppcg1220                              | power gcc 12.2.0
+cppcg1220                             | power gcc 12.2.0
+ppcg48                                | power gcc 4.8.5
+cppcg48                               | power gcc 4.8.5
+fppc64g8                              | power64 AT12.0
+ppc64g8                               | power64 AT12.0 (gcc8)
+cppc64g8                              | power64 AT12.0 (gcc8)
+fppc64g9                              | power64 AT13.0
+ppc64g9                               | power64 AT13.0 (gcc9)
+cppc64g9                              | power64 AT13.0 (gcc9)
+ppc64g1120                            | power64 gcc 11.2.0
+cppc64g1120                           | power64 gcc 11.2.0
+ppc64g1210                            | power64 gcc 12.1.0
+cppc64g1210                           | power64 gcc 12.1.0
+ppc64g1220                            | power64 gcc 12.2.0
+cppc64g1220                           | power64 gcc 12.2.0
+fppc64leg8                            | power64le AT12.0
+ppc64leg8                             | power64le AT12.0 (gcc8)
+cppc64leg8                            | power64le AT12.0 (gcc8)
+fppc64leg9                            | power64le AT13.0
+ppc64leg9                             | power64le AT13.0 (gcc9)
+cppc64leg9                            | power64le AT13.0 (gcc9)
+ppc64leclang                          | power64le clang (trunk)
+cppc64leclang                         | power64le clang (trunk)
+ppc64leg1120                          | power64le gcc 11.2.0
+cppc64leg1120                         | power64le gcc 11.2.0
+ppc64leg1210                          | power64le gcc 12.1.0
+cppc64leg1210                         | power64le gcc 12.1.0
+ppc64leg1220                          | power64le gcc 12.2.0
+cppc64leg1220                         | power64le gcc 12.2.0
+ppc64leg630                           | power64le gcc 6.3.0
+cppc64leg630                          | power64le gcc 6.3.0
+gnatppc1120                           | powerpc gnat 11.2.0
+gnatppc1210                           | powerpc gnat 12.1.0
+gnatppc1220                           | powerpc gnat 12.2.0
+ppc64clang                            | powerpc64 clang (trunk)
+cppc64clang                           | powerpc64 clang (trunk)
+gnatppc641210                         | powerpc64 gnat 12.1.0
+gnatppc641220                         | powerpc64 gnat 12.2.0
+gnatppc64le1120                       | powerpc64le gnat 11.2.0
+gnatppc64le1210                       | powerpc64le gnat 12.1.0
+gnatppc64le1220                       | powerpc64le gnat 12.2.0
+ppci055                               | ppci 0.5.5
+gdcriscv1220                          | riscv32 12.2.0
+gdcriscv641220                        | riscv64 12.2.0
+gnatriscv64103                        | riscv64 gnat 10.3.0-2 (Alire)
+gnatriscv64112                        | riscv64 gnat 11.2.0-3 (Alire)
+r100                                  | rustc 1.0.0
+r110                                  | rustc 1.1.0
+r1100                                 | rustc 1.10.0
+r1110                                 | rustc 1.11.0
+r1120                                 | rustc 1.12.0
+r1130                                 | rustc 1.13.0
+r1140                                 | rustc 1.14.0
+r1151                                 | rustc 1.15.1
+r1160                                 | rustc 1.16.0
+r1170                                 | rustc 1.17.0
+r1180                                 | rustc 1.18.0
+r1190                                 | rustc 1.19.0
+r120                                  | rustc 1.2.0
+r1200                                 | rustc 1.20.0
+r1210                                 | rustc 1.21.0
+r1220                                 | rustc 1.22.0
+r1230                                 | rustc 1.23.0
+r1240                                 | rustc 1.24.0
+r1250                                 | rustc 1.25.0
+r1260                                 | rustc 1.26.0
+r1270                                 | rustc 1.27.0
+r1271                                 | rustc 1.27.1
+r1280                                 | rustc 1.28.0
+r1290                                 | rustc 1.29.0
+r130                                  | rustc 1.3.0
+r1300                                 | rustc 1.30.0
+r1310                                 | rustc 1.31.0
+r1320                                 | rustc 1.32.0
+r1330                                 | rustc 1.33.0
+r1340                                 | rustc 1.34.0
+r1350                                 | rustc 1.35.0
+r1360                                 | rustc 1.36.0
+r1370                                 | rustc 1.37.0
+r1380                                 | rustc 1.38.0
+r1390                                 | rustc 1.39.0
+r140                                  | rustc 1.4.0
+r1400                                 | rustc 1.40.0
+r1410                                 | rustc 1.41.0
+r1420                                 | rustc 1.42.0
+r1430                                 | rustc 1.43.0
+r1440                                 | rustc 1.44.0
+r1450                                 | rustc 1.45.0
+r1452                                 | rustc 1.45.2
+r1460                                 | rustc 1.46.0
+r1470                                 | rustc 1.47.0
+r1480                                 | rustc 1.48.0
+r1490                                 | rustc 1.49.0
+r150                                  | rustc 1.5.0
+r1500                                 | rustc 1.50.0
+r1510                                 | rustc 1.51.0
+r1520                                 | rustc 1.52.0
+r1530                                 | rustc 1.53.0
+r1540                                 | rustc 1.54.0
+r1550                                 | rustc 1.55.0
+r1560                                 | rustc 1.56.0
+r1570                                 | rustc 1.57.0
+r1580                                 | rustc 1.58.0
+r1590                                 | rustc 1.59.0
+r160                                  | rustc 1.6.0
+r1600                                 | rustc 1.60.0
+r1610                                 | rustc 1.61.0
+r1620                                 | rustc 1.62.0
+r1630                                 | rustc 1.63.0
+r1640                                 | rustc 1.64.0
+r1650                                 | rustc 1.65.0
+r1660                                 | rustc 1.66.0
+r1670                                 | rustc 1.67.0
+r1680                                 | rustc 1.68.0
+r170                                  | rustc 1.7.0
+r180                                  | rustc 1.8.0
+r190                                  | rustc 1.9.0
+beta                                  | rustc beta
+nightly                               | rustc nightly
+rustccggcc-master                     | rustc-cg-gcc (master)
+gccs390x1120                          | s390x gcc 11.2.0
+cgccs390x112                          | s390x gcc 11.2.0
+s390xg1210                            | s390x gcc 12.1.0
+cs390xg1210                           | s390x gcc 12.1.0
+s390xg1220                            | s390x gcc 12.2.0
+cs390xg1220                           | s390x gcc 12.2.0
+objcs390xg1220                        | s390x gcc 12.2.0
+fs390xg1210                           | s390x gfortran 12.1.0
+fs390xg1220                           | s390x gfortran 12.2.0
+gnats390x1120                         | s390x gnat 11.2.0
+gnats390x1210                         | s390x gnat 12.1.0
+gnats390x1220                         | s390x gnat 12.2.0
+scalac21214                           | scalac 2.12.14
+scalac2136                            | scalac 2.13.6
+scalac300                             | scalac 3.0.0
+shg1220                               | sh gcc 12.2.0
+cshg1220                              | sh gcc 12.2.0
+shg494                                | sh gcc 4.9.4
+cshg494                               | sh gcc 4.9.4
+shg950                                | sh gcc 9.5.0
+cshg950                               | sh gcc 9.5.0
+solc0426                              | solc 0.4.26
+solc0517                              | solc 0.5.17
+solc0612                              | solc 0.6.12
+solc076                               | solc 0.7.6
+solc0813                              | solc 0.8.13
+gnatsparc1220                         | sparc gnat 12.2.0
+gnatsparc641220                       | sparc64 12.2.0
+cltrunk                               | trunk sm_86 CUDA-11.3
+cl19_2015_u3_64                       | x64 msvc v19.0 (WINE)
+ccl19_2015_u3_64                      | x64 msvc v19.0 (WINE)
+cl19_64                               | x64 msvc v19.10 (WINE)
+ccl19_64                              | x64 msvc v19.10 (WINE)
+vcpp_v19_14_x64                       | x64 msvc v19.14
+vc_v19_14_x64                         | x64 msvc v19.14
+cl_new_64                             | x64 msvc v19.14 (WINE)
+ccl_new_64                            | x64 msvc v19.14 (WINE)
+vcpp_v19_15_x64                       | x64 msvc v19.15
+vc_v19_15_x64                         | x64 msvc v19.15
+vcpp_v19_16_x64                       | x64 msvc v19.16
+vc_v19_16_x64                         | x64 msvc v19.16
+vcpp_v19_20_x64                       | x64 msvc v19.20
+vc_v19_20_x64                         | x64 msvc v19.20
+vcpp_v19_21_x64                       | x64 msvc v19.21
+vc_v19_21_x64                         | x64 msvc v19.21
+vcpp_v19_22_x64                       | x64 msvc v19.22
+vc_v19_22_x64                         | x64 msvc v19.22
+vcpp_v19_23_x64                       | x64 msvc v19.23
+vc_v19_23_x64                         | x64 msvc v19.23
+vcpp_v19_24_x64                       | x64 msvc v19.24
+vc_v19_24_x64                         | x64 msvc v19.24
+vcpp_v19_25_x64                       | x64 msvc v19.25
+vc_v19_25_x64                         | x64 msvc v19.25
+vcpp_v19_26_x64                       | x64 msvc v19.26
+vc_v19_26_x64                         | x64 msvc v19.26
+vcpp_v19_27_x64                       | x64 msvc v19.27
+vc_v19_27_x64                         | x64 msvc v19.27
+vcpp_v19_28_x64                       | x64 msvc v19.28
+vc_v19_28_x64                         | x64 msvc v19.28
+vcpp_v19_28_VS16_9_x64                | x64 msvc v19.28 VS16.9
+vc_v19_28_VS16_9_x64                  | x64 msvc v19.28 VS16.9
+vcpp_v19_29_VS16_10_x64               | x64 msvc v19.29 VS16.10
+vc_v19_29_VS16_10_x64                 | x64 msvc v19.29 VS16.10
+vcpp_v19_29_VS16_11_x64               | x64 msvc v19.29 VS16.11
+vc_v19_29_VS16_11_x64                 | x64 msvc v19.29 VS16.11
+vcpp_v19_30_x64                       | x64 msvc v19.30
+vc_v19_30_x64                         | x64 msvc v19.30
+vcpp_v19_31_x64                       | x64 msvc v19.31
+vc_v19_31_x64                         | x64 msvc v19.31
+vcpp_v19_32_x64                       | x64 msvc v19.32
+vc_v19_32_x64                         | x64 msvc v19.32
+vcpp_v19_33_x64                       | x64 msvc v19.33
+vc_v19_33_x64                         | x64 msvc v19.33
+vcpp_v19_latest_x64                   | x64 msvc v19.latest
+vc_v19_latest_x64                     | x64 msvc v19.latest
+ccx8632_310                           | x86 CompCert 3.10
+ccx8632_311                           | x86 CompCert 3.11
+ccx8632_312                           | x86 CompCert 3.12
+ccx8632_309                           | x86 CompCert 3.9
+clean24_32                            | x86 clean 2.4
+clean30_32                            | x86 clean 3.0
+djggp494                              | x86 djgpp 4.9.4
+djggp550                              | x86 djgpp 5.5.0
+djggp640                              | x86 djgpp 6.4.0
+djggp720                              | x86 djgpp 7.2.0
+386_gltip                             | x86 gc (tip)
+386_gl114                             | x86 gc 1.14
+386_gl115                             | x86 gc 1.15
+386_gl116                             | x86 gc 1.16
+386_gl117                             | x86 gc 1.17
+386_gl118                             | x86 gc 1.18
+386_gl119                             | x86 gc 1.19
+cg127                                 | x86 gcc 1.27
+gccgo102                              | x86 gccgo 10.2.0
+gccgo111                              | x86 gccgo 11.1.0
+gccgo112                              | x86 gccgo 11.2.0
+gccgo113                              | x86 gccgo 11.3.0
+gccgo121                              | x86 gccgo 12.1.0
+gccgo122                              | x86 gccgo 12.2.0
+gccgo494                              | x86 gccgo 4.9.4
+gccgo630                              | x86 gccgo 6.3.0
+gccgo720                              | x86 gccgo 7.2.0
+gccgo830                              | x86 gccgo 8.3.0
+gccgo930                              | x86 gccgo 9.3.0
+gccgo950                              | x86 gccgo 9.5.0
+cl19_2015_u3_32                       | x86 msvc v19.0 (WINE)
+ccl19_2015_u3_32                      | x86 msvc v19.0 (WINE)
+cl19_32                               | x86 msvc v19.10 (WINE)
+ccl19_32                              | x86 msvc v19.10 (WINE)
+vcpp_v19_14_x86                       | x86 msvc v19.14
+vc_v19_14_x86                         | x86 msvc v19.14
+cl_new_32                             | x86 msvc v19.14 (WINE)
+ccl_new_32                            | x86 msvc v19.14 (WINE)
+vcpp_v19_15_x86                       | x86 msvc v19.15
+vc_v19_15_x86                         | x86 msvc v19.15
+vcpp_v19_16_x86                       | x86 msvc v19.16
+vc_v19_16_x86                         | x86 msvc v19.16
+vcpp_v19_20_x86                       | x86 msvc v19.20
+vc_v19_20_x86                         | x86 msvc v19.20
+vcpp_v19_21_x86                       | x86 msvc v19.21
+vc_v19_21_x86                         | x86 msvc v19.21
+vcpp_v19_22_x86                       | x86 msvc v19.22
+vc_v19_22_x86                         | x86 msvc v19.22
+vcpp_v19_23_x86                       | x86 msvc v19.23
+vc_v19_23_x86                         | x86 msvc v19.23
+vcpp_v19_24_x86                       | x86 msvc v19.24
+vc_v19_24_x86                         | x86 msvc v19.24
+vcpp_v19_25_x86                       | x86 msvc v19.25
+vc_v19_25_x86                         | x86 msvc v19.25
+vcpp_v19_26_x86                       | x86 msvc v19.26
+vc_v19_26_x86                         | x86 msvc v19.26
+vcpp_v19_27_x86                       | x86 msvc v19.27
+vc_v19_27_x86                         | x86 msvc v19.27
+vcpp_v19_28_x86                       | x86 msvc v19.28
+vc_v19_28_x86                         | x86 msvc v19.28
+vcpp_v19_28_VS16_9_x86                | x86 msvc v19.28 VS16.9
+vc_v19_28_VS16_9_x86                  | x86 msvc v19.28 VS16.9
+vcpp_v19_29_VS16_10_x86               | x86 msvc v19.29 VS16.10
+vc_v19_29_VS16_10_x86                 | x86 msvc v19.29 VS16.10
+vcpp_v19_29_VS16_11_x86               | x86 msvc v19.29 VS16.11
+vc_v19_29_VS16_11_x86                 | x86 msvc v19.29 VS16.11
+vcpp_v19_30_x86                       | x86 msvc v19.30
+vc_v19_30_x86                         | x86 msvc v19.30
+vcpp_v19_31_x86                       | x86 msvc v19.31
+vc_v19_31_x86                         | x86 msvc v19.31
+vcpp_v19_32_x86                       | x86 msvc v19.32
+vc_v19_32_x86                         | x86 msvc v19.32
+vcpp_v19_33_x86                       | x86 msvc v19.33
+vc_v19_33_x86                         | x86 msvc v19.33
+vcpp_v19_latest_x86                   | x86 msvc v19.latest
+vc_v19_latest_x86                     | x86 msvc v19.latest
+nvcxx_x86_cxx22_11                    | x86 nvc++ 22.11
+nvcxx_x86_cxx22_7                     | x86 nvc++ 22.7
+nvcxx_x86_cxx22_9                     | x86 nvc++ 22.9
+nvcxx_x86_cxx23_1                     | x86 nvc++ 23.1
+ctendrax86trunk                       | x86 tendra (trunk)
+gcc-snapshot                          | x86-64 GCCRS (GCC master)
+gccrs-snapshot                        | x86-64 GCCRS (GCCRS master)
+zapcc190308                           | x86-64 Zapcc 190308
+gnuassnapshot                         | x86-64 binutils (trunk)
+gnuas72                               | x86-64 binutils 2.27
+gnuas73                               | x86-64 binutils 2.28
+gnuas92                               | x86-64 binutils 2.29.1
+gnuas103                              | x86-64 binutils 2.34
+gnuas112                              | x86-64 binutils 2.36.1
+gnuas121                              | x86-64 binutils 2.38
+clang-rocm-trunk                      | x86-64 clang (amd-stg-open)
+clang_assertions_trunk                | x86-64 clang (assertions trunk)
+llvmas_assertions_trunk               | x86-64 clang (assertions trunk)
+cclang_assertions_trunk               | x86-64 clang (assertions trunk)
+clang_lifetime                        | x86-64 clang (experimental -Wlifetime)
+clang_p1061                           | x86-64 clang (experimental P1061)
+clang_p1144                           | x86-64 clang (experimental P1144)
+clang_parmexpr                        | x86-64 clang (experimental P1221)
+clang_autonsdmi                       | x86-64 clang (experimental metaprogramming - P2632)
+clang_patmat                          | x86-64 clang (experimental pattern matching)
+clang_concepts                        | x86-64 clang (old concepts branch)
+clang_reflection                      | x86-64 clang (reflection)
+clang_resugar                         | x86-64 clang (resugar)
+clang_embed                           | x86-64 clang (std::embed)
+clang_dang                            | x86-64 clang (thephd.dev)
+cclang_dang                           | x86-64 clang (thephd.dev)
+clang_trunk                           | x86-64 clang (trunk)
+llvmas_trunk                          | x86-64 clang (trunk)
+cclang_trunk                          | x86-64 clang (trunk)
+clang_widberg                         | x86-64 clang (widberg)
+cclang_widberg                        | x86-64 clang (widberg)
+clang1000                             | x86-64 clang 10.0.0
+llvmas1000                            | x86-64 clang 10.0.0
+cclang1000                            | x86-64 clang 10.0.0
+clang1001                             | x86-64 clang 10.0.1
+llvmas1001                            | x86-64 clang 10.0.1
+cclang1001                            | x86-64 clang 10.0.1
+clang1100                             | x86-64 clang 11.0.0
+llvmas1100                            | x86-64 clang 11.0.0
+cclang1100                            | x86-64 clang 11.0.0
+clang1101                             | x86-64 clang 11.0.1
+llvmas1101                            | x86-64 clang 11.0.1
+cclang1101                            | x86-64 clang 11.0.1
+clang1200                             | x86-64 clang 12.0.0
+llvmas1200                            | x86-64 clang 12.0.0
+cclang1200                            | x86-64 clang 12.0.0
+clang1201                             | x86-64 clang 12.0.1
+llvmas1201                            | x86-64 clang 12.0.1
+cclang1201                            | x86-64 clang 12.0.1
+clang1300                             | x86-64 clang 13.0.0
+llvmas1300                            | x86-64 clang 13.0.0
+cclang1300                            | x86-64 clang 13.0.0
+clang1301                             | x86-64 clang 13.0.1
+cclang1301                            | x86-64 clang 13.0.1
+clang1400                             | x86-64 clang 14.0.0
+llvmas1400                            | x86-64 clang 14.0.0
+cclang1400                            | x86-64 clang 14.0.0
+clang1500                             | x86-64 clang 15.0.0
+llvmas1500                            | x86-64 clang 15.0.0
+cclang1500                            | x86-64 clang 15.0.0
+clang1600                             | x86-64 clang 16.0.0
+llvmas1600                            | x86-64 clang 16.0.0
+cclang1600                            | x86-64 clang 16.0.0
+clang30                               | x86-64 clang 3.0.0
+llvmas30                              | x86-64 clang 3.0.0
+cclang30                              | x86-64 clang 3.0.0
+clang31                               | x86-64 clang 3.1
+llvmas31                              | x86-64 clang 3.1
+cclang31                              | x86-64 clang 3.1
+clang32                               | x86-64 clang 3.2
+llvmas32                              | x86-64 clang 3.2
+cclang32                              | x86-64 clang 3.2
+clang33                               | x86-64 clang 3.3
+llvmas33                              | x86-64 clang 3.3
+cclang33                              | x86-64 clang 3.3
+clang341                              | x86-64 clang 3.4.1
+llvmas341                             | x86-64 clang 3.4.1
+cclang341                             | x86-64 clang 3.4.1
+clang350                              | x86-64 clang 3.5
+llvmas350                             | x86-64 clang 3.5
+cclang350                             | x86-64 clang 3.5
+clang351                              | x86-64 clang 3.5.1
+llvmas351                             | x86-64 clang 3.5.1
+cclang351                             | x86-64 clang 3.5.1
+clang352                              | x86-64 clang 3.5.2
+llvmas352                             | x86-64 clang 3.5.2
+cclang352                             | x86-64 clang 3.5.2
+clang36x                              | x86-64 clang 3.6
+llvmas36x                             | x86-64 clang 3.6
+cclang36x                             | x86-64 clang 3.6
+clang37x                              | x86-64 clang 3.7
+llvmas37x                             | x86-64 clang 3.7
+cclang37x                             | x86-64 clang 3.7
+clang371                              | x86-64 clang 3.7.1
+llvmas371                             | x86-64 clang 3.7.1
+cclang371                             | x86-64 clang 3.7.1
+clang380                              | x86-64 clang 3.8
+llvmas380                             | x86-64 clang 3.8
+cclang380                             | x86-64 clang 3.8
+clang381                              | x86-64 clang 3.8.1
+llvmas381                             | x86-64 clang 3.8.1
+cclang381                             | x86-64 clang 3.8.1
+clang390                              | x86-64 clang 3.9.0
+llvmas390                             | x86-64 clang 3.9.0
+cclang390                             | x86-64 clang 3.9.0
+clang391                              | x86-64 clang 3.9.1
+llvmas391                             | x86-64 clang 3.9.1
+cclang391                             | x86-64 clang 3.9.1
+clang400                              | x86-64 clang 4.0.0
+llvmas400                             | x86-64 clang 4.0.0
+cclang400                             | x86-64 clang 4.0.0
+clang401                              | x86-64 clang 4.0.1
+llvmas401                             | x86-64 clang 4.0.1
+cclang401                             | x86-64 clang 4.0.1
+clang500                              | x86-64 clang 5.0.0
+llvmas500                             | x86-64 clang 5.0.0
+cclang500                             | x86-64 clang 5.0.0
+clang501                              | x86-64 clang 5.0.1
+cclang501                             | x86-64 clang 5.0.1
+clang502                              | x86-64 clang 5.0.2
+cclang502                             | x86-64 clang 5.0.2
+clang600                              | x86-64 clang 6.0.0
+llvmas600                             | x86-64 clang 6.0.0
+cclang600                             | x86-64 clang 6.0.0
+clang601                              | x86-64 clang 6.0.1
+cclang601                             | x86-64 clang 6.0.1
+clang700                              | x86-64 clang 7.0.0
+llvmas700                             | x86-64 clang 7.0.0
+cclang700                             | x86-64 clang 7.0.0
+clang701                              | x86-64 clang 7.0.1
+cclang701                             | x86-64 clang 7.0.1
+clang710                              | x86-64 clang 7.1.0
+cclang710                             | x86-64 clang 7.1.0
+clang800                              | x86-64 clang 8.0.0
+llvmas800                             | x86-64 clang 8.0.0
+cclang800                             | x86-64 clang 8.0.0
+clang801                              | x86-64 clang 8.0.1
+cclang801                             | x86-64 clang 8.0.1
+clang900                              | x86-64 clang 9.0.0
+llvmas900                             | x86-64 clang 9.0.0
+cclang900                             | x86-64 clang 9.0.0
+clang901                              | x86-64 clang 9.0.1
+cclang901                             | x86-64 clang 9.0.1
+clang-rocm-40502                      | x86-64 clang rocm-4.5.2
+clang-rocm-50002                      | x86-64 clang rocm-5.0.2
+clang-rocm-50103                      | x86-64 clang rocm-5.1.3
+clang-rocm-50203                      | x86-64 clang rocm-5.2.3
+clang-rocm-50303                      | x86-64 clang rocm-5.3.3
+clean_trunk                           | x86-64 clean (trunk)
+clean24_64                            | x86-64 clean 2.4
+clean30_64                            | x86-64 clean 3.0
+fpc260                                | x86-64 fpc 2.6.0
+fpc262                                | x86-64 fpc 2.6.2
+fpc264                                | x86-64 fpc 2.6.4
+fpc302                                | x86-64 fpc 3.0.2
+fpc304                                | x86-64 fpc 3.0.4
+fpc320                                | x86-64 fpc 3.2.0
+fpc322                                | x86-64 fpc 3.2.2
+gltip                                 | x86-64 gc (tip)
+gl1100                                | x86-64 gc 1.10
+gl1101                                | x86-64 gc 1.10.1
+gl1110                                | x86-64 gc 1.11
+gl1120                                | x86-64 gc 1.12
+gl1130                                | x86-64 gc 1.13
+gl1140                                | x86-64 gc 1.14
+gl1150                                | x86-64 gc 1.15
+gl1160                                | x86-64 gc 1.16
+gl1170                                | x86-64 gc 1.17
+gl1180                                | x86-64 gc 1.18
+gl1190                                | x86-64 gc 1.19
+6g141                                 | x86-64 gc 1.4.1
+gl172                                 | x86-64 gc 1.7.2
+gl185                                 | x86-64 gc 1.8.5
+gl187                                 | x86-64 gc 1.8.7
+gl192                                 | x86-64 gc 1.9.2
+gl194                                 | x86-64 gc 1.9.4
+gcontract-labels-trunk                | x86-64 gcc (contract labels)
+gcontracts-trunk                      | x86-64 gcc (contracts)
+gcxx-coroutines-trunk                 | x86-64 gcc (coroutines)
+gcxx-modules-trunk                    | x86-64 gcc (modules)
+gcc-static-analysis-trunk             | x86-64 gcc (static analysis)
+cgstatic-analysis                     | x86-64 gcc (static analysis)
+gcc-embed-trunk                       | x86-64 gcc (std::embed)
+gsnapshot                             | x86-64 gcc (trunk)
+cgsnapshot                            | x86-64 gcc (trunk)
+objcgsnapshot                         | x86-64 gcc (trunk)
+objcppgsnapshot                       | x86-64 gcc (trunk)
+g101                                  | x86-64 gcc 10.1
+cg101                                 | x86-64 gcc 10.1
+g102                                  | x86-64 gcc 10.2
+cg102                                 | x86-64 gcc 10.2
+g103                                  | x86-64 gcc 10.3
+cg103                                 | x86-64 gcc 10.3
+g104                                  | x86-64 gcc 10.4
+cg104                                 | x86-64 gcc 10.4
+g111                                  | x86-64 gcc 11.1
+cg111                                 | x86-64 gcc 11.1
+g112                                  | x86-64 gcc 11.2
+cg112                                 | x86-64 gcc 11.2
+g113                                  | x86-64 gcc 11.3
+cg113                                 | x86-64 gcc 11.3
+g121                                  | x86-64 gcc 12.1
+cg121                                 | x86-64 gcc 12.1
+g122                                  | x86-64 gcc 12.2
+cg122                                 | x86-64 gcc 12.2
+objcg122                              | x86-64 gcc 12.2
+objcppg122                            | x86-64 gcc 12.2
+g412                                  | x86-64 gcc 4.1.2
+cg412                                 | x86-64 gcc 4.1.2
+g447                                  | x86-64 gcc 4.4.7
+cg447                                 | x86-64 gcc 4.4.7
+g453                                  | x86-64 gcc 4.5.3
+cg453                                 | x86-64 gcc 4.5.3
+g464                                  | x86-64 gcc 4.6.4
+cg464                                 | x86-64 gcc 4.6.4
+g471                                  | x86-64 gcc 4.7.1
+cg471                                 | x86-64 gcc 4.7.1
+g472                                  | x86-64 gcc 4.7.2
+cg472                                 | x86-64 gcc 4.7.2
+g473                                  | x86-64 gcc 4.7.3
+cg473                                 | x86-64 gcc 4.7.3
+g474                                  | x86-64 gcc 4.7.4
+cg474                                 | x86-64 gcc 4.7.4
+g481                                  | x86-64 gcc 4.8.1
+cg481                                 | x86-64 gcc 4.8.1
+g482                                  | x86-64 gcc 4.8.2
+cg482                                 | x86-64 gcc 4.8.2
+g483                                  | x86-64 gcc 4.8.3
+cg483                                 | x86-64 gcc 4.8.3
+g484                                  | x86-64 gcc 4.8.4
+cg484                                 | x86-64 gcc 4.8.4
+g485                                  | x86-64 gcc 4.8.5
+cg485                                 | x86-64 gcc 4.8.5
+g490                                  | x86-64 gcc 4.9.0
+cg490                                 | x86-64 gcc 4.9.0
+g491                                  | x86-64 gcc 4.9.1
+cg491                                 | x86-64 gcc 4.9.1
+g492                                  | x86-64 gcc 4.9.2
+cg492                                 | x86-64 gcc 4.9.2
+g493                                  | x86-64 gcc 4.9.3
+cg493                                 | x86-64 gcc 4.9.3
+g494                                  | x86-64 gcc 4.9.4
+cg494                                 | x86-64 gcc 4.9.4
+g510                                  | x86-64 gcc 5.1
+cg510                                 | x86-64 gcc 5.1
+g520                                  | x86-64 gcc 5.2
+cg520                                 | x86-64 gcc 5.2
+g530                                  | x86-64 gcc 5.3
+cg530                                 | x86-64 gcc 5.3
+g540                                  | x86-64 gcc 5.4
+cg540                                 | x86-64 gcc 5.4
+g550                                  | x86-64 gcc 5.5
+g6                                    | x86-64 gcc 6.1
+cg6                                   | x86-64 gcc 6.1
+g62                                   | x86-64 gcc 6.2
+cg62                                  | x86-64 gcc 6.2
+g63                                   | x86-64 gcc 6.3
+cg63                                  | x86-64 gcc 6.3
+g64                                   | x86-64 gcc 6.4
+g71                                   | x86-64 gcc 7.1
+cg71                                  | x86-64 gcc 7.1
+g72                                   | x86-64 gcc 7.2
+cg72                                  | x86-64 gcc 7.2
+g73                                   | x86-64 gcc 7.3
+cg73                                  | x86-64 gcc 7.3
+g74                                   | x86-64 gcc 7.4
+cg74                                  | x86-64 gcc 7.4
+g75                                   | x86-64 gcc 7.5
+g81                                   | x86-64 gcc 8.1
+cg81                                  | x86-64 gcc 8.1
+g82                                   | x86-64 gcc 8.2
+cg82                                  | x86-64 gcc 8.2
+g83                                   | x86-64 gcc 8.3
+cg83                                  | x86-64 gcc 8.3
+g84                                   | x86-64 gcc 8.4
+cg84                                  | x86-64 gcc 8.4
+g85                                   | x86-64 gcc 8.5
+cg85                                  | x86-64 gcc 8.5
+g91                                   | x86-64 gcc 9.1
+cg91                                  | x86-64 gcc 9.1
+g92                                   | x86-64 gcc 9.2
+cg92                                  | x86-64 gcc 9.2
+g93                                   | x86-64 gcc 9.3
+cg93                                  | x86-64 gcc 9.3
+g94                                   | x86-64 gcc 9.4
+cg94                                  | x86-64 gcc 9.4
+g95                                   | x86-64 gcc 9.5
+cg95                                  | x86-64 gcc 9.5
+gm2snapshot                           | x86-64 gcc gm2 (snapshot)
+gfortransnapshot                      | x86-64 gfortran (trunk)
+gfortran101                           | x86-64 gfortran 10.1
+gfortran102                           | x86-64 gfortran 10.2
+gfortran103                           | x86-64 gfortran 10.3
+gfortran104                           | x86-64 gfortran 10.4
+gfortran111                           | x86-64 gfortran 11.1
+gfortran112                           | x86-64 gfortran 11.2
+gfortran113                           | x86-64 gfortran 11.3
+gfortran121                           | x86-64 gfortran 12.1
+gfortran122                           | x86-64 gfortran 12.2
+gfortran494                           | x86-64 gfortran 4.9.4
+gfortran550                           | x86-64 gfortran 5.5
+gfortran63                            | x86-64 gfortran 6.3
+gfortran71                            | x86-64 gfortran 7.1
+gfortran72                            | x86-64 gfortran 7.2
+gfortran73                            | x86-64 gfortran 7.3
+gfortran81                            | x86-64 gfortran 8.1
+gfortran82                            | x86-64 gfortran 8.2
+gfortran83                            | x86-64 gfortran 8.3
+gfortran84                            | x86-64 gfortran 8.4
+gfortran85                            | x86-64 gfortran 8.5
+gfortran91                            | x86-64 gfortran 9.1
+gfortran92                            | x86-64 gfortran 9.2
+gfortran93                            | x86-64 gfortran 9.3
+gfortran94                            | x86-64 gfortran 9.4
+ghc802                                | x86-64 ghc 8.0.2
+ghc8105                               | x86-64 ghc 8.10.5
+ghc841                                | x86-64 ghc 8.4.1
+ghc842                                | x86-64 ghc 8.4.2
+ghc843                                | x86-64 ghc 8.4.3
+ghc844                                | x86-64 ghc 8.4.4
+ghc861                                | x86-64 ghc 8.6.1
+ghc862                                | x86-64 ghc 8.6.2
+ghc901                                | x86-64 ghc 9.0.1
+ghc921                                | x86-64 ghc 9.2.1
+ghc922                                | x86-64 ghc 9.2.2
+gnatsnapshot                          | x86-64 gnat (trunk)
+gnat102                               | x86-64 gnat 10.2
+gnat104                               | x86-64 gnat 10.4
+gnat111                               | x86-64 gnat 11.1
+gnat112                               | x86-64 gnat 11.2
+gnat113                               | x86-64 gnat 11.3
+gnat121                               | x86-64 gnat 12.1
+gnat122                               | x86-64 gnat 12.2
+gnat82                                | x86-64 gnat 8.2
+gnat95                                | x86-64 gnat 9.5
+icc1301                               | x86-64 icc 13.0.1
+cicc1301                              | x86-64 icc 13.0.1
+icc16                                 | x86-64 icc 16.0.3
+cicc16                                | x86-64 icc 16.0.3
+icc17                                 | x86-64 icc 17.0.0
+cicc17                                | x86-64 icc 17.0.0
+icc18                                 | x86-64 icc 18.0.0
+cicc18                                | x86-64 icc 18.0.0
+icc19                                 | x86-64 icc 19.0.0
+cicc19                                | x86-64 icc 19.0.0
+icc191                                | x86-64 icc 19.0.1
+cicc191                               | x86-64 icc 19.0.1
+icc202112                             | x86-64 icc 2021.1.2
+cicc202112                            | x86-64 icc 2021.1.2
+icc202120                             | x86-64 icc 2021.2.0
+cicc202120                            | x86-64 icc 2021.2.0
+icc202130                             | x86-64 icc 2021.3.0
+cicc202130                            | x86-64 icc 2021.3.0
+icc202140                             | x86-64 icc 2021.4.0
+cicc202140                            | x86-64 icc 2021.4.0
+icc202150                             | x86-64 icc 2021.5.0
+cicc202150                            | x86-64 icc 2021.5.0
+icc202160                             | x86-64 icc 2021.6.0
+cicc202160                            | x86-64 icc 2021.6.0
+icc202170                             | x86-64 icc 2021.7.0
+cicc202170                            | x86-64 icc 2021.7.0
+icc202171                             | x86-64 icc 2021.7.1
+cicc202171                            | x86-64 icc 2021.7.1
+icx202112                             | x86-64 icx 2021.1.2
+cicx202112                            | x86-64 icx 2021.1.2
+icx202120                             | x86-64 icx 2021.2.0
+cicx202120                            | x86-64 icx 2021.2.0
+icx202130                             | x86-64 icx 2021.3.0
+cicx202130                            | x86-64 icx 2021.3.0
+icx202140                             | x86-64 icx 2021.4.0
+cicx202140                            | x86-64 icx 2021.4.0
+icx202200                             | x86-64 icx 2022.0.0
+cicx202200                            | x86-64 icx 2022.0.0
+icx202210                             | x86-64 icx 2022.1.0
+cicx202210                            | x86-64 icx 2022.1.0
+icx202220                             | x86-64 icx 2022.2.0
+cicx202220                            | x86-64 icx 2022.2.0
+icx202221                             | x86-64 icx 2022.2.1
+cicx202221                            | x86-64 icx 2022.2.1
+ifort19                               | x86-64 ifort 19.0.0
+ifort202112                           | x86-64 ifort 2021.1.2
+ifort202120                           | x86-64 ifort 2021.2.0
+ifort202130                           | x86-64 ifort 2021.3.0
+ifort202140                           | x86-64 ifort 2021.4.0
+ifort202150                           | x86-64 ifort 2021.5.0
+ifort202160                           | x86-64 ifort 2021.6.0
+ifort202170                           | x86-64 ifort 2021.7.0
+ifort202171                           | x86-64 ifort 2021.7.1
+ifx202112                             | x86-64 ifx 2021.1.2
+ifx202120                             | x86-64 ifx 2021.2.0
+ifx202130                             | x86-64 ifx 2021.3.0
+ifx202140                             | x86-64 ifx 2021.4.0
+ifx202200                             | x86-64 ifx 2022.0.0
+ifx202210                             | x86-64 ifx 2022.1.0
+ifx202220                             | x86-64 ifx 2022.2.0
+ifx202221                             | x86-64 ifx 2022.2.1
+ocaml4042                             | x86-64 ocamlopt 4.04.2
+ocaml4061                             | x86-64 ocamlopt 4.06.1
+ocaml4071                             | x86-64 ocamlopt 4.07.1
+ocaml4071flambda                      | x86-64 ocamlopt 4.07.1-flambda
+ocaml4081                             | x86-64 ocamlopt 4.08.1
+ocaml4081flambda                      | x86-64 ocamlopt 4.08.1-flambda
+ocaml4090                             | x86-64 ocamlopt 4.09.0
+ocaml4090flambda                      | x86-64 ocamlopt 4.09.0-flambda
+ocaml4091                             | x86-64 ocamlopt 4.09.1
+ocaml4091flambda                      | x86-64 ocamlopt 4.09.1-flambda
+ocaml4100                             | x86-64 ocamlopt 4.10.0
+ocaml4100flambda                      | x86-64 ocamlopt 4.10.0-flambda
+ocaml4101                             | x86-64 ocamlopt 4.10.1
+ocaml4101flambda                      | x86-64 ocamlopt 4.10.1-flambda
+ocaml4102                             | x86-64 ocamlopt 4.10.2
+ocaml4102flambda                      | x86-64 ocamlopt 4.10.2-flambda
+ocaml4111                             | x86-64 ocamlopt 4.11.1
+ocaml4111flambda                      | x86-64 ocamlopt 4.11.1-flambda
+ocaml4112                             | x86-64 ocamlopt 4.11.2
+ocaml4112flambda                      | x86-64 ocamlopt 4.11.2-flambda
+ocaml4120                             | x86-64 ocamlopt 4.12.0
+ocaml4120flambda                      | x86-64 ocamlopt 4.12.0-flambda
+ocaml4131                             | x86-64 ocamlopt 4.13.1
+ocaml4131flambda                      | x86-64 ocamlopt 4.13.1-flambda
+ocaml4140                             | x86-64 ocamlopt 4.14.0
+ocaml4140flambda                      | x86-64 ocamlopt 4.14.0-flambda
+ocaml5000                             | x86-64 ocamlopt 5.0.0
+ocaml5000flambda                      | x86-64 ocamlopt 5.0.0-flambda
+swift311                              | x86-64 swiftc 3.1.1
+swift402                              | x86-64 swiftc 4.0.2
+swift403                              | x86-64 swiftc 4.0.3
+swift41                               | x86-64 swiftc 4.1
+swift411                              | x86-64 swiftc 4.1.1
+swift412                              | x86-64 swiftc 4.1.2
+swift42                               | x86-64 swiftc 4.2
+swift50                               | x86-64 swiftc 5.0
+swift51                               | x86-64 swiftc 5.1
+swift52                               | x86-64 swiftc 5.2
+swift53                               | x86-64 swiftc 5.3
+swift54                               | x86-64 swiftc 5.4
+swift55                               | x86-64 swiftc 5.5
+swift56                               | x86-64 swiftc 5.6
+swift57                               | x86-64 swiftc 5.7
+swiftnightly                          | x86-64 swiftc nightly
+ccx8664_310                           | x86_64 CompCert 3.10
+ccx8664_311                           | x86_64 CompCert 3.11
+ccx8664_312                           | x86_64 CompCert 3.12
+ccx8664_309                           | x86_64 CompCert 3.9
+z88dk22                               | z88dk 2.2
+z0100                                 | zig 0.10.0
+z020                                  | zig 0.2.0
+z030                                  | zig 0.3.0
+z040                                  | zig 0.4.0
+z050                                  | zig 0.5.0
+z060                                  | zig 0.6.0
+z070                                  | zig 0.7.0
+z071                                  | zig 0.7.1
+z080                                  | zig 0.8.0
+z090                                  | zig 0.9.0
+zcxx0100                              | zig c++ 0.10.0
+zcxx060                               | zig c++ 0.6.0
+zcxx070                               | zig c++ 0.7.0
+zcxx071                               | zig c++ 0.7.1
+zcxx080                               | zig c++ 0.8.0
+zcxx090                               | zig c++ 0.9.0
+zcxxtrunk                             | zig c++ trunk
+zcc0100                               | zig cc 0.10.0
+zcc060                                | zig cc 0.6.0
+zcc070                                | zig cc 0.7.0
+zcc071                                | zig cc 0.7.1
+zcc080                                | zig cc 0.8.0
+zcc090                                | zig cc 0.9.0
+zcctrunk                              | zig cc trunk
+ztrunk                                | zig trunk

@@ -1,0 +1,511 @@
+-- stylua: ignore start
+-- stylua: ignore end
+
+https://github.com/williamboman/mason-lspconfig.nvim
+It's important that you set up the plugins in the following order:
+mason.nvim
+mason-lspconfig.nvim
+Setup servers via lspconfig
+
+lazy config
+require('lazy').setup('module.plugins', {
+  root = opt.root,
+  concurrency = 2,
+  defaults = { lazy = true },
+  readme = { enabled = false },
+  performance = { cache = { enabled = false } },
+})
+
+async run lua script
+-- vim.api.nvim_command('echomsg "test"')
+-- require('plenary.async').run(function() require('luasnip.loaders.from_vscode').load() end)
+
+disable snippet
+textDocument.completion.completionItem.snippetSupport = true
+
+curl https://godbolt.org/api/compiler/g63/compile?options=-Wall --data-binary "int foo() { return 1; }"
+curl https://godbolt.org/api/compiler/g122/compile --data-binary @godbolt_request_asm.json --header "Accept: application/json" --header "Content-Type: application/json" --output godbolt_response_asm.json
+
+OS platform test
+-- vim.loop.os_uname().version:match('Windows')
+if jit then
+  return string.lower(jit.os) ~= 'windows' and M.sep() or M.nt_sep()
+if vim.fn.has('win32') == 1 then
+  cmd = { 'explorer', uri }
+  cmd = table.concat(cmd, ' '):gsub(M.kernel_sep(), M.nt_sep())
+elseif vim.fn.has('macunix') == 1 then
+  cmd = { 'open', uri }
+else  
+  M.is_windows = function() return vim.loop.os_uname().sysname == 'Windows_NT' end
+M.is_linux = function() return vim.loop.os_uname().sysname == 'Linux' end
+
+M.cached = cached
+M.installed = function(name)
+  -- if vim.tbl_isempty(cached) then
+  -- for _, plugin in pairs(require('module.plugins')) do
+  -- table.insert(cached, plugin[1])
+  -- end
+  -- end
+  -- return vim.tbl_contains(cached, name)
+  return true
+end
+
+['mrjones2014/legendary.nvim'] = function()
+  local opts = { which_key = { auto_register = true } }
+  opts = vim.tbl_deep_extend('error', opts, bindings.legendary())
+  require('legendary').setup(opts)
+end,
+
+{ 'nvim-neo-tree/neo-tree.nvim', cmd = { 'Neotree' }, config = config('nvim-neo-tree/neo-tree.nvim') },
+['nvim-neo-tree/neo-tree.nvim'] = function()
+  vim.g.neo_tree_remove_legacy_commands = 1
+  local opts = { async_directory_scan = 'never', log_level = 'trace', log_to_file = true, close_if_last_window = true, source_selector = { winbar = false, statusline = false } }
+  opts = vim.tbl_deep_extend('error', opts, bindings.neotree())
+  require('neo-tree').setup(opts)
+end,
+M.setup_autocmd = function()
+  local augroup = vim.api.nvim_create_augroup('bindings.lua', {})
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = augroup,
+    pattern = '*',
+    callback = function(args)
+      local info = vim.loop.fs_stat(args.file)
+      if info and info.type == 'directory' then
+        require('module.settings').config('nvim-neo-tree/neo-tree.nvim')()
+        vim.cmd('Neotree position=current ' .. args.file)
+      end
+    end,
+    desc = 'Hijack Directories',
+  })
+end
+M.neotree = function()
+  local telescope = require('telescope.builtin')
+  local fs = require('neo-tree.sources.filesystem')
+  return {
+    window = {
+      mappings = {
+        ['e'] = function() vim.api.nvim_exec('Neotree focus filesystem left', true) end,
+        ['b'] = function() vim.api.nvim_exec('Neotree focus buffers left', true) end,
+        ['g'] = function() vim.api.nvim_exec('Neotree focus git_status left', true) end,
+      },
+    },
+    filesystem = {
+      window = {
+        mappings = {
+          ['O'] = 'system_open',
+          ['tf'] = 'telescope_find',
+          ['tg'] = 'telescope_grep',
+        },
+      },
+      commands = {
+        system_open = function(state)
+          local path = state.tree:get_node():get_id()
+          require('base').open(path)
+        end,
+        telescope_find = function(state)
+          local path = state.tree:get_node():get_id()
+          telescope.find_files(get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state))
+        end,
+        telescope_grep = function(state)
+          local path = state.tree:get_node():get_id()
+          telescope.live_grep(get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state))
+        end,
+      },
+    },
+  }
+end
+
+{ 'anuvyklack/hydra.nvim' },
+-- local nvim_tree_hydra = nil
+-- local nt_au_group = vim.api.nvim_create_augroup('NvimTreeHydraAu', { clear = true })
+-- local function spawn_nvim_tree_hydra()
+--   local hydraopts = {
+--     name = 'NvimTree',
+--     config = { color = 'pink', invoke_on_body = true, buffer = 0, hint = { position = 'bottom', border = 'rounded' } },
+--     mode = 'n',
+--     body = 'H',
+--   }
+--   hydraopts = vim.tbl_deep_extend('error', hydraopts, bindings.nvim_tree_hydra())
+--   nvim_tree_hydra = require('hydra')(hydraopts)
+--   nvim_tree_hydra:activate()
+-- end
+-- vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+--   pattern = '*',
+--   callback = function(opts)
+--     if vim.bo[opts.buf].filetype == 'NvimTree' then
+--       spawn_nvim_tree_hydra()
+--     else
+--       if nvim_tree_hydra then
+--         nvim_tree_hydra:exit()
+--       end
+--     end
+--   end,
+--   group = nt_au_group,
+-- })
+M.nvim_tree_hydra = function()
+  local hint = [[
+    _w_: cd CWD   _c_: Path yank    _/_: Filter
+    _y_: Copy     _x_: Cut          _p_: Paste
+    _r_: Rename   _d_: Remove       _n_: New
+    _h_: Hidden   _?_: Help
+    ^
+    ]]
+  return {
+    hint = hint,
+    heads = {
+      { 'w', require('nvim-tree.api').tree.change_root(vim.fn.getcwd()), { silent = true } },
+      { 'c', require('nvim-tree.api').fs.copy.absolute_path, { silent = true } },
+      { '/', require('nvim-tree.api').live_filter.start, { silent = true } },
+      { 'y', require('nvim-tree.api').fs.copy.node, { silent = true } },
+      { 'x', require('nvim-tree.api').fs.cut, { exit = true, silent = true } },
+      { 'p', require('nvim-tree.api').fs.paste, { exit = true, silent = true } },
+      { 'r', require('nvim-tree.api').fs.rename, { silent = true } },
+      { 'd', require('nvim-tree.api').fs.remove, { silent = true } },
+      { 'n', require('nvim-tree.api').fs.create, { silent = true } },
+      { 'h', require('nvim-tree.api').tree.toggle_hidden_filter, { silent = true } },
+      { '?', require('nvim-tree.api').tree.toggle_help, { silent = true } },
+    },
+  }
+end
+
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded', width = 60 })
+
+-- vim.cmd([[
+--   nnoremap ; :
+--   nnoremap : ;
+--   vnoremap ; :
+--   vnoremap : ;
+-- ]])
+
+-- vim.cmd([[
+--   command -nargs=+ LspHover lua vim.lsp.buf.hover()
+--   set keywordprg=:LspHover
+-- ]])  
+
+-- ['folke/tokyonight.nvim'] = function() vim.cmd([[colorscheme tokyonight]]) end,
+
+
+{ 'rcarriga/nvim-notify', config = config('rcarriga/nvim-notify') },
+['rcarriga/nvim-notify'] = function()
+  require('notify').setup()
+  vim.notify = require('notify')
+end,
+
+{ 'folke/noice.nvim', config = config('folke/noice.nvim') },
+['folke/noice.nvim'] = function()
+  require('noice').setup({
+    lsp = {
+      -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+      override = {
+        ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+        ['vim.lsp.util.stylize_markdown'] = true,
+        ['cmp.entry.get_documentation'] = true,
+      },
+    },
+    -- you can enable a preset for easier configuration
+    presets = {
+      bottom_search = true, -- use a classic bottom cmdline for search
+      command_palette = true, -- position the cmdline and popupmenu together
+      long_message_to_split = true, -- long messages will be sent to a split
+      inc_rename = false, -- enables an input dialog for inc-rename.nvim
+      lsp_doc_border = false, -- add a border to hover docs and signature help
+    },
+  })
+end,
+
+{ 'MunifTanjim/nui.nvim' },
+
+-- CmdLine
+{ 'VonHeikemen/fine-cmdline.nvim', config = config('VonHeikemen/fine-cmdline.nvim'), cmd = { 'FineCmdline' } },
+['VonHeikemen/fine-cmdline.nvim'] = function() require('fine-cmdline').setup({ cmdline = { prompt = ' > ' } }) end,
+M.map('n', '<M-cr>', '<cmd>FineCmdline<cr>', { noremap = true, desc = 'Fine Cmdline... (fine-cmdline.nvim)' })
+
+{ 'nvim-lualine/lualine.nvim', enabled = false, event = 'VeryLazy', config = config('nvim-lualine/lualine.nvim') },
+['nvim-lualine/lualine.nvim'] = function()
+  local function lsp_active()
+    local names = {}
+    for _, client in pairs(vim.lsp.get_active_clients()) do
+      table.insert(names, client.name)
+    end
+    return 'LSP<' .. table.concat(names, ', ') .. '>'
+  end
+  local function location() return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) end
+  local fileformat = { 'fileformat', icons_enabled = false }
+  require('lualine').setup({ sections = {
+    lualine_x = { lsp_active, 'encoding', fileformat, 'filetype' },
+    lualine_z = { location },
+  } })
+end,
+
+{ 'glepnir/flybuf.nvim', cmd = 'FlyBuf', config = config('glepnir/flybuf.nvim') },
+['glepnir/flybuf.nvim'] = function() require('flybuf').setup({}) end,
+
+shortmess = {
+  -- t = true, -- truncate file messages at start
+  -- A = true, -- ignore annoying swap file messages
+  o = true, -- file-read message overwrites previous
+  O = true, -- file-read message overwrites previous
+  -- T = true, -- truncate non-file messages in middle
+  -- f = true, -- (file x of x) instead of just (x of x
+  -- F = true, -- Don't give file info when editing a file, NOTE: this breaks autocommand messages
+  -- s = true,
+  -- c = true,
+  -- W = true, -- Don't show [w] or written when writing
+},
+
+['tanvirtin/vgit.nvim'] = function() require('vgit').setup() end,
+{ 'tanvirtin/vgit.nvim', config = config('tanvirtin/vgit.nvim') },
+v = {
+  name = 'VGit',
+  s = { [[<cmd>lua require('vgit').buffer_hunk_stage()<cr>]], 'Buffer Hunk Stage' },
+  r = { [[<cmd>lua require('vgit').buffer_hunk_reset()<cr>]], 'Buffer Hunk Reset' },
+  p = { [[<cmd>lua require('vgit').buffer_hunk_preview()<cr>]], 'Buffer Hunk Preview' },
+  b = { [[<cmd>lua require('vgit').buffer_blame_preview()<cr>]], 'Buffer Blame Preview' },
+  f = { [[<cmd>lua require('vgit').buffer_diff_preview()<cr>]], 'Buffer Diff Preview' },
+  h = { [[<cmd>lua require('vgit').buffer_history_preview()<cr>]], 'Buffer History Preview' },
+  u = { [[<cmd>lua require('vgit').buffer_reset()<cr>]], 'Buffer Reset' },
+  g = { [[<cmd>lua require('vgit').buffer_gutter_blame_preview()<cr>]], 'Buffer Gutter Blame Preview' },
+  d = { [[<cmd>lua require('vgit').project_diff_preview()<cr>]], 'Project Diff Preview' },
+  q = { [[<cmd>lua require('vgit').project_hunks_qf()<cr>]], 'Project Hunks QF' },
+  x = { [[<cmd>lua require('vgit').toggle_diff_preference()<cr>]], 'Toggle Diff Preference' },
+  l = { [[<cmd>lua require('vgit').buffer_hunks_preview()<cr>]], 'Buffer Hunks Preview' },
+  m = { [[<cmd>lua require('vgit').project_hunks_staged_preview()<cr>]], 'Project Hunks Staged Preview' },
+},
+
+{ 'glepnir/lspsaga.nvim', cmd = { 'Lspsaga' }, config = config('glepnir/lspsaga.nvim') },
+{ 'L', '<cmd>Lspsaga show_line_diagnostics<cr>', 'Show Line Diagnostics' },
+l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
+['glepnir/lspsaga.nvim'] = function() require('lspsaga').setup({ ui = { diagnostic = ' ' } }) end,
+
+{ 'TimUntersberger/neogit', cmd = { 'Neogit' }, config = config('TimUntersberger/neogit') },
+['TimUntersberger/neogit'] = function() require('neogit').setup() end,
+n = { '<cmd>Neogit<cr>', 'Neogit' },
+
+{ 'qpkorr/vim-bufkill', cmd = { 'BD' } },
+{ 'moll/vim-bbye', cmd = { 'Bdelete' } },
+b = {
+  name = 'Buffer',
+  b = { '<cmd>Buffers<cr>', 'Buffers' },
+  h = { '<cmd>bprevious<cr>', 'Previous' },
+  l = { '<cmd>bnext<cr>', 'Next' },
+  k = { '<cmd>bfirst<cr>', 'First' },
+  j = { '<cmd>blast<cr>', 'Last' },
+  d = { '<cmd>BD<cr>', 'Delete' },
+  o = { '<cmd>BufferCloseOthers<cr>', 'Only, Close Others' },
+  a = { '', 'CloseAll' },
+  f = { '<cmd>FlyBuf<cr>', 'Show All Buffers' },
+},
+
+
+vim.cmd([[
+  silent! autocmd! FileExplorer *
+]])
+M.setup_autocmd = function()
+  local augroup = vim.api.nvim_create_augroup('bindings.lua', {})
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = augroup,
+    pattern = '*',
+    callback = function(args)
+      local info = vim.loop.fs_stat(args.file)
+      if info and info.type == 'directory' then
+        require('module.settings').config('nvim-tree/nvim-tree.lua')()
+        require('nvim-tree.api').tree.toggle({ path = args.file, find_file = true })
+      end
+    end,
+    desc = 'Hijack Directories',
+  })
+end
+
+{ 'weilbith/nvim-code-action-menu', cmd = { 'CodeActionMenu' }, ft = { 'c', 'cpp' }, config = config('weilbith/nvim-code-action-menu') },
+['weilbith/nvim-code-action-menu'] = function() vim.g.code_action_menu_window_border = 'single' end,
+
+M.map('n', [[\]], '<cmd>Telescope cmdline<cr>', { noremap = true, desc = 'Cmdline... (telescope-cmdline.nvim)' })
+{ 'jonarrien/telescope-cmdline.nvim' },
+telescope.load_extension('cmdline')
+
+
+  -- { 'williamboman/mason.nvim' },
+  -- { 'williamboman/mason-lspconfig.nvim' },
+  M.mason = function()
+    require('mason').setup()
+    require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
+  end
+  -- It's important that you set up the plugins in the following order:
+M.setup = function()
+  -- M.mason()
+  M.lsp()
+end
+
+local ex = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+ex.textDocument.completion.completionItem.snippetSupport = true
+ex.textDocument.completion.completionItem.resolveSupport = { properties = { 'documentation', 'detail', 'additionalTextEdits' } }
+return ex
+
+-- completion = { completeopt = 'menuone, noinsert, noselect' },
+-- { 'rafamadriz/friendly-snippets' },
+-- require('luasnip').config.set_config({ history = true, updateevents = 'TextChanged, TextChangedI' })
+-- sync load luasnip cust ~600ms
+-- vim.loop.new_timer():start(3000, 0, vim.schedule_wrap(function() require('luasnip.loaders.from_vscode').load() end))
+-- formatting = {
+--   fields = { 'kind', 'abbr', 'menu' },
+--   format = function(entry, vim_item)
+--     vim_item.menu = ({ nvim_lsp = '[LSP]', buffer = '[Buffer]', path = '[Path]', luasnip = '[Snippet]' })[entry.source.name]
+--     local max = 45
+--     local content = vim_item.abbr
+--     if #content > max then
+--       vim_item.abbr = vim.fn.strcharpart(content, 0, max) .. '…'
+--     else
+--       vim_item.abbr = content .. (' '):rep(max - #content)
+--     end
+--     return vim_item
+--   end,
+-- },
+
+sources = { { name = 'nvim_lsp' }, { name = 'buffer' }, { name = 'path' }, { name = 'luasnip' } },
+{ 'saadparwaiz1/cmp_luasnip' },
+completion = { completeopt = 'menuone, noinsert, noselect' },
+experimental = { ghost_text = true },
+
+local lsp_capabilities = (function()
+  local ex = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  ex.textDocument.completion.completionItem.snippetSupport = true
+  return ex
+end)()
+
+--- search windows lua runtime files
+require('mason').setup()
+require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })  
+{ 'williamboman/mason.nvim' },
+{ 'williamboman/mason-lspconfig.nvim' },  
+
+{ 'hrsh7th/cmp-buffer' },
+{ 'hrsh7th/nvim-cmp', event = { 'BufReadPost' }, config = config('hrsh7th/nvim-cmp'), dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp' } },
+cmp.setup.cmdline('/', { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } })
+sources = { { name = 'nvim_lsp' }, { name = 'buffer' }, { name = 'path' } },
+
+-- https://godbolt.org/api/compilers/
+-- https://godbolt.org/api/libraries/
+require('godbolt').setup({
+  languages = {
+    -- vc2017_64
+    cpp = { compiler = 'vc2017_64', options = {} },
+    -- cpp = { compiler = 'g122', options = {} },
+    -- c = { compiler = 'cg122', options = {} },
+    -- any_additional_filetype = { compiler = ..., options = ... },
+  },
+  quickfix = {
+    enable = false, -- whether to populate the quickfix list in case of errors
+    auto_open = false, -- whether to open the quickfix list in case of errors
+  },
+  url = 'https://godbolt.org', -- can be changed to a different godbolt instance
+})
+
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+end
+
+elseif has_words_before() then
+  cmp.complete()
+
+  
+
+-- e = { function() require('base').reveal_in_tree() end, 'Reveal In Tree' },
+-- c = { '<cmd>Telescope registers<cr>', 'Register Cached' },
+-- C = { function() require('base').reveal_cwd_in_file_explorer() end, 'Reveal CWD In File Explorer' },
+l = { '<cmd>Telescope live_grep<cr>', 'Find Text' },
+r = { '<cmd>Telescope oldfiles<cr>', 'Recently Used Files' },
+
+local opts = {}
+opts = vim.tbl_deep_extend('error', opts, bindings.toggleterm())
+
+blend  -- Window transparency (0-100)
+blend是混合的意思
+透明是通过把当前窗口和背景混合起来
+当blend设置为0，自然说明没有这种计算，也即是不透明
+
+M.reveal_in_tree = function() require('nvim-tree.api').tree.find_file({ open = true, update_root = true }) end
+
+
+  { 'folke/trouble.nvim', cmd = { 'TroubleToggle' }, config = config('folke/trouble.nvim') },
+  { 'lukas-reineke/indent-blankline.nvim', event = { 'BufReadPost', 'BufNewFile' }, config = config('lukas-reineke/indent-blankline.nvim') },
+  { 'folke/trouble.nvim', cmd = { 'TroubleToggle' } },
+  { 'lukas-reineke/indent-blankline.nvim', event = { 'BufReadPost', 'BufNewFile' } },
+
+  ['kazhala/close-buffers.nvim'] = function() require('close_buffers').setup({}) end,
+  ['folke/trouble.nvim'] = function() require('trouble').setup({ icons = false }) end,
+  ['lukas-reineke/indent-blankline.nvim'] = function() require('indent_blankline').setup() end,
+  
+  ['sindrets/diffview.nvim'] = function() require('diffview').setup() end,  
+
+
+{ 'nvim-telescope/telescope-frecency.nvim' },
+telescope.load_extension('frecency')
+
+trying to get preamble for non-added document
+重启一下LSP可以解决问题
+
+a = { '<cmd>ClangAST<cr>', 'Clang AST' },
+t = { '<cmd>ClangdTypeHierarchy<cr>', 'Clang Type Hierarchy' },
+h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ header/source' },
+m = { '<cmd>ClangdMemoryUsage<cr>', 'Clangd Memory Usage' },
+
+require('clangd_extensions').setup({ server = { filetypes = { 'c', 'cpp' }, on_attach = lsp_on_attach, capabilities = lsp_capabilities } })
+{ 'p00f/clangd_extensions.nvim' },
+
+p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
+u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
+c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
+
+s = {
+  name = 'Search',
+  f = { function() require('spectre').open_file_search() end, 'Search File' },
+  p = { function() require('spectre').open() end, 'Search Project' },
+},
+['nvim-pack/nvim-spectre'] = function() require('spectre').setup(bindings.spectre()) end,
+{ 'nvim-pack/nvim-spectre', config = config('nvim-pack/nvim-spectre') },
+
+['kkharji/sqlite.lua'] = function()
+  if require('base').is_windows() then
+    local nvim = 'nvim.exe'
+    vim.g.sqlite_clib_path = string.sub(vim.loop.exepath(nvim), 1, -(#nvim + 1)) .. 'sqlite3.dll'
+  end
+end,
+{ 'kkharji/sqlite.lua', config = config('kkharji/sqlite.lua') },
+
+vim.cmd([[highlight FidgetTitle ctermfg=110 guifg=#0887c7]])
+vim.cmd([[highlight FidgetTask ctermfg=110 guifg=#0887c7]])
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('LspAttach_inlayhints', {}),
+  callback = function(args)
+    if not (args.data and args.data.client_id) then
+      return
+    end
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    require('lsp-inlayhints').on_attach(client, args.buf)
+  end,
+})
+{ 'lvimuser/lsp-inlayhints.nvim', event = 'LspAttach', config = config('lvimuser/lsp-inlayhints.nvim') },
+
+local opts = { inlay_hints = { parameter_hints = { remove_colon_start = true }, type_hints = { prefix = ' ', remove_colon_start = true } } }
+
+['j-hui/fidget.nvim'] = function() require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } }) end,
+['ray-x/lsp_signature.nvim'] = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
+
+n = { function() _any_toggle('nnn') end, 'nnn' },
+
+-- n = { function() require('nnn').toggle('picker', { require('base').get_contain_directory() }) end, 'nnn Explorer' },
+-- n = { '<cmd>NnnPicker require("base").get_contain_directory()<cr>', 'nnn Explorer' },
+n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
+
+M.spectre = function()
+  return { mapping = {
+    ['close_search'] = {
+      map = '<c-w>',
+      cmd = '<cmd>close<cr>',
+      desc = 'close',
+    },
+  } }
+end
+
