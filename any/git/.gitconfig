@@ -1,0 +1,14 @@
+[user]
+	email = luozhiya@petalmail.com
+	name = luozhiya
+[http]
+	sslverify = false
+	proxy = http://127.0.0.1:38457
+	postBuffer = 524288000
+[https]
+	sslverify = false
+	proxy = http://127.0.0.1:38457
+[credential]
+	helper = store
+[init]
+	defaultBranch = master

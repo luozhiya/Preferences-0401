@@ -1,0 +1,12 @@
+{
+	"bootstrapped": true,
+	"installed_packages":
+	[
+		"Package Control",
+		"Terminal",
+		"Visual Studio Code Plus Scheme",
+	],
+	"in_process_packages":
+	[
+	],
+}

@@ -1,0 +1,7 @@
+# Created by newuser for 5.9
+
+autoload -Uz compinit promptinit
+compinit
+promptinit
+prompt clint
+zstyle ':completion::complete:*' gain-privileges 1

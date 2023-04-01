@@ -1,0 +1,20 @@
+{
+	"color_scheme": "Dark+.sublime-color-scheme",
+	"theme": "Default Dark.sublime-theme",
+	"font_size": 11,
+	"ui_scale": 1.5,
+	"default_line_ending": "unix",
+	"hot_exit_projects": false,
+	"hot_exit": "disabled",
+	"draw_white_space": ["selection_none"],
+	"ignored_packages":
+	[
+		"Vintage",
+	],
+	"show_encoding": true,
+	"show_line_endings": true,
+	"show_spelling_errors": false,
+	"remember_workspace": false,
+	"open_files_in_new_window": "always",
+	"close_windows_when_empty": true,
+}
