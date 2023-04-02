@@ -75,10 +75,7 @@ M.config = function(name)
           url = 'http://localhost:10240', -- https://godbolt.org
         })
       end,
-      ['lvimuser/lsp-inlayhints.nvim'] = function()
-        local opts = { inlay_hints = { parameter_hints = { prefix = '< ', remove_colon_start = true }, type_hints = { prefix = '< ', remove_colon_start = true } } }
-        require('lsp-inlayhints').setup(opts)
-      end,
+      ['lvimuser/lsp-inlayhints.nvim'] = function() require('lsp-inlayhints').setup() end,
       ['luukvbaal/nnn.nvim'] = function() require('nnn').setup() end,
       ['mhartington/formatter.nvim'] = function()
         require('formatter').setup({
@@ -102,6 +99,27 @@ M.config = function(name)
               click = 'v:lua.ScFa',
             },
           },
+        })
+      end,
+      ['petertriho/nvim-scrollbar'] = function()
+        local scrollbar = require('scrollbar')
+        local colors = require('tokyonight.colors').setup()
+        scrollbar.setup({
+          handle = { color = colors.bg_highlight },
+          excluded_filetypes = { 'prompt', 'TelescopePrompt', 'noice', 'notify' },
+          marks = {
+            Search = { color = colors.orange },
+            Error = { color = colors.error },
+            Warn = { color = colors.warning },
+            Info = { color = colors.info },
+            Hint = { color = colors.hint },
+            Misc = { color = colors.purple },
+          },
+        })
+      end,
+      ['kevinhwang91/nvim-hlslens'] = function()
+        require('hlslens').setup({
+          build_position_cb = function(plist, _, _, _) require('scrollbar.handlers.search').handler.show(plist.start_pos) end,
         })
       end,
     }

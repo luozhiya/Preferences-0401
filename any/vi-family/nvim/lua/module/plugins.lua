@@ -32,6 +32,8 @@ M.list = {
   { 'akinsho/toggleterm.nvim', cmd = { 'ToggleTerm' }, config = config('akinsho/toggleterm.nvim') },
   { 'folke/tokyonight.nvim', lazy = false, priority = 1000 },
   { 'luukvbaal/statuscol.nvim', event = 'BufReadPost', config = config('luukvbaal/statuscol.nvim') },
+  { 'petertriho/nvim-scrollbar', event = 'BufReadPost', config = config('petertriho/nvim-scrollbar') },
+  { 'kevinhwang91/nvim-hlslens', event = 'BufReadPost', config = config('kevinhwang91/nvim-hlslens')},
   -- Edit
   { 'tpope/vim-obsession', cmd = { 'Obsession' } },
   { 'windwp/nvim-autopairs' },

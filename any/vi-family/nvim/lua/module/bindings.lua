@@ -361,8 +361,7 @@ M.setup_comands = function()
     end
   end
   local _close_view = function()
-    local wins = vim.api.nvim_list_wins()
-    if #wins == 1 then
+    if #vim.api.nvim_list_wins() == 1 then
       require('close_buffers').delete({ type = 'this' })
     else
       vim.api.nvim_win_close(0, true)
@@ -388,6 +387,16 @@ M.setup_autocmd = function()
         once = true,
         command = 'normal! zx',
       })
+    end,
+  })
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('NvimTreeClose', { clear = true }),
+    pattern = 'NvimTree_*',
+    callback = function()
+      local layout = vim.api.nvim_call_function('winlayout', {})
+      if layout[1] == 'leaf' and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), 'filetype') == 'NvimTree' and layout[3] == nil then
+        vim.cmd('confirm quit')
+      end
     end,
   })
 end

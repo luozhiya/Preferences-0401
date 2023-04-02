@@ -554,3 +554,6 @@ https://www.jmaguire.tech/posts/treesitter_folding/
 
 
       ['andymass/vim-matchup'] = function() require('nvim-treesitter.configs').setup({ matchup = { enable = true } }) end,
+
+
+local opts = { inlay_hints = { parameter_hints = { prefix = '< ', remove_colon_start = true }, type_hints = { prefix = '< ', remove_colon_start = true } } }

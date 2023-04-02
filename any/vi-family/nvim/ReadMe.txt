@@ -161,6 +161,12 @@ https://vi.stackexchange.com/questions/12864/oneliner-map-to-fold-all-unfold-all
 https://www.linux.com/training-tutorials/vim-tips-folding-fun/
 https://github.com/nvim-telescope/telescope.nvim/issues/1277
 https://github.com/tmhedberg/SimpylFold/issues/130#issuecomment-1074049490
+https://vi.stackexchange.com/questions/3814/is-there-a-best-practice-to-fold-a-vimrc-file
+https://vi.stackexchange.com/questions/39174/no-digits-in-foldcolumn
+https://github.com/neovim/neovim/pull/17446
+https://github.com/luukvbaal/statuscol.nvim
+https://github.com/neovim/neovim/pull/22035
+https://github.com/neovim/neovim/pull/19155
 
 Lua
 ---
