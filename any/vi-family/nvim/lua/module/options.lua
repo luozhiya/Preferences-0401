@@ -56,6 +56,7 @@ function M.before()
     au CursorHold,CursorHoldI * checktime
     aunmenu PopUp.How-to\ disable\ mouse
     aunmenu PopUp.-1-
+    set nofoldenable
   ]])
 
   local opts = {
@@ -64,7 +65,7 @@ function M.before()
     laststatus = 3, -- Status line style
     cmdheight = 0, -- command-line
     showmode = false, -- Dont show mode since we have a statusline
-    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = false, -- Print line number
@@ -78,7 +79,7 @@ function M.before()
     shiftround = true, -- round indentation to multiples of 'shiftwidth' when shifting text
     smartindent = true, -- Insert indents automatically
     cinoptions = vim.opt.cinoptions:append({ 'g0', 'N-s', ':0', 'E-s' }), -- gN. See https://neovim.io/doc/user/indent.html#cinoptions-values
-    synmaxcol = 200, -- don't syntax-highlight long lines
+    synmaxcol = 300, -- don't syntax-highlight long lines
     ignorecase = true, -- Ignore case
     smartcase = true, -- Don't ignore case with capitals
     clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
@@ -91,7 +92,13 @@ function M.before()
     wildmode = 'full',
     updatetime = 300,
     incsearch = false,
-    fillchars = vim.opt.fillchars:append('vert: '),
+    fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ', vert = ' ' },
+    foldlevel = 99,
+    foldlevelstart = 99,
+    foldenable = true,
+    foldcolumn = '1',
+    foldmethod = 'expr',
+    foldexpr = 'nvim_treesitter#foldexpr()',
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v

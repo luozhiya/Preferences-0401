@@ -1,5 +1,6 @@
 local config = require('module.settings').config
-return {
+local M = {}
+M.list = {
   -- Foundation
   { 'nvim-lua/plenary.nvim' },
   -- Treesitter
@@ -30,6 +31,7 @@ return {
   { 'nvim-tree/nvim-tree.lua', cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' }, config = config('nvim-tree/nvim-tree.lua') },
   { 'akinsho/toggleterm.nvim', cmd = { 'ToggleTerm' }, config = config('akinsho/toggleterm.nvim') },
   { 'folke/tokyonight.nvim', lazy = false, priority = 1000 },
+  { 'luukvbaal/statuscol.nvim', event = 'BufReadPost', config = config('luukvbaal/statuscol.nvim') },
   -- Edit
   { 'tpope/vim-obsession', cmd = { 'Obsession' } },
   { 'windwp/nvim-autopairs' },
@@ -42,13 +44,25 @@ return {
   { 'p00f/godbolt.nvim', cmd = { 'Godbolt' }, config = config('p00f/godbolt.nvim') },
   { 'luukvbaal/nnn.nvim', cmd = { 'NnnExplorer', 'NnnPicker' }, config = config('luukvbaal/nnn.nvim') },
   { 'mhartington/formatter.nvim', cmd = { 'FormatWriteLock' }, config = config('mhartington/formatter.nvim') },
+  { 'andymass/vim-matchup', event = 'BufReadPost' },
   -- LSP Core
   { 'neovim/nvim-lspconfig', ft = { 'c', 'cpp', 'lua' }, config = require('module.lsp').lsp, dependencies = { 'j-hui/fidget.nvim', 'ray-x/lsp_signature.nvim' } },
   { 'lvimuser/lsp-inlayhints.nvim', event = 'LspAttach', config = config('lvimuser/lsp-inlayhints.nvim') },
   { 'folke/neodev.nvim' },
-  -- Debug
-  { 'mfussenegger/nvim-dap', ft = { 'c', 'cpp' }, config = require('module.lsp').dap, dependencies = { 'theHamsta/nvim-dap-virtual-text', 'rcarriga/nvim-dap-ui', 'Weissle/persistent-breakpoints.nvim' } },
-  { 'theHamsta/nvim-dap-virtual-text' },
-  { 'rcarriga/nvim-dap-ui' },
-  { 'Weissle/persistent-breakpoints.nvim' },
 }
+
+-- Debug
+local _dap = function()
+  if require('base').is_kernel() then
+    return {
+      { 'mfussenegger/nvim-dap', config = require('module.lsp').dap, dependencies = { 'theHamsta/nvim-dap-virtual-text', 'rcarriga/nvim-dap-ui', 'Weissle/persistent-breakpoints.nvim' } },
+      { 'theHamsta/nvim-dap-virtual-text' },
+      { 'rcarriga/nvim-dap-ui' },
+      { 'Weissle/persistent-breakpoints.nvim' },
+    }
+  end
+  return {}
+end
+
+vim.list_extend(M.list, _dap())
+return M

@@ -22,6 +22,19 @@ InsertEnter
 BufReadPost
 BufRead
 
+Folding
+-------
+zM  close-all
+zR  open-all
+zc  fold
+zo  open
+[z  jump-start
+]z  jump-end
+
+Matchup
+-------
+%
+
 stdpath()
 ---------
 https://github.com/neovim/neovim/blob/master/src/nvim/os/stdpaths.c
@@ -142,6 +155,12 @@ https://vim-jp.org/vimdoc-en/indent.html
 https://vimhelp.org/indent.txt.html#indent.txt
 https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim
 https://vi.stackexchange.com/questions/2702/how-can-i-make-vim-autoread-a-file-while-it-doesnt-have-focus
+https://www.jmaguire.tech/posts/treesitter_folding/
+https://unix.stackexchange.com/questions/141097/how-to-enable-and-use-code-folding-in-vim
+https://vi.stackexchange.com/questions/12864/oneliner-map-to-fold-all-unfold-all
+https://www.linux.com/training-tutorials/vim-tips-folding-fun/
+https://github.com/nvim-telescope/telescope.nvim/issues/1277
+https://github.com/tmhedberg/SimpylFold/issues/130#issuecomment-1074049490
 
 Lua
 ---

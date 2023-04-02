@@ -10,7 +10,7 @@ if not vim.loop.fs_stat(opt.lazy) then
     opt.lazy,
   })
 end
-require('lazy').setup('module.plugins', {
+require('lazy').setup(require('module.plugins').list, {
   root = opt.root,
   concurrency = 2,
   defaults = { lazy = true },

@@ -3,7 +3,7 @@ local M = {}
 local cached = {}
 
 M.is_windows = function() return vim.loop.os_uname().sysname == 'Windows_NT' end
-M.is_linux = function() return vim.loop.os_uname().sysname == 'Linux' end
+M.is_kernel = function() return vim.loop.os_uname().sysname == 'Linux' end
 M.nt_sep = function() return '\\' end
 M.kernel_sep = function() return '/' end
 M.os_sep = function() return package.config:sub(1, 1) end

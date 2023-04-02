@@ -543,3 +543,14 @@ end
       f = { '<cmd>lua vim.lsp.buf.format{async=true}<cr>', 'Code Format' },
 
             cpp = { require('formatter.filetypes.cpp').clangformat },
+
+
+
+
+  capabilities.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
+
+https://www.jmaguire.tech/posts/treesitter_folding/
+
+
+
+      ['andymass/vim-matchup'] = function() require('nvim-treesitter.configs').setup({ matchup = { enable = true } }) end,

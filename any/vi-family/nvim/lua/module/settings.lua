@@ -6,7 +6,7 @@ M.cached = {}
 M.config = function(name)
   if vim.tbl_isempty(M.cached) then
     M.cached = {
-      ['nvim-treesitter/nvim-treesitter'] = function() require('nvim-treesitter.configs').setup({ ensure_installed = { 'cpp', 'c', 'lua', 'cmake' } }) end,
+      ['nvim-treesitter/nvim-treesitter'] = function() require('nvim-treesitter.configs').setup({ matchup = { enable = true }, ensure_installed = { 'cpp', 'c', 'lua', 'cmake' } }) end,
       ['stevearc/aerial.nvim'] = function()
         local opts = { backends = { 'treesitter', 'lsp' }, layout = { max_width = { 60, 0.4 } } }
         opts = vim.tbl_deep_extend('error', opts, bindings.aerial())
@@ -86,6 +86,21 @@ M.config = function(name)
           filetype = {
             lua = { require('formatter.filetypes.lua').stylua },
             ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
+          },
+        })
+      end,
+      ['luukvbaal/statuscol.nvim'] = function()
+        local builtin = require('statuscol.builtin')
+        require('statuscol').setup({
+          ft_ignore = { 'NvimTree' },
+          segments = {
+            { text = { '%s' }, click = 'v:lua.ScSa' },
+            { text = { builtin.lnumfunc }, click = 'v:lua.ScLa' },
+            {
+              text = { ' ', builtin.foldfunc, ' ' },
+              condition = { builtin.not_empty, true, builtin.not_empty },
+              click = 'v:lua.ScFa',
+            },
           },
         })
       end,

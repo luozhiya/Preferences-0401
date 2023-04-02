@@ -376,10 +376,20 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('CommentLine', function() _any_comment(require('Comment.api').toggle.linewise) end, { desc = 'Comment Line' })
   vim.api.nvim_create_user_command('CommentBlock', function() _any_comment(require('Comment.api').toggle.blockwise) end, { desc = 'Comment Block' })
   vim.api.nvim_create_user_command('SublimeMerge', function() require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Merge' })
-  vim.api.nvim_create_user_command('SublimeText', function() require('plenary.job'):new({ command = 'sublime_text', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Text' })
+  vim.api.nvim_create_user_command('SublimeText', function() require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Text' })
   vim.api.nvim_create_user_command('CloseView', function() _close_view() end, { desc = 'Close View' })
 end
 
-M.setup_autocmd = function() end
+M.setup_autocmd = function()
+  vim.api.nvim_create_autocmd('BufRead', {
+    pattern = { '*.c', '*.cpp', '*.cc', '*.hpp', '*.h', '*.lua' },
+    callback = function()
+      vim.api.nvim_create_autocmd('BufWinEnter', {
+        once = true,
+        command = 'normal! zx',
+      })
+    end,
+  })
+end
 
 return M
