@@ -522,3 +522,24 @@ end
     },
   }
   dap.configurations.c = dap.configurations.cpp
+
+
+
+              function()
+                return {
+                  exe = 'stylua',
+                  args = {
+                    '--search-parent-directories',
+                    '--stdin-filepath',
+                    util.escape_path(util.get_current_buffer_file_path()),
+                    '--',
+                    '-',
+                  },
+                  stdin = true,
+                }
+              end,
+
+
+      f = { '<cmd>lua vim.lsp.buf.format{async=true}<cr>', 'Code Format' },
+
+            cpp = { require('formatter.filetypes.cpp').clangformat },

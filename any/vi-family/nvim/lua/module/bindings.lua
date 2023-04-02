@@ -101,18 +101,21 @@ M.wk = function(wk)
     })
     run:toggle()
   end
-  local _copy_content = function() return M.copy_to_clipboard(M.get_content()) end
-  local _copy_path = function() return M.copy_to_clipboard(M.to_native(M.get_path())) end
-  local _copy_relative_path = function() return M.copy_to_clipboard(M.to_native(M.get_relative_path())) end
-  local _copy_name = function() return M.copy_to_clipboard(M.name()) end
-  local _copy_name_without_ext = function() return M.copy_to_clipboard(M.get_name_without_ext()) end
-  local _copy_contain_directory = function() return M.copy_to_clipboard(M.to_native(M.get_contain_directory())) end
-  local _reveal_cwd_in_file_explorer = function() M.open(vim.fn.getcwd()) end
-  local _reveal_file_in_file_explorer = function() M.open(M.get_contain_directory()) end
-  local _open_with_default_app = function() M.open(M.get_current_buffer_name()) end
+  local base = require('base')
+  local _copy_content = function() return base.copy_to_clipboard(base.get_content()) end
+  local _copy_path = function() return base.copy_to_clipboard(base.to_native(base.get_path())) end
+  local _copy_relative_path = function() return base.copy_to_clipboard(base.to_native(base.get_relative_path())) end
+  local _copy_name = function() return base.copy_to_clipboard(base.name()) end
+  local _copy_name_without_ext = function() return base.copy_to_clipboard(base.get_name_without_ext()) end
+  local _copy_contain_directory = function() return base.copy_to_clipboard(base.to_native(base.get_contain_directory())) end
+  local _reveal_cwd_in_file_explorer = function() base.open(vim.fn.getcwd()) end
+  local _reveal_file_in_file_explorer = function() base.open(base.get_contain_directory()) end
+  local _open_with_default_app = function() base.open(base.get_current_buffer_name()) end
   local _dap_continue = function()
     local dap = require('dap')
-    if not dap.session() then
+    if dap.session() then
+      dap.continue()
+    else
       local input_opts = { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
       vim.ui.input(input_opts, function(input)
         if not input then
@@ -132,8 +135,13 @@ M.wk = function(wk)
         dap.configurations.c = dap.configurations.cpp
         dap.continue()
       end)
+    end
+  end
+  local _format = function()
+    if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('cpp') then
+      vim.lsp.buf.format({ async = true })
     else
-      dap.continue()
+      vim.cmd('FormatWriteLock')
     end
   end
   -- stylua: ignore start
@@ -181,8 +189,8 @@ M.wk = function(wk)
       name = 'LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
       h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ header/source' },
-      f = { '<cmd>lua vim.lsp.buf.format{async=true}<cr>', 'Code Format' },
       o = { '<cmd>AerialToggle<cr>', 'Outline' },
+      f = { function() _format() end, 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
       w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Trouble Workspace Diagnostics' },
       d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics' },
@@ -290,7 +298,7 @@ M.nvim_tree = function()
     end
     return basedir
   end
--- stylua: ignore start  
+-- stylua: ignore start
   return { view = { mappings = { list = {
           { key = '<c-f>', action_cb = function() telescope.find_files(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },
           { key = '<c-g>', action_cb = function() telescope.live_grep(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },

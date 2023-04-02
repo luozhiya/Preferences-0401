@@ -140,6 +140,8 @@ https://vi.stackexchange.com/questions/11025/passing-visual-range-to-a-command-a
 https://neovim.io/doc/user/indent.html#cinoptions-values
 https://vim-jp.org/vimdoc-en/indent.html
 https://vimhelp.org/indent.txt.html#indent.txt
+https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim
+https://vi.stackexchange.com/questions/2702/how-can-i-make-vim-autoread-a-file-while-it-doesnt-have-focus
 
 Lua
 ---
@@ -151,3 +153,7 @@ https://replit.com/languages/lua
 Loop
 ----
 https://neovim.io/doc/user/lua.html#lua-loop
+
+DAP
+---
+https://microsoft.github.io/debug-adapter-protocol/overview

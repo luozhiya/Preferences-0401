@@ -58,7 +58,7 @@ M.config = function(name)
         }
         opts = vim.tbl_deep_extend('error', opts, bindings.cmp(cmp))
         cmp.setup(opts)
-        require('nvim-autopairs').setup()
+        require('nvim-autopairs').setup({ disable_filetype = { 'dapui_watches' } })
         cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } }))
         cmp.setup.cmdline(':', {
           mapping = cmp.mapping.preset.cmdline(),
@@ -80,6 +80,15 @@ M.config = function(name)
         require('lsp-inlayhints').setup(opts)
       end,
       ['luukvbaal/nnn.nvim'] = function() require('nnn').setup() end,
+      ['mhartington/formatter.nvim'] = function()
+        require('formatter').setup({
+          logging = false,
+          filetype = {
+            lua = { require('formatter.filetypes.lua').stylua },
+            ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
+          },
+        })
+      end,
     }
   end
   return M.cached[name]
