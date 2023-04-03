@@ -18,7 +18,7 @@ M.home = function() return vim.loop.os_homedir() end
 M.root = function() return M.is_windows() and M.shellslash_safe(string.sub(vim.loop.cwd(), 1, 1) .. ':' .. M.nt_sep()) or M.kernel_sep() end
 M.concat_paths = function(...) return table.concat({ ... }, M.nvim_sep()) end
 
-function M.open(uri)
+M.open = function(uri)
   if uri == nil then
     return vim.notify('Open nil URI', vim.log.levels.INFO)
   end

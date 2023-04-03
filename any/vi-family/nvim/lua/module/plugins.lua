@@ -1,6 +1,6 @@
 local M = {}
 
-local _list = {
+local list = {
   -- Foundation
   { 'nvim-lua/plenary.nvim' },
   -- Treesitter
@@ -53,10 +53,10 @@ local _list = {
   { 'folke/neodev.nvim' },
 }
 
--- Debug
-local _dap = function()
+local platform = function()
   if require('base').is_kernel() then
     return {
+      -- Debug
       { 'mfussenegger/nvim-dap' },
       { 'theHamsta/nvim-dap-virtual-text' },
       { 'rcarriga/nvim-dap-ui' },
@@ -69,8 +69,8 @@ end
 local cached = {}
 M.computed = function()
   if vim.tbl_isempty(cached) then
-    vim.list_extend(_list, _dap())
-    for i, v in pairs(_list) do
+    vim.list_extend(list, platform())
+    for i, v in pairs(list) do
       cached[i] = require('module.settings').spec(v[1])
     end
   end
