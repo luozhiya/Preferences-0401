@@ -1,1 +1,1 @@
-mklink /j %appdata%\..\Local\nvim %~dp0\nvim
+mklink /j %LOCALAPPDATA%\nvim %~dp0\nvim

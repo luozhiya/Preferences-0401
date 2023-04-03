@@ -47,6 +47,9 @@ local list = {
   { 'luukvbaal/nnn.nvim' },
   { 'mhartington/formatter.nvim' },
   { 'andymass/vim-matchup' },
+  { 'DNLHC/glance.nvim' },
+  -- Session
+  { 'Shatur/neovim-session-manager' },
   -- LSP Core
   { 'neovim/nvim-lspconfig' },
   { 'lvimuser/lsp-inlayhints.nvim' },

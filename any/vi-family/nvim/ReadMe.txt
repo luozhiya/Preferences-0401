@@ -167,6 +167,11 @@ https://github.com/neovim/neovim/pull/17446
 https://github.com/luukvbaal/statuscol.nvim
 https://github.com/neovim/neovim/pull/22035
 https://github.com/neovim/neovim/pull/19155
+https://github.com/luukvbaal/statuscol.nvim/commit/b3d6490176bf0caaaa301d31163e41dfcd144c72
+https://github.com/neovim/neovim/pull/15999
+https://github.com/luukvbaal/statuscol.nvim/issues/33
+https://vi.stackexchange.com/questions/18930/setting-xdg-config-home
+https://vi.stackexchange.com/questions/12579/neovim-setup-on-ms-windows
 
 Lua
 ---

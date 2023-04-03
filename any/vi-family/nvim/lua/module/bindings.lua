@@ -14,7 +14,8 @@ end
 M.semicolon_to_colon = function() M.map('n', ';', ':', { silent = false }) end
 
 M.lsp = {
-  { 'gd', vim.lsp.buf.definition, desc = 'Goto Definition' },
+  { 'gD', vim.lsp.buf.definition, desc = 'Goto Definition' },
+  { 'gd', '<cmd>Glance definitions<cr>', desc = 'Goto Definition' },
   { 'gh', vim.lsp.buf.hover, desc = 'Hover' },
   { 'K', vim.lsp.buf.hover, desc = 'Hover' },
   { 'gn', vim.lsp.buf.rename, desc = 'Rename' },
@@ -107,8 +108,7 @@ M.wk = function(wk)
   local _copy_relative_path = function() return base.copy_to_clipboard(base.to_native(base.get_relative_path())) end
   local _copy_name = function() return base.copy_to_clipboard(base.name()) end
   local _copy_name_without_ext = function() return base.copy_to_clipboard(base.get_name_without_ext()) end
-  local _copy_contain_directory =
-    function() return base.copy_to_clipboard(base.to_native(base.get_contain_directory())) end
+  local _copy_contain_directory = function() return base.copy_to_clipboard(base.to_native(base.get_contain_directory())) end
   local _reveal_cwd_in_file_explorer = function() base.open(vim.fn.getcwd()) end
   local _reveal_file_in_file_explorer = function() base.open(base.get_contain_directory()) end
   local _open_with_default_app = function() base.open(base.get_current_buffer_name()) end
@@ -160,14 +160,20 @@ M.wk = function(wk)
   -- stylua: ignore end
   local n = {
     q = {
-      name = 'Quit Session',
+      name = 'Quit',
       q = { '<cmd>qa<cr>', 'Quit All' },
       w = { '<cmd>wqall<cr>', 'Quit And Save Everything' },
       f = { '<cmd>q!<cr>', 'Quit Force' },
       F = { '<cmd>qa!<cr>', 'Quit All Force' },
       s = { '<cmd>w<cr>', 'Save' },
-      S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
-      r = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
+    },
+    s = {
+      name = 'Session',
+      s = { '<cmd>SessionManager save_current_session<cr>', 'Save Current Session' },
+      l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
+      r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
+      -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
+      -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },      
     },
     w = {
       name = 'Windows',

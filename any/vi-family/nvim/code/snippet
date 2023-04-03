@@ -557,3 +557,12 @@ https://www.jmaguire.tech/posts/treesitter_folding/
 
 
 local opts = { inlay_hints = { parameter_hints = { prefix = '< ', remove_colon_start = true }, type_hints = { prefix = '< ', remove_colon_start = true } } }
+
+E:\DataCenter\neovide>cargo build --release
+   Compiling skia-bindings v0.52.0
+   Compiling derive-new v0.5.9
+   Compiling skia-safe v0.52.0
+   Compiling neovide v0.10.3 (E:\DataCenter\neovide)
+    Finished release [optimized] target(s) in 6m 45s
+
+E:\DataCenter\neovide>

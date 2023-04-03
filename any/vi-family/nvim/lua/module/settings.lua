@@ -226,6 +226,36 @@ local cached = {
   ['andymass/vim-matchup'] = {
     event = 'BufReadPost',
   },
+  ['DNLHC/glance.nvim'] = {
+    cmd = { 'Glance' },
+    config = function()
+      require('glance').setup({
+        border = {
+          enable = true,
+          top_char = '―',
+          bottom_char = '―',
+        },
+        hooks = {
+          before_open = function(results, open, jump, method)
+            if #results == 1 then
+              jump(results[1])
+            else
+              open(results)
+            end
+          end,
+        },
+      })
+    end,
+  },
+  ['Shatur/neovim-session-manager'] = {
+    cmd = { 'SessionManager' },
+    config = function()
+      local Path = require('plenary.path')
+      require('session_manager').setup({
+        sessions_dir = Path:new(require('base').to_native(vim.fn.stdpath('data') .. '/sessions')),
+      })
+    end,
+  },
   ['neovim/nvim-lspconfig'] = {
     ft = { 'c', 'cpp', 'lua' },
     config = require('module.lsp').lsp,
