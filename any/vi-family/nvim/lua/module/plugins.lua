@@ -30,7 +30,7 @@ M.list = {
   spec('j-hui/fidget.nvim'),
   spec('nvim-tree/nvim-tree.lua'),
   spec('akinsho/toggleterm.nvim'),
-  spec('folke/tokyonight.nvim'),
+  { 'folke/tokyonight.nvim', lazy = false, priority = 1000 },
   spec('luukvbaal/statuscol.nvim'),
   spec('petertriho/nvim-scrollbar'),
   spec('kevinhwang91/nvim-hlslens'),
@@ -48,7 +48,7 @@ M.list = {
   spec('mhartington/formatter.nvim'),
   { 'andymass/vim-matchup', event = 'BufReadPost' },
   -- LSP Core
-  { 'neovim/nvim-lspconfig', ft = { 'c', 'cpp', 'lua' }, config = require('module.lsp').lsp, dependencies = { 'j-hui/fidget.nvim', 'ray-x/lsp_signature.nvim' } },
+  spec('neovim/nvim-lspconfig'),
   { 'lvimuser/lsp-inlayhints.nvim' },
   { 'folke/neodev.nvim' },
 }
@@ -57,7 +57,7 @@ M.list = {
 local _dap = function()
   if require('base').is_kernel() then
     return {
-      { 'mfussenegger/nvim-dap', config = require('module.lsp').dap, dependencies = { 'theHamsta/nvim-dap-virtual-text', 'rcarriga/nvim-dap-ui', 'Weissle/persistent-breakpoints.nvim' } },
+      spec('mfussenegger/nvim-dap'),
       { 'theHamsta/nvim-dap-virtual-text' },
       { 'rcarriga/nvim-dap-ui' },
       { 'Weissle/persistent-breakpoints.nvim' },

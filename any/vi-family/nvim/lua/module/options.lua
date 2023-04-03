@@ -3,11 +3,12 @@
 -- autoindent = true, -- neovim default true -- reproduce the indentation of the previous line
 
 local bindings = require('module.bindings')
+local base = require('base')
 
 local M = {}
 
-M.lazy = vim.fn.stdpath('config') .. '/lazy/lazy.nvim'
-M.root = vim.fn.stdpath('config') .. '/lazy'
+M.lazy = base.to_native(vim.fn.stdpath('config') .. '/lazy/lazy.nvim')
+M.root = base.to_native(vim.fn.stdpath('config') .. '/lazy')
 
 function M.before()
   bindings.setup_leader()
