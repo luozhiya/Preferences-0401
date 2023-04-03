@@ -14,6 +14,7 @@ M.lsp = function()
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
   require('neodev').setup()
+  require('lsp-inlayhints').setup()
   require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
   require('lspconfig').clangd.setup({ filetypes = { 'c', 'cpp' }, on_attach = on_attach, capabilities = capabilities })
 end
