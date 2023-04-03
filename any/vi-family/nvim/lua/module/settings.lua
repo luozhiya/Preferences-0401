@@ -1,11 +1,11 @@
 local bindings = require('module.bindings')
 
 local M = {}
-M.cached = {}
+local cached = {}
 
 M.spec = function(url)
-  if vim.tbl_isempty(M.cached) then
-    M.cached = {
+  if vim.tbl_isempty(cached) then
+    cached = {
       ['nvim-treesitter/nvim-treesitter'] = {
         cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
         build = ':TSUpdate',
@@ -67,6 +67,12 @@ M.spec = function(url)
         event = 'BufReadPost',
         config = function() require('gitsigns').setup() end,
       },
+      ['sindrets/diffview.nvim'] = {
+        cmd = { 'DiffviewOpen' },
+      },
+      ['kazhala/close-buffers.nvim'] = {
+        cmd = { 'CloseView', 'BWipeout' },
+      },
       ['folke/which-key.nvim'] = {
         keys = { { ',' }, { 'g' } },
         config = function()
@@ -107,6 +113,10 @@ M.spec = function(url)
       ['akinsho/toggleterm.nvim'] = {
         cmd = { 'ToggleTerm' },
         config = function() require('toggleterm').setup(bindings.toggleterm()) end,
+      },
+      ['folke/tokyonight.nvim'] = {
+        lazy = false,
+        priority = 1000,
       },
       ['luukvbaal/statuscol.nvim'] = {
         event = 'BufReadPost',
@@ -153,8 +163,20 @@ M.spec = function(url)
           })
         end,
       },
+      ['tpope/vim-obsession'] = {
+        cmd = { 'Obsession' },
+      },
+      ['fedepujol/move.nvim'] = {
+        cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' },
+      },
       ['ray-x/lsp_signature.nvim'] = {
         config = function() require('lsp_signature').setup({ hint_prefix = '< ' }) end,
+      },
+      ['folke/trouble.nvim'] = {
+        cmd = { 'TroubleToggle' },
+      },
+      ['lukas-reineke/indent-blankline.nvim'] = {
+        event = { 'BufReadPost', 'BufNewFile' },
       },
       ['HiPhish/nvim-ts-rainbow2'] = {
         event = 'BufReadPost',
@@ -193,6 +215,9 @@ M.spec = function(url)
           })
         end,
       },
+      ['andymass/vim-matchup'] = {
+        event = 'BufReadPost',
+      },
       ['neovim/nvim-lspconfig'] = {
         ft = { 'c', 'cpp', 'lua' },
         config = require('module.lsp').lsp,
@@ -204,7 +229,7 @@ M.spec = function(url)
       },
     }
   end
-  return vim.tbl_deep_extend('error', { url }, M.cached[url])
+  return vim.tbl_deep_extend('error', { url }, cached[url] or {})
 end
 
 return M

@@ -1,54 +1,54 @@
-local spec = require('module.settings').spec
 local M = {}
-M.list = {
+
+local _list = {
   -- Foundation
   { 'nvim-lua/plenary.nvim' },
   -- Treesitter
-  spec('nvim-treesitter/nvim-treesitter'),
+  { 'nvim-treesitter/nvim-treesitter' },
   -- Telescope
-  spec('nvim-telescope/telescope.nvim'),
-  spec('nvim-telescope/telescope-fzf-native.nvim'),
+  { 'nvim-telescope/telescope.nvim' },
+  { 'nvim-telescope/telescope-fzf-native.nvim' },
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
-  spec('stevearc/aerial.nvim'),
-  spec('ahmedkhalf/project.nvim'),
+  { 'stevearc/aerial.nvim' },
+  { 'ahmedkhalf/project.nvim' },
   -- Completion
-  spec('hrsh7th/nvim-cmp'),
+  { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'L3MON4D3/LuaSnip' },
   -- Git
-  spec('lewis6991/gitsigns.nvim'),
-  { 'sindrets/diffview.nvim', cmd = { 'DiffviewOpen' } },
+  { 'lewis6991/gitsigns.nvim' },
+  { 'sindrets/diffview.nvim' },
   -- Buffer
-  { 'kazhala/close-buffers.nvim', cmd = { 'CloseView', 'BWipeout' } },
+  { 'kazhala/close-buffers.nvim' },
   -- Key Management
-  spec('folke/which-key.nvim'),
+  { 'folke/which-key.nvim' },
   -- Appearance
-  spec('stevearc/dressing.nvim'),
-  spec('j-hui/fidget.nvim'),
-  spec('nvim-tree/nvim-tree.lua'),
-  spec('akinsho/toggleterm.nvim'),
-  { 'folke/tokyonight.nvim', lazy = false, priority = 1000 },
-  spec('luukvbaal/statuscol.nvim'),
-  spec('petertriho/nvim-scrollbar'),
-  spec('kevinhwang91/nvim-hlslens'),
+  { 'stevearc/dressing.nvim' },
+  { 'j-hui/fidget.nvim' },
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'akinsho/toggleterm.nvim' },
+  { 'folke/tokyonight.nvim' },
+  { 'luukvbaal/statuscol.nvim' },
+  { 'petertriho/nvim-scrollbar' },
+  { 'kevinhwang91/nvim-hlslens' },
   -- Edit
-  { 'tpope/vim-obsession', cmd = { 'Obsession' } },
+  { 'tpope/vim-obsession' },
   { 'windwp/nvim-autopairs' },
   { 'numToStr/Comment.nvim' },
-  { 'fedepujol/move.nvim', cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' } },
-  spec('ray-x/lsp_signature.nvim'),
-  { 'folke/trouble.nvim', cmd = { 'TroubleToggle' } },
-  { 'lukas-reineke/indent-blankline.nvim', event = { 'BufReadPost', 'BufNewFile' } },
-  spec('HiPhish/nvim-ts-rainbow2'),
-  spec('p00f/godbolt.nvim'),
-  spec('luukvbaal/nnn.nvim'),
-  spec('mhartington/formatter.nvim'),
-  { 'andymass/vim-matchup', event = 'BufReadPost' },
+  { 'fedepujol/move.nvim' },
+  { 'ray-x/lsp_signature.nvim' },
+  { 'folke/trouble.nvim' },
+  { 'lukas-reineke/indent-blankline.nvim' },
+  { 'HiPhish/nvim-ts-rainbow2' },
+  { 'p00f/godbolt.nvim' },
+  { 'luukvbaal/nnn.nvim' },
+  { 'mhartington/formatter.nvim' },
+  { 'andymass/vim-matchup' },
   -- LSP Core
-  spec('neovim/nvim-lspconfig'),
+  { 'neovim/nvim-lspconfig' },
   { 'lvimuser/lsp-inlayhints.nvim' },
   { 'folke/neodev.nvim' },
 }
@@ -57,7 +57,7 @@ M.list = {
 local _dap = function()
   if require('base').is_kernel() then
     return {
-      spec('mfussenegger/nvim-dap'),
+      { 'mfussenegger/nvim-dap' },
       { 'theHamsta/nvim-dap-virtual-text' },
       { 'rcarriga/nvim-dap-ui' },
       { 'Weissle/persistent-breakpoints.nvim' },
@@ -66,5 +66,15 @@ local _dap = function()
   return {}
 end
 
-vim.list_extend(M.list, _dap())
+local cached = {}
+M.computed = function()
+  if vim.tbl_isempty(cached) then
+    vim.list_extend(_list, _dap())
+    for i, v in pairs(_list) do
+      cached[i] = require('module.settings').spec(v[1])
+    end
+  end
+  return cached
+end
+
 return M
