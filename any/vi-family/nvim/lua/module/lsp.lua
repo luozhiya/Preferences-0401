@@ -16,6 +16,9 @@ M.lsp = function()
     require('lsp-inlayhints').on_attach(client, buffer)
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- mason: It's important that you set up the plugins in the following order
+  require('mason').setup()
+  require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
   require('neodev').setup()
   require('lsp-inlayhints').setup()
   require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })

@@ -168,6 +168,36 @@ local cached = {
       })
     end,
   },
+  ['obaland/vfiler.vim'] = {
+    cmd = { 'VFiler' },
+    config = function()
+      require('vfiler/config').setup({
+        options = {
+          auto_cd = true,
+          auto_resize = true,
+          keep = true,
+          layout = 'left',
+          name = 'explorer',
+          width = 30,
+          columns = 'indent,icon,name',
+        },
+      })
+    end,
+  },
+  ['nvim-neo-tree/neo-tree.nvim'] = {
+    cmd = { 'Neotree' },
+    config = function()
+      vim.g.neo_tree_remove_legacy_commands = 1
+      local opts = {
+        async_directory_scan = 'never',
+        log_level = 'trace',
+        log_to_file = true,
+        close_if_last_window = true,
+        source_selector = { winbar = false, statusline = false },
+      }
+      require('neo-tree').setup(opts)
+    end,
+  },
   ['tpope/vim-obsession'] = {
     cmd = { 'Obsession' },
   },

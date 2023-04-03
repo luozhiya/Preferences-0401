@@ -173,7 +173,7 @@ M.wk = function(wk)
       l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
       r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
       -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
-      -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },      
+      -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
     },
     w = {
       name = 'Windows',
@@ -252,6 +252,7 @@ M.wk = function(wk)
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
       e = { '<cmd>NvimTreeFindFile<cr>', 'Tree Explorer' },
       t = { '<cmd>NvimTreeToggle<cr>', 'Tree Explorer' },
+      v = { '<cmd>VFiler<cr>', 'VFiler File explorer' },
       s = { '<cmd>Telescope find_files theme=get_dropdown previewer=false<cr>', 'Find files' },
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
       p = { '<cmd>Telescope projects<cr>', 'Projects' },

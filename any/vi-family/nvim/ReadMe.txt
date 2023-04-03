@@ -172,6 +172,9 @@ https://github.com/neovim/neovim/pull/15999
 https://github.com/luukvbaal/statuscol.nvim/issues/33
 https://vi.stackexchange.com/questions/18930/setting-xdg-config-home
 https://vi.stackexchange.com/questions/12579/neovim-setup-on-ms-windows
+https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
+http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_realpath
+https://github.com/neovim/neovim/blob/10baf89712724b4b95f7c641f2012f051737003c/src/nvim/os/fs.c#L1265
 
 Lua
 ---

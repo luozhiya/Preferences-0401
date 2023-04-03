@@ -26,6 +26,7 @@ local list = {
   -- Key Management
   { 'folke/which-key.nvim' },
   -- Appearance
+  { 'MunifTanjim/nui.nvim' },
   { 'stevearc/dressing.nvim' },
   { 'j-hui/fidget.nvim' },
   { 'nvim-tree/nvim-tree.lua' },
@@ -34,6 +35,8 @@ local list = {
   { 'luukvbaal/statuscol.nvim' },
   { 'petertriho/nvim-scrollbar' },
   { 'kevinhwang91/nvim-hlslens' },
+  { 'obaland/vfiler.vim' },
+  { 'nvim-neo-tree/neo-tree.nvim' },
   -- Edit
   { 'tpope/vim-obsession' },
   { 'windwp/nvim-autopairs' },
@@ -54,6 +57,8 @@ local list = {
   { 'neovim/nvim-lspconfig' },
   { 'lvimuser/lsp-inlayhints.nvim' },
   { 'folke/neodev.nvim' },
+  { 'williamboman/mason.nvim' },
+  { 'williamboman/mason-lspconfig.nvim' },
 }
 
 local platform = function()
