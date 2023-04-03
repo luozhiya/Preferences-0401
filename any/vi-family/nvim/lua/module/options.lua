@@ -14,8 +14,8 @@ function M.before()
   bindings.setup_leader()
 
   vim.g.neovide_remember_window_size = true
-  vim.g.neovide_refresh_rate_idle = 240
-  vim.g.neovide_no_idle = true
+  -- vim.g.neovide_refresh_rate_idle = 120
+  -- vim.g.neovide_no_idle = true
 
   vim.g.loaded_python3_provider = 0
   vim.g.loaded_pythonx_provider = 0
@@ -66,7 +66,7 @@ function M.before()
     laststatus = 3, -- Status line style
     cmdheight = 0, -- command-line
     showmode = false, -- Dont show mode since we have a statusline
-    lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = false, -- Print line number

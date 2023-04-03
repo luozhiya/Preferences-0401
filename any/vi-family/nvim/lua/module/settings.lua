@@ -16,7 +16,16 @@ local cached = {
     cmd = { 'Telescope' },
     config = function()
       local telescope = require('telescope')
-      telescope.setup(bindings.telescope())
+      local opts = {
+        pickers = {
+          buffers = {
+            ignore_current_buffer = false,
+            sort_lastused = true,
+          },
+        },
+      }
+      opts = vim.tbl_deep_extend('error', opts, bindings.telescope())
+      telescope.setup(opts)
       telescope.load_extension('undo')
       telescope.load_extension('fzf')
       telescope.load_extension('live_grep_args')
@@ -196,6 +205,26 @@ local cached = {
         source_selector = { winbar = false, statusline = false },
       }
       require('neo-tree').setup(opts)
+    end,
+  },
+  ['nvim-lualine/lualine.nvim'] = {
+    event = 'VeryLazy',
+    config = function()
+      local function lsp_active()
+        local names = {}
+        for _, client in pairs(vim.lsp.get_active_clients()) do
+          table.insert(names, client.name)
+        end
+        return 'LSP<' .. table.concat(names, ', ') .. '>'
+      end
+      local function location() return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) end
+      local fileformat = { 'fileformat', icons_enabled = false }
+      require('lualine').setup({
+        sections = {
+          lualine_x = { lsp_active, 'encoding', fileformat, 'filetype' },
+          lualine_z = { location },
+        },
+      })
     end,
   },
   ['tpope/vim-obsession'] = {

@@ -37,6 +37,7 @@ local list = {
   { 'kevinhwang91/nvim-hlslens' },
   { 'obaland/vfiler.vim' },
   { 'nvim-neo-tree/neo-tree.nvim' },
+  { 'nvim-lualine/lualine.nvim' },
   -- Edit
   { 'tpope/vim-obsession' },
   { 'windwp/nvim-autopairs' },
@@ -63,23 +64,18 @@ local list = {
   { 'williamboman/mason-lspconfig.nvim' },
 }
 
-local platform = function()
-  if require('base').is_kernel() then
-    return {
-      -- Debug
-      { 'mfussenegger/nvim-dap' },
-      { 'theHamsta/nvim-dap-virtual-text' },
-      { 'rcarriga/nvim-dap-ui' },
-      { 'Weissle/persistent-breakpoints.nvim' },
-    }
-  end
-  return {}
-end
+local dap = {
+  -- Debug
+  { 'mfussenegger/nvim-dap' },
+  { 'theHamsta/nvim-dap-virtual-text' },
+  { 'rcarriga/nvim-dap-ui' },
+  { 'Weissle/persistent-breakpoints.nvim' },
+}
 
 local cached = {}
 M.computed = function()
   if vim.tbl_isempty(cached) then
-    vim.list_extend(list, platform())
+    if require('base').is_kernel() then vim.list_extend(list, dap) end
     for i, v in pairs(list) do
       cached[i] = require('module.settings').spec(v[1])
     end
