@@ -1,5 +1,4 @@
 local bindings = require('module.bindings')
-
 local M = {}
 
 M.lsp = function()
@@ -22,7 +21,65 @@ M.lsp = function()
   require('neodev').setup()
   require('lsp-inlayhints').setup()
   require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-  require('lspconfig').clangd.setup({ filetypes = { 'c', 'cpp' }, on_attach = on_attach, capabilities = capabilities })
+  local offset = {
+    offsetEncoding = { 'utf-32' },
+  }
+  local clangd_capabilities = vim.tbl_deep_extend('error', capabilities, offset)
+  require('lspconfig').clangd.setup({
+    filetypes = { 'c', 'cpp' },
+    init_options = {
+      clangdFileStatus = true,
+    },
+    on_attach = on_attach,
+    capabilities = clangd_capabilities,
+  })
+  local ccls_on_attach = function(client, buffer)
+    -- Lsp workspace symbol, <,lS>
+    client.server_capabilities.workspaceSymbolProvider = false
+    -- Lsp finder
+    client.server_capabilities.definitionProvider = false
+    client.server_capabilities.referencesProvider = false
+    --
+    client.server_capabilities.implementationProvider = false
+    client.server_capabilities.codeActionProvider = false
+    client.server_capabilities.resolveProvider = false
+    client.server_capabilities.documentSymbolProvider = false
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+    client.server_capabilities.documentOnTypeFormattingProvider = false
+  end
+  require('lspconfig').ccls.setup({
+    filetypes = { 'c', 'cpp' },
+    offset_encoding = 'utf-32',
+    -- ccls does not support sending a null root directory
+    single_file_support = true,
+    init_options = {
+      highlight = { lsRanges = true },
+      cache = {
+        directory = '/tmp/ccls-cache',
+      },
+      compilationDatabaseDirectory = 'build',
+      index = {
+        threads = 0,
+      },
+      clang = {
+        excludeArgs = { '-frounding-math' },
+      },
+    },
+    handlers = {
+      ['textDocument/publishDiagnostics'] = function(...) return nil end,
+      ['textDocument/hover'] = function(...) return nil end,
+      ['textDocument/signatureHelp'] = function(...) return nil end,
+      ['workspace/symbol'] = nil,
+      ['textDocument/definition'] = nil,
+      ['textDocument/implementation'] = nil,
+      ['textDocument/references'] = nil,
+      ['textDocument/formatting'] = nil,
+      ['textDocument/rangeFormatting'] = nil,
+    },
+    on_attach = ccls_on_attach,
+    capabilities = capabilities,
+  })
 end
 
 M.dap = function()

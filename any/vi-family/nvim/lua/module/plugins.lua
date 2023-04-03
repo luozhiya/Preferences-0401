@@ -51,6 +51,8 @@ local list = {
   { 'mhartington/formatter.nvim' },
   { 'andymass/vim-matchup' },
   { 'DNLHC/glance.nvim' },
+  { 'm-pilia/vim-ccls' },
+  { 'jackguo380/vim-lsp-cxx-highlight' },
   -- Session
   { 'Shatur/neovim-session-manager' },
   -- LSP Core

@@ -277,6 +277,12 @@ local cached = {
       })
     end,
   },
+  ['jackguo380/vim-lsp-cxx-highlight'] = {
+    ft = { 'c', 'cpp' },
+  },
+  ['m-pilia/vim-ccls'] = {
+    ft = { 'c', 'cpp' },
+  },
   ['Shatur/neovim-session-manager'] = {
     cmd = { 'SessionManager' },
     config = function()
