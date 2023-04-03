@@ -107,7 +107,8 @@ M.wk = function(wk)
   local _copy_relative_path = function() return base.copy_to_clipboard(base.to_native(base.get_relative_path())) end
   local _copy_name = function() return base.copy_to_clipboard(base.name()) end
   local _copy_name_without_ext = function() return base.copy_to_clipboard(base.get_name_without_ext()) end
-  local _copy_contain_directory = function() return base.copy_to_clipboard(base.to_native(base.get_contain_directory())) end
+  local _copy_contain_directory =
+    function() return base.copy_to_clipboard(base.to_native(base.get_contain_directory())) end
   local _reveal_cwd_in_file_explorer = function() base.open(vim.fn.getcwd()) end
   local _reveal_file_in_file_explorer = function() base.open(base.get_contain_directory()) end
   local _open_with_default_app = function() base.open(base.get_current_buffer_name()) end
@@ -116,7 +117,8 @@ M.wk = function(wk)
     if dap.session() then
       dap.continue()
     else
-      local input_opts = { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
+      local input_opts =
+        { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
       vim.ui.input(input_opts, function(input)
         if not input then
           return
@@ -204,7 +206,10 @@ M.wk = function(wk)
     b = {
       name = 'Breakpoint',
       b = { function() require('persistent-breakpoints.api').toggle_breakpoint() end, 'Toggle Breakpoint' },
-      c = { function() require('persistent-breakpoints.api').set_conditional_breakpoint() end, 'Toggle Condition Breakpoint' },
+      c = {
+        function() require('persistent-breakpoints.api').set_conditional_breakpoint() end,
+        'Toggle Condition Breakpoint',
+      },
       l = { function() require('persistent-breakpoints.api').load_breakpoints() end, 'Load Saved Breakpoint' },
       d = { function() require('persistent-breakpoints.api').clear_all_breakpoints() end, 'Clear All Breakpoint' },
     },
@@ -344,7 +349,12 @@ M.setup_code = function()
   M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   M.map('n', [[\]], '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   -- Go
-  M.map('n', '<c-p>', '<cmd>Telescope buffers show_all_buffers=true theme=get_dropdown previewer=false<cr>', { noremap = true, desc = 'Go To File... (telescope.nvim)' })
+  M.map(
+    'n',
+    '<c-p>',
+    '<cmd>Telescope buffers show_all_buffers=true theme=get_dropdown previewer=false<cr>',
+    { noremap = true, desc = 'Go To File... (telescope.nvim)' }
+  )
   -- Run
   -- Terminal
   M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
@@ -367,15 +377,51 @@ M.setup_comands = function()
       vim.api.nvim_win_close(0, true)
     end
   end
-  vim.api.nvim_create_user_command('ToggleFullScreen', function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end, { desc = 'Toggle Full Screen' })
-  vim.api.nvim_create_user_command('ToggleWrap', function() vim.opt.wrap = vim.opt.wrap._value == false end, { desc = 'Toggle Wrap' })
-  vim.api.nvim_create_user_command('ToggleFocusMode', function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end, { desc = 'Toggle Focus Mode' })
-  vim.api.nvim_create_user_command('ToggleCaseSensitive', function() vim.opt.ignorecase = vim.opt.ignorecase._value == false end, { desc = 'Toggle Case Sensitive' })
-  vim.api.nvim_create_user_command('RemoveExclusiveORM', function() vim.cmd([[:%s/\r//g]]) end, { desc = 'Remove Exclusive ORM' })
-  vim.api.nvim_create_user_command('CommentLine', function() _any_comment(require('Comment.api').toggle.linewise) end, { desc = 'Comment Line' })
-  vim.api.nvim_create_user_command('CommentBlock', function() _any_comment(require('Comment.api').toggle.blockwise) end, { desc = 'Comment Block' })
-  vim.api.nvim_create_user_command('SublimeMerge', function() require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Merge' })
-  vim.api.nvim_create_user_command('SublimeText', function() require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync() end, { desc = 'Sublime Text' })
+  vim.api.nvim_create_user_command(
+    'ToggleFullScreen',
+    function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end,
+    { desc = 'Toggle Full Screen' }
+  )
+  vim.api.nvim_create_user_command(
+    'ToggleWrap',
+    function() vim.opt.wrap = vim.opt.wrap._value == false end,
+    { desc = 'Toggle Wrap' }
+  )
+  vim.api.nvim_create_user_command(
+    'ToggleFocusMode',
+    function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end,
+    { desc = 'Toggle Focus Mode' }
+  )
+  vim.api.nvim_create_user_command(
+    'ToggleCaseSensitive',
+    function() vim.opt.ignorecase = vim.opt.ignorecase._value == false end,
+    { desc = 'Toggle Case Sensitive' }
+  )
+  vim.api.nvim_create_user_command(
+    'RemoveExclusiveORM',
+    function() vim.cmd([[:%s/\r//g]]) end,
+    { desc = 'Remove Exclusive ORM' }
+  )
+  vim.api.nvim_create_user_command(
+    'CommentLine',
+    function() _any_comment(require('Comment.api').toggle.linewise) end,
+    { desc = 'Comment Line' }
+  )
+  vim.api.nvim_create_user_command(
+    'CommentBlock',
+    function() _any_comment(require('Comment.api').toggle.blockwise) end,
+    { desc = 'Comment Block' }
+  )
+  vim.api.nvim_create_user_command(
+    'SublimeMerge',
+    function() require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync() end,
+    { desc = 'Sublime Merge' }
+  )
+  vim.api.nvim_create_user_command(
+    'SublimeText',
+    function() require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync() end,
+    { desc = 'Sublime Text' }
+  )
   vim.api.nvim_create_user_command('CloseView', function() _close_view() end, { desc = 'Close View' })
 end
 
@@ -394,7 +440,11 @@ M.setup_autocmd = function()
     pattern = 'NvimTree_*',
     callback = function()
       local layout = vim.api.nvim_call_function('winlayout', {})
-      if layout[1] == 'leaf' and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), 'filetype') == 'NvimTree' and layout[3] == nil then
+      if
+        layout[1] == 'leaf'
+        and vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(layout[2]), 'filetype') == 'NvimTree'
+        and layout[3] == nil
+      then
         vim.cmd('confirm quit')
       end
     end,

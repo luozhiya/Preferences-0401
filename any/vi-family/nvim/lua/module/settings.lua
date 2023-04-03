@@ -49,7 +49,10 @@ local cached = {
       opts = vim.tbl_deep_extend('error', opts, bindings.cmp(cmp))
       cmp.setup(opts)
       require('nvim-autopairs').setup({ disable_filetype = { 'dapui_watches' } })
-      cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } }))
+      cmp.event:on(
+        'confirm_done',
+        require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } })
+      )
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
@@ -81,7 +84,13 @@ local cached = {
     event = { 'VeryLazy' },
     config = function()
       require('dressing').setup({
-        input = { enabled = true, prompt_align = 'center', relative = 'editor', prefer_width = 0.6, win_options = { winblend = 0 } },
+        input = {
+          enabled = true,
+          prompt_align = 'center',
+          relative = 'editor',
+          prefer_width = 0.6,
+          win_options = { winblend = 0 },
+        },
         select = { enabled = true, backend = { 'telescope' } },
       })
     end,
@@ -190,7 +199,10 @@ local cached = {
     cmd = { 'Godbolt' },
     config = function()
       require('godbolt').setup({
-        languages = { cpp = { compiler = 'clangdefault', options = {} }, c = { compiler = 'cclangdefault', options = {} } }, -- vc2017_64
+        languages = {
+          cpp = { compiler = 'clangdefault', options = {} },
+          c = { compiler = 'cclangdefault', options = {} },
+        }, -- vc2017_64
         url = 'http://localhost:10240', -- https://godbolt.org
       })
     end,

@@ -15,7 +15,9 @@ M.shellslash_safe = function(s) return M.nvim_sep() == M.kernel_sep() and s:gsub
 M.is_uri = function(path) return path:match('^%w+://') ~= nil end
 M.file_exists = function(file) return vim.loop.fs_stat(file) ~= nil end
 M.home = function() return vim.loop.os_homedir() end
-M.root = function() return M.is_windows() and M.shellslash_safe(string.sub(vim.loop.cwd(), 1, 1) .. ':' .. M.nt_sep()) or M.kernel_sep() end
+M.root = function()
+  return M.is_windows() and M.shellslash_safe(string.sub(vim.loop.cwd(), 1, 1) .. ':' .. M.nt_sep()) or M.kernel_sep()
+end
 M.concat_paths = function(...) return table.concat({ ... }, M.nvim_sep()) end
 
 M.open = function(uri)
