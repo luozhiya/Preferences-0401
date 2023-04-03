@@ -21,17 +21,13 @@ end
 M.concat_paths = function(...) return table.concat({ ... }, M.nvim_sep()) end
 
 M.open = function(uri)
-  if uri == nil then
-    return vim.notify('Open nil URI', vim.log.levels.INFO)
-  end
+  if uri == nil then return vim.notify('Open nil URI', vim.log.levels.INFO) end
   local cmd
   if M.is_windows() then
     cmd = { 'explorer', uri }
     cmd = M.to_nt(table.concat(cmd, ' '))
   else
-    if vim.fn.executable('xdg-open') == 1 then
-      cmd = { 'xdg-open', uri }
-    end
+    if vim.fn.executable('xdg-open') == 1 then cmd = { 'xdg-open', uri } end
   end
   local ret = vim.fn.jobstart(cmd, { detach = true })
   if ret <= 0 then
@@ -80,9 +76,7 @@ M.rfind = function(s, sub)
 end
 
 M.path_add_trailing = function(path)
-  if path:sub(-1) == M.nvim_sep() then
-    return path
-  end
+  if path:sub(-1) == M.nvim_sep() then return path end
   return path .. M.nvim_sep()
 end
 

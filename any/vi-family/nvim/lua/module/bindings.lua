@@ -120,9 +120,7 @@ M.wk = function(wk)
       local input_opts =
         { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
       vim.ui.input(input_opts, function(input)
-        if not input then
-          return
-        end
+        if not input then return end
         dap.configurations.cpp = {
           {
             name = 'Launch',
@@ -280,9 +278,7 @@ M.nvim_tree = function()
           actions.close(prompt_bufnr)
           local selection = require('telescope.actions.state').get_selected_entry()
           local filename = selection.filename
-          if filename == nil then
-            filename = selection[1]
-          end
+          if filename == nil then filename = selection[1] end
           tree(filename, any)
         end)
         return true
@@ -293,14 +289,10 @@ M.nvim_tree = function()
   local fs = require('nvim-tree.actions.node.open-file')
   local path = function()
     local node = require('nvim-tree.lib').get_node_at_cursor()
-    if node == nil then
-      return
-    end
+    if node == nil then return end
     local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
     local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
-    if node.name == '..' and TreeExplorer ~= nil then
-      basedir = TreeExplorer.cwd
-    end
+    if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
     return basedir
   end
 -- stylua: ignore start
