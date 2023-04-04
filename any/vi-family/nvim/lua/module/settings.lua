@@ -133,8 +133,9 @@ local cached = {
     priority = 1000,
   },
   ['luukvbaal/statuscol.nvim'] = {
-    event = 'BufReadPost',
+    event = 'User NeXT',
     config = function()
+      vim.opt.foldcolumn = '1'
       local builtin = require('statuscol.builtin')
       require('statuscol').setup({
         ft_ignore = { 'NvimTree' },
@@ -151,7 +152,7 @@ local cached = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
-    event = 'BufReadPost',
+    event = 'User NeXT',
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
@@ -307,10 +308,10 @@ local cached = {
     end,
   },
   ['jackguo380/vim-lsp-cxx-highlight'] = {
-    ft = { 'c', 'cpp' },
+    event = 'User ccls',
   },
   ['m-pilia/vim-ccls'] = {
-    ft = { 'c', 'cpp' },
+    event = 'User ccls',
   },
   ['Shatur/neovim-session-manager'] = {
     cmd = { 'SessionManager' },

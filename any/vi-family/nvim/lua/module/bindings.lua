@@ -175,6 +175,13 @@ M.wk = function(wk)
       -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
       -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
     },
+    c = {
+      name = 'C++',
+      a = { '<cmd>ClangAST<cr>', 'Clang AST' },
+      t = { '<cmd>ClangdTypeHierarchy<cr>', 'Clang Type Hierarchy' },
+      h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
+      m = { '<cmd>ClangdMemoryUsage<cr>', 'Clangd Memory Usage' },
+    },
     w = {
       name = 'Windows',
       h = { '<C-w>h', 'Jump Left' },
@@ -189,12 +196,15 @@ M.wk = function(wk)
     v = {
       name = 'Vim',
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
+      p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
+      u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
+      c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       e = wk_ve(),
     },
     l = {
       name = 'LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
-      h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ header/source' },
+      h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
       o = { '<cmd>AerialToggle<cr>', 'Outline' },
       f = { function() _format() end, 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
@@ -261,8 +271,8 @@ M.wk = function(wk)
       o = { function() _open_with_default_app() end, 'Open With Default APP' },
       r = { function() _reveal_file_in_file_explorer() end, 'Reveal In File Explorer' },
     },
-    c = {
-      name = 'Copy',
+    i = {
+      name = 'Copy Information',
       c = { function() _copy_content() end, 'Copy Content' },
       n = { function() _copy_name() end, 'Copy File Name' },
       e = { function() _copy_name_without_ext() end, 'Copy File Name Without Ext' },
@@ -335,6 +345,7 @@ M.setup_code = function()
   M.map('x', 'cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
   M.map('n', 'cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
   M.map('x', 'cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
+  M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
   -- Selection
   M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', { noremap = true, desc = 'Line: Move Up (move.nvim)' })
   M.map('n', '<a-k>', '<cmd>MoveLine(-1)<cr>', { noremap = true, desc = 'Line: Move Down (move.nvim)' })
@@ -451,9 +462,10 @@ M.setup_autocmd = function()
   vim.api.nvim_create_autocmd('User', {
     pattern = 'NeXT',
     once = true,
-    callback = function() print('NeXT') end,
+    -- callback = function() vim.notify('NeXT', vim.log.levels.INFO) end,
+    callback = function() end,
   })
-  local function _next()
+  local _next = function()
     vim.schedule(function()
       if vim.v.exiting ~= vim.NIL then return end
       if base.is_kernel() then vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false }) end
@@ -462,6 +474,12 @@ M.setup_autocmd = function()
   vim.api.nvim_create_autocmd('UIEnter', {
     once = true,
     callback = function() _next() end,
+  })
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'ccls',
+    once = true,
+    -- callback = function() vim.notify('ccls', vim.log.levels.INFO) end,
+    callback = function() end,
   })
 end
 

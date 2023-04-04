@@ -1,6 +1,6 @@
 -- Neovim default
 -- vim.cmd([[filetype plugin indent on]]) -- use language‐specific plugins for indenting (better):
--- autoindent = true, -- neovim default true -- reproduce the indentation of the previous line
+-- autoindent = true, -- reproduce the indentation of the previous line
 
 local bindings = require('module.bindings')
 local base = require('base')
@@ -12,6 +12,9 @@ M.root = base.to_native(vim.fn.stdpath('config') .. '/lazy')
 
 function M.before()
   bindings.setup_leader()
+
+  vim.g.lsp_cpp_provider = 'ccls' -- ccls clangd
+  vim.g.lua_enhance = false
 
   vim.g.neovide_remember_window_size = true
   -- vim.g.neovide_refresh_rate_idle = 120
@@ -97,7 +100,7 @@ function M.before()
     foldlevel = 99,
     foldlevelstart = 99,
     foldenable = true,
-    foldcolumn = '1',
+    foldcolumn = '0',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
   }

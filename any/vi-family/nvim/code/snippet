@@ -585,3 +585,56 @@ E:\DataCenter\neovide>
 
 
 https://github.com/nvim-telescope/telescope.nvim/issues/791
+
+local lsp_ccls = function()
+  local on_attach = function(client, buffer)
+    local disabled_provider = {
+      'workspaceSymbolProvider',
+      'definitionProvider',
+      'referencesProvider',
+      'implementationProvider',
+      'codeActionProvider',
+      'resolveProvider',
+      'documentSymbolProvider',
+      'documentFormattingProvider',
+      'documentRangeFormattingProvider',
+      'documentOnTypeFormattingProvider',
+    }
+    for _, v in ipairs(disabled_provider) do
+      client.server_capabilities[v] = false
+    end
+  end
+  local opts = {
+    filetypes = { 'c', 'cpp' },
+    offset_encoding = 'utf-32',
+    single_file_support = true,
+    init_options = {
+      highlight = { lsRanges = true },
+      cache = {
+        directory = '/tmp/ccls-cache',
+      },
+      compilationDatabaseDirectory = 'build',
+      index = {
+        threads = 0,
+      },
+    },
+    handlers = {
+      ['textDocument/publishDiagnostics'] = function(...) return nil end,
+      ['textDocument/hover'] = function(...) return nil end,
+      ['textDocument/signatureHelp'] = function(...) return nil end,
+      ['workspace/symbol'] = nil,
+      ['textDocument/definition'] = nil,
+      ['textDocument/implementation'] = nil,
+      ['textDocument/references'] = nil,
+      ['textDocument/formatting'] = nil,
+      ['textDocument/rangeFormatting'] = nil,
+    },
+    on_attach = on_attach,
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
+  }
+  require('lspconfig').ccls.setup(opts)
+  vim.api.nvim_exec_autocmds('User', { pattern = 'ccls', modeline = false })
+end
+
+require('lsp-inlayhints').on_attach(client, buffer)
+require('lsp-inlayhints').setup()

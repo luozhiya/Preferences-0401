@@ -52,13 +52,14 @@ local list = {
   { 'mhartington/formatter.nvim' },
   { 'andymass/vim-matchup' },
   { 'DNLHC/glance.nvim' },
-  { 'm-pilia/vim-ccls' },
-  { 'jackguo380/vim-lsp-cxx-highlight' },
   -- Session
   { 'Shatur/neovim-session-manager' },
   -- LSP Core
-  { 'neovim/nvim-lspconfig' },
+  { 'm-pilia/vim-ccls' },
+  { 'jackguo380/vim-lsp-cxx-highlight' },
+  { 'p00f/clangd_extensions.nvim' },
   { 'lvimuser/lsp-inlayhints.nvim' },
+  { 'neovim/nvim-lspconfig' },
   { 'folke/neodev.nvim' },
   { 'williamboman/mason.nvim' },
   { 'williamboman/mason-lspconfig.nvim' },

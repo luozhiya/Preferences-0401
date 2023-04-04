@@ -1,7 +1,7 @@
 local bindings = require('module.bindings')
 local M = {}
 
-local lsp_clangd = function(on_attach, capabilities)
+local _lsp_clangd = function(on_attach, capabilities)
   local opts = {
     filetypes = { 'c', 'cpp' },
     on_attach = on_attach,
@@ -9,27 +9,11 @@ local lsp_clangd = function(on_attach, capabilities)
       offsetEncoding = { 'utf-32' },
     }),
   }
-  require('lspconfig').clangd.setup(opts)
+  -- require('lspconfig').clangd.setup(opts)
+  require('clangd_extensions').setup({ server = opts })
 end
 
-local lsp_ccls = function()
-  local on_attach = function(client, buffer)
-    local disabled_provider = {
-      'workspaceSymbolProvider',
-      'definitionProvider',
-      'referencesProvider',
-      'implementationProvider',
-      'codeActionProvider',
-      'resolveProvider',
-      'documentSymbolProvider',
-      'documentFormattingProvider',
-      'documentRangeFormattingProvider',
-      'documentOnTypeFormattingProvider',
-    }
-    for _, v in ipairs(disabled_provider) do
-      client.server_capabilities[v] = false
-    end
-  end
+local _lsp_ccls = function(on_attach, capabilities)
   local opts = {
     filetypes = { 'c', 'cpp' },
     offset_encoding = 'utf-32',
@@ -44,26 +28,19 @@ local lsp_ccls = function()
         threads = 0,
       },
     },
-    handlers = {
-      ['textDocument/publishDiagnostics'] = function(...) return nil end,
-      ['textDocument/hover'] = function(...) return nil end,
-      ['textDocument/signatureHelp'] = function(...) return nil end,
-      ['workspace/symbol'] = nil,
-      ['textDocument/definition'] = nil,
-      ['textDocument/implementation'] = nil,
-      ['textDocument/references'] = nil,
-      ['textDocument/formatting'] = nil,
-      ['textDocument/rangeFormatting'] = nil,
-    },
     on_attach = on_attach,
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    capabilities = capabilities,
   }
   require('lspconfig').ccls.setup(opts)
+  vim.api.nvim_exec_autocmds('User', { pattern = 'ccls', modeline = false })
 end
 
-local setup_lsp_cpp = function(on_attach, capabilities)
-  lsp_clangd(on_attach, capabilities)
-  lsp_ccls()
+local _setup_lsp_cpp = function(on_attach, capabilities)
+  if vim.g.lsp_cpp_provider == 'clangd' then
+    _lsp_clangd(on_attach, capabilities)
+  elseif vim.g.lsp_cpp_provider == 'ccls' then
+    _lsp_ccls(on_attach, capabilities)
+  end
 end
 
 M.lsp = function()
@@ -77,16 +54,16 @@ M.lsp = function()
     for _, keys in pairs(bindings.lsp) do
       bindings.map(keys.mode or 'n', keys[1], keys[2], { noremap = true, silent = true, buffer = buffer })
     end
-    require('lsp-inlayhints').on_attach(client, buffer)
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-  -- mason: It's important that you set up the plugins in the following order
-  require('mason').setup()
-  require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
-  require('neodev').setup()
-  require('lsp-inlayhints').setup()
-  require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-  setup_lsp_cpp(on_attach, capabilities)
+  if vim.g.lua_enhance == true then
+    -- mason: It's important that you set up the plugins in the following order
+    require('mason').setup()
+    require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
+    require('neodev').setup()
+    require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
+  end
+  _setup_lsp_cpp(on_attach, capabilities)
 end
 
 M.dap = function()
