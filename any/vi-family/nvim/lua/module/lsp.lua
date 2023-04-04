@@ -4,6 +4,7 @@ local M = {}
 local _lsp_clangd = function(on_attach, capabilities)
   local opts = {
     filetypes = { 'c', 'cpp' },
+    -- root_dir = function(fname) return require('lspconfig.util').find_git_ancestor(fname) end,
     on_attach = on_attach,
     capabilities = vim.tbl_deep_extend('error', capabilities, {
       offsetEncoding = { 'utf-32' },

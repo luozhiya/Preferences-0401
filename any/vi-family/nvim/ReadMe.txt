@@ -178,6 +178,8 @@ https://github.com/neovim/neovim/blob/10baf89712724b4b95f7c641f2012f051737003c/s
 https://github.com/nvim-telescope/telescope.nvim/issues/791
 https://github.com/LunarVim/LunarVim/issues/2597
 https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text
+https://github.com/neovim/neovim/issues/9877
+https://vi.stackexchange.com/questions/39285/is-it-possible-to-set-a-vim-api-nvim-create-autocmd-for-a-filetype-not-just-a-p
 
 Lua
 ---
@@ -193,3 +195,10 @@ https://neovim.io/doc/user/lua.html#lua-loop
 DAP
 ---
 https://microsoft.github.io/debug-adapter-protocol/overview
+
+QA
+--
+1. confusion root?
+  LSP(lsp-file, no lsp-file)
+  nvim-tree(change root, even in same dir)
+  project

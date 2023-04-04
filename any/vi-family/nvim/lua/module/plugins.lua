@@ -23,6 +23,7 @@ local list = {
   { 'sindrets/diffview.nvim' },
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
+  { 'glepnir/flybuf.nvim' },
   -- Key Management
   { 'folke/which-key.nvim' },
   -- Appearance

@@ -88,6 +88,47 @@ M.telescope = function()
   -- stylua: ignore end
 end
 
+M.neotree = function()
+  local telescope = require('telescope.builtin')
+  local fs = require('neo-tree.sources.filesystem')
+  return {
+    window = {
+      mappings = {
+        ['e'] = function() vim.api.nvim_exec('Neotree focus filesystem left', true) end,
+        ['b'] = function() vim.api.nvim_exec('Neotree focus buffers left', true) end,
+        ['g'] = function() vim.api.nvim_exec('Neotree focus git_status left', true) end,
+      },
+    },
+    filesystem = {
+      window = {
+        mappings = {
+          ['O'] = 'system_open',
+          ['tf'] = 'telescope_find',
+          ['tg'] = 'telescope_grep',
+        },
+      },
+      commands = {
+        system_open = function(state)
+          local path = state.tree:get_node():get_id()
+          require('base').open(path)
+        end,
+        telescope_find = function(state)
+          local path = state.tree:get_node():get_id()
+          telescope.find_files(
+            get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state)
+          )
+        end,
+        telescope_grep = function(state)
+          local path = state.tree:get_node():get_id()
+          telescope.live_grep(
+            get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state)
+          )
+        end,
+      },
+    },
+  }
+end
+
 M.wk = function(wk)
   function _any_toggle(cmd)
     local run = require('toggleterm.terminal').Terminal:new({
@@ -193,6 +234,10 @@ M.wk = function(wk)
       i = { '<cmd>split<cr><esc>', 'Split Up' },
       o = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
     },
+    b = {
+      name = 'Buffer',
+      f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
+    },
     v = {
       name = 'Vim',
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
@@ -217,18 +262,15 @@ M.wk = function(wk)
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols' },
       S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols' },
     },
-    b = {
-      name = 'Breakpoint',
-      b = { function() require('persistent-breakpoints.api').toggle_breakpoint() end, 'Toggle Breakpoint' },
-      c = {
-        function() require('persistent-breakpoints.api').set_conditional_breakpoint() end,
-        'Toggle Condition Breakpoint',
-      },
-      l = { function() require('persistent-breakpoints.api').load_breakpoints() end, 'Load Saved Breakpoint' },
-      d = { function() require('persistent-breakpoints.api').clear_all_breakpoints() end, 'Clear All Breakpoint' },
-    },
     d = {
       name = 'Debug',
+      b = {
+        name = 'Breakpoint',
+        b = { '<cmd>PBToggleBreakpoint<cr>', 'Toggle Breakpoint' },
+        c = { '<cmd>PBSetConditionalBreakpoint<cr>', 'Toggle Condition Breakpoint' },
+        l = { '<cmd>PBLoad<cr>', 'Load Saved Breakpoint' },
+        d = { '<cmd>PBClearAllBreakpoints<cr>', 'Clear All Breakpoint' },
+      },
       c = { function() _dap_continue() end, 'Continue' },
       o = { function() require('dap').step_over() end, 'Step Over' },
       i = { function() require('dap').step_into() end, 'Step Into' },
@@ -253,15 +295,25 @@ M.wk = function(wk)
       f = { '<cmd>ToggleFocusMode<cr>', 'Focus Mode' },
       o = { '<cmd>BWipeout other<cr>', 'Only Current Buffer' },
       w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
-      c = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
+      s = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
       m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
+      c = {
+        name = 'Copy Information',
+        c = { function() _copy_content() end, 'Copy Content' },
+        n = { function() _copy_name() end, 'Copy File Name' },
+        e = { function() _copy_name_without_ext() end, 'Copy File Name Without Ext' },
+        d = { function() _copy_contain_directory() end, 'Copy Contain Directory' },
+        p = { function() _copy_path() end, 'Copy Path' },
+        r = { function() _copy_relative_path() end, 'Copy Relative Path' },
+      },
     },
     f = {
       name = 'File Explorer',
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
-      e = { '<cmd>NvimTreeFindFile<cr>', 'Tree Explorer' },
-      t = { '<cmd>NvimTreeToggle<cr>', 'Tree Explorer' },
+      e = { '<cmd>NvimTreeFindFile<cr>', 'NvimTree Explorer' },
+      d = { '<cmd>Neotree<cr>', 'Neotree Explorer' },
+      t = { '<cmd>NvimTreeToggle<cr>', 'Toggle Tree Explorer' },
       v = { '<cmd>VFiler<cr>', 'VFiler File explorer' },
       s = { '<cmd>Telescope find_files theme=get_dropdown previewer=false<cr>', 'Find files' },
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
@@ -270,15 +322,6 @@ M.wk = function(wk)
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
       o = { function() _open_with_default_app() end, 'Open With Default APP' },
       r = { function() _reveal_file_in_file_explorer() end, 'Reveal In File Explorer' },
-    },
-    i = {
-      name = 'Copy Information',
-      c = { function() _copy_content() end, 'Copy Content' },
-      n = { function() _copy_name() end, 'Copy File Name' },
-      e = { function() _copy_name_without_ext() end, 'Copy File Name Without Ext' },
-      d = { function() _copy_contain_directory() end, 'Copy Contain Directory' },
-      p = { function() _copy_path() end, 'Copy Path' },
-      r = { function() _copy_relative_path() end, 'Copy Relative Path' },
     },
   }
   wk.register(n, { mode = 'n', prefix = '<leader>' })
@@ -480,6 +523,19 @@ M.setup_autocmd = function()
     once = true,
     -- callback = function() vim.notify('ccls', vim.log.levels.INFO) end,
     callback = function() end,
+  })
+  vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+    pattern = '*',
+    command = 'checktime',
+  })
+  local _disable_syntax = function() vim.cmd('if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif') end
+  vim.api.nvim_create_autocmd('Filetype', {
+    pattern = 'log',
+    callback = function() _disable_syntax() end,
+  })
+  local _nofold = function() vim.cmd('set nofoldenable') end
+  vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
+    callback = function() _nofold() end,
   })
 end
 

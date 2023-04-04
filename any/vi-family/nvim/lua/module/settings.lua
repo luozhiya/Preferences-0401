@@ -44,7 +44,11 @@ local cached = {
   },
   ['ahmedkhalf/project.nvim'] = {
     event = { 'VeryLazy' },
-    config = function() require('project_nvim').setup() end,
+    config = function()
+      require('project_nvim').setup({
+        silent_chdir = true,
+      })
+    end,
   },
   ['hrsh7th/nvim-cmp'] = {
     event = { 'BufReadPost' },
@@ -73,13 +77,17 @@ local cached = {
   },
   ['lewis6991/gitsigns.nvim'] = {
     event = 'BufReadPost',
-    config = function() require('gitsigns').setup() end,
+    config = true,
   },
   ['sindrets/diffview.nvim'] = {
     cmd = { 'DiffviewOpen' },
   },
   ['kazhala/close-buffers.nvim'] = {
     cmd = { 'CloseView', 'BWipeout' },
+  },
+  ['glepnir/flybuf.nvim'] = {
+    cmd = { 'FlyBuf' },
+    config = true,
   },
   ['folke/which-key.nvim'] = {
     keys = { { ',' }, { 'g' } },
@@ -115,7 +123,7 @@ local cached = {
         sync_root_with_cwd = true,
         respect_buf_cwd = true,
         hijack_directories = { enable = false },
-        update_focused_file = { enable = false, update_root = true },
+        update_focused_file = { enable = true, update_root = true },
         actions = { open_file = { resize_window = false } },
         view = { adaptive_size = false, preserve_window_proportions = true },
         git = { enable = false },
@@ -131,6 +139,7 @@ local cached = {
   ['folke/tokyonight.nvim'] = {
     lazy = false,
     priority = 1000,
+    config = function() vim.cmd([[colorscheme tokyonight]]) end,
   },
   ['luukvbaal/statuscol.nvim'] = {
     event = 'User NeXT',
@@ -205,6 +214,7 @@ local cached = {
         close_if_last_window = true,
         source_selector = { winbar = false, statusline = false },
       }
+      opts = vim.tbl_deep_extend('error', opts, bindings.neotree())
       require('neo-tree').setup(opts)
     end,
   },

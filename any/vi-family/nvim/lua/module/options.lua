@@ -13,7 +13,7 @@ M.root = base.to_native(vim.fn.stdpath('config') .. '/lazy')
 function M.before()
   bindings.setup_leader()
 
-  vim.g.lsp_cpp_provider = 'ccls' -- ccls clangd
+  vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
   vim.g.lua_enhance = false
 
   vim.g.neovide_remember_window_size = true
@@ -55,12 +55,8 @@ function M.before()
   end
 
   vim.cmd([[
-    autocmd Filetype log if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif
-    au FocusGained,BufEnter * :checktime
-    au CursorHold,CursorHoldI * checktime
     aunmenu PopUp.How-to\ disable\ mouse
     aunmenu PopUp.-1-
-    set nofoldenable
   ]])
 
   local opts = {
@@ -110,7 +106,6 @@ function M.before()
 end
 
 M.after = function()
-  vim.cmd([[colorscheme tokyonight]])
   bindings.setup_autocmd()
   bindings.setup_comands()
   bindings.setup_code()
