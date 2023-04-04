@@ -208,7 +208,7 @@ local cached = {
     end,
   },
   ['nvim-lualine/lualine.nvim'] = {
-    event = 'VeryLazy',
+    event = 'User NeXT',
     config = function()
       local function lsp_active()
         local names = {}

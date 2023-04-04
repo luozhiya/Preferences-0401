@@ -1,3 +1,4 @@
+local base = require('base')
 local M = {}
 
 M.map = function(mode, lhs, rhs, opts)
@@ -102,7 +103,6 @@ M.wk = function(wk)
     })
     run:toggle()
   end
-  local base = require('base')
   local _copy_content = function() return base.copy_to_clipboard(base.get_content()) end
   local _copy_path = function() return base.copy_to_clipboard(base.to_native(base.get_path())) end
   local _copy_relative_path = function() return base.copy_to_clipboard(base.to_native(base.get_relative_path())) end
@@ -447,6 +447,21 @@ M.setup_autocmd = function()
         vim.cmd('confirm quit')
       end
     end,
+  })
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'NeXT',
+    once = true,
+    callback = function() print('NeXT') end,
+  })
+  local function _next()
+    vim.schedule(function()
+      if vim.v.exiting ~= vim.NIL then return end
+      if base.is_kernel() then vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false }) end
+    end)
+  end
+  vim.api.nvim_create_autocmd('UIEnter', {
+    once = true,
+    callback = function() _next() end,
   })
 end
 
