@@ -6,10 +6,14 @@ local cached = {
     cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
     build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup({
+      local opts = {
         matchup = { enable = true },
         ensure_installed = { 'cpp', 'c', 'lua', 'cmake' },
-      })
+      }
+      if vim.g.NeXT == true then
+        vim.list_extend(opts.ensure_installed, { 'regex', 'bash', 'markdown', 'markdown_inline' })
+      end
+      require('nvim-treesitter.configs').setup(opts)
     end,
   },
   ['nvim-telescope/telescope.nvim'] = {
@@ -111,9 +115,6 @@ local cached = {
         select = { enabled = true, backend = { 'telescope' } },
       })
     end,
-  },
-  ['j-hui/fidget.nvim'] = {
-    config = function() require('fidget').setup({ window = { blend = 0 } }) end,
   },
   ['nvim-tree/nvim-tree.lua'] = {
     cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
@@ -238,14 +239,41 @@ local cached = {
       })
     end,
   },
+  ['rcarriga/nvim-notify'] = {
+    event = 'User NeXT',
+    config = function()
+      require('notify').setup()
+      vim.notify = require('notify')
+    end,
+  },
+  ['folke/noice.nvim'] = {
+    event = 'User NeXT',
+    config = function()
+      require('noice').setup({
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+            ['vim.lsp.util.stylize_markdown'] = true,
+            ['cmp.entry.get_documentation'] = true,
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      })
+    end,
+  },
   ['tpope/vim-obsession'] = {
     cmd = { 'Obsession' },
   },
   ['fedepujol/move.nvim'] = {
     cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' },
-  },
-  ['ray-x/lsp_signature.nvim'] = {
-    config = function() require('lsp_signature').setup({ hint_prefix = '< ' }) end,
   },
   ['folke/trouble.nvim'] = {
     cmd = { 'TroubleToggle' },
@@ -335,11 +363,9 @@ local cached = {
   ['neovim/nvim-lspconfig'] = {
     ft = { 'c', 'cpp', 'lua' },
     config = require('module.lsp').lsp,
-    dependencies = { 'j-hui/fidget.nvim', 'ray-x/lsp_signature.nvim' },
   },
   ['mfussenegger/nvim-dap'] = {
     config = require('module.lsp').dap,
-    dependencies = { 'theHamsta/nvim-dap-virtual-text', 'rcarriga/nvim-dap-ui', 'Weissle/persistent-breakpoints.nvim' },
   },
 }
 

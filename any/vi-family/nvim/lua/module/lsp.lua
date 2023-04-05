@@ -44,20 +44,36 @@ local _setup_lsp_cpp = function(on_attach, capabilities)
   end
 end
 
-M.lsp = function()
-  vim.lsp.set_log_level('OFF')
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+local _lsp_handlers = function()
+  if not vim.g.NeXT then
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+  end
   vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics,
     { virtual_text = false, signs = false, update_in_insert = false, underline = false }
   )
+end
+
+local _lsp_preferences = function()
   local on_attach = function(client, buffer)
     for _, keys in pairs(bindings.lsp) do
       bindings.map(keys.mode or 'n', keys[1], keys[2], { noremap = true, silent = true, buffer = buffer })
     end
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-  if vim.g.lua_enhance == true then
+  return on_attach, capabilities
+end
+
+local _lsp_ui = function()
+  if not vim.g.NeXT then require('lsp_signature').setup({ hint_prefix = '< ' }) end
+  require('fidget').setup({ window = { blend = 0 } })
+end
+
+M.lsp = function()
+  vim.lsp.set_log_level('OFF')
+  _lsp_handlers()
+  local on_attach, capabilities = _lsp_preferences()
+  if vim.g.lsp_lua_enhance == true then
     -- mason: It's important that you set up the plugins in the following order
     require('mason').setup()
     require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
@@ -65,6 +81,7 @@ M.lsp = function()
     require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
   end
   _setup_lsp_cpp(on_attach, capabilities)
+  _lsp_ui()
 end
 
 M.dap = function()

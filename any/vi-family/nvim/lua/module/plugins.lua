@@ -39,12 +39,13 @@ local list = {
   { 'obaland/vfiler.vim' },
   { 'nvim-neo-tree/neo-tree.nvim' },
   { 'nvim-lualine/lualine.nvim' },
+  { 'rcarriga/nvim-notify' },
+  { 'folke/noice.nvim' },
   -- Edit
   { 'tpope/vim-obsession' },
   { 'windwp/nvim-autopairs' },
   { 'numToStr/Comment.nvim' },
   { 'fedepujol/move.nvim' },
-  { 'ray-x/lsp_signature.nvim' },
   { 'folke/trouble.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
   { 'HiPhish/nvim-ts-rainbow2' },
@@ -55,9 +56,11 @@ local list = {
   { 'DNLHC/glance.nvim' },
   -- Session
   { 'Shatur/neovim-session-manager' },
-  -- LSP Core
+  -- LSP
   { 'm-pilia/vim-ccls' },
+  { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },
+  { 'glepnir/lspsaga.nvim' },
   { 'p00f/clangd_extensions.nvim' },
   { 'lvimuser/lsp-inlayhints.nvim' },
   { 'neovim/nvim-lspconfig' },
