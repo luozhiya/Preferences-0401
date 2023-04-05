@@ -1,76 +1,87 @@
 local M = {}
 
 local list = {
-  -- Foundation
+  -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
-  -- Treesitter
-  { 'nvim-treesitter/nvim-treesitter' },
-  -- Telescope
+  { 'MunifTanjim/nui.nvim' },
+  -- Bars And Lines
+  { 'petertriho/nvim-scrollbar' },
+  { 'nvim-lualine/lualine.nvim' },
+  { 'luukvbaal/statuscol.nvim' },
+  -- Colorschemes
+  { 'folke/tokyonight.nvim' },
+  -- Builtin UI Improved
+  { 'stevearc/dressing.nvim' },
+  { 'rcarriga/nvim-notify' },
+  { 'folke/noice.nvim' },
+  -- File Explorer
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'obaland/vfiler.vim' },
+  { 'nvim-neo-tree/neo-tree.nvim' },
+  { 'luukvbaal/nnn.nvim' },
+  -- Terminal Integration
+  { 'akinsho/toggleterm.nvim' },
+  -- Project
+  { 'ahmedkhalf/project.nvim' },
+  -- Session
+  { 'tpope/vim-obsession' },
+  { 'Shatur/neovim-session-manager' },
+  -- Git
+  { 'lewis6991/gitsigns.nvim' },
+  { 'sindrets/diffview.nvim' },
+  -- Fuzzy Finder
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-telescope/telescope-fzf-native.nvim' },
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
-  { 'stevearc/aerial.nvim' },
-  { 'ahmedkhalf/project.nvim' },
+  -- Key Management
+  { 'folke/which-key.nvim' },
+  -- Buffer
+  { 'kazhala/close-buffers.nvim' },
+  { 'glepnir/flybuf.nvim' },
+  -- Syntax
+  { 'nvim-treesitter/nvim-treesitter' },
+  -- Editing Support
+  { 'fedepujol/move.nvim' },
+  { 'andymass/vim-matchup' },
+  { 'windwp/nvim-autopairs' },
+  { 'numToStr/Comment.nvim' },
+  -- Search
+  { 'kevinhwang91/nvim-hlslens' },
+  -- Formatting
+  { 'mhartington/formatter.nvim' },
+  { 'lukas-reineke/indent-blankline.nvim' },
+  { 'HiPhish/nvim-ts-rainbow2' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
+  -- Snippet
   { 'L3MON4D3/LuaSnip' },
-  -- Git
-  { 'lewis6991/gitsigns.nvim' },
-  { 'sindrets/diffview.nvim' },
-  -- Buffer
-  { 'kazhala/close-buffers.nvim' },
-  { 'glepnir/flybuf.nvim' },
-  -- Key Management
-  { 'folke/which-key.nvim' },
-  -- Appearance
-  { 'MunifTanjim/nui.nvim' },
-  { 'stevearc/dressing.nvim' },
-  { 'j-hui/fidget.nvim' },
-  { 'nvim-tree/nvim-tree.lua' },
-  { 'akinsho/toggleterm.nvim' },
-  { 'folke/tokyonight.nvim' },
-  { 'luukvbaal/statuscol.nvim' },
-  { 'petertriho/nvim-scrollbar' },
-  { 'kevinhwang91/nvim-hlslens' },
-  { 'obaland/vfiler.vim' },
-  { 'nvim-neo-tree/neo-tree.nvim' },
-  { 'nvim-lualine/lualine.nvim' },
-  { 'rcarriga/nvim-notify' },
-  { 'folke/noice.nvim' },
-  -- Edit
-  { 'tpope/vim-obsession' },
-  { 'windwp/nvim-autopairs' },
-  { 'numToStr/Comment.nvim' },
-  { 'fedepujol/move.nvim' },
-  { 'folke/trouble.nvim' },
-  { 'lukas-reineke/indent-blankline.nvim' },
-  { 'HiPhish/nvim-ts-rainbow2' },
+  -- C++
   { 'p00f/godbolt.nvim' },
-  { 'luukvbaal/nnn.nvim' },
-  { 'mhartington/formatter.nvim' },
-  { 'andymass/vim-matchup' },
-  { 'DNLHC/glance.nvim' },
-  -- Session
-  { 'Shatur/neovim-session-manager' },
-  -- LSP
-  { 'm-pilia/vim-ccls' },
-  { 'ray-x/lsp_signature.nvim' },
-  { 'jackguo380/vim-lsp-cxx-highlight' },
-  { 'glepnir/lspsaga.nvim' },
-  { 'p00f/clangd_extensions.nvim' },
-  { 'lvimuser/lsp-inlayhints.nvim' },
+  -- Diagnostics
+  { 'folke/trouble.nvim' },
+  -- LSP Functional
   { 'neovim/nvim-lspconfig' },
-  { 'folke/neodev.nvim' },
   { 'williamboman/mason.nvim' },
   { 'williamboman/mason-lspconfig.nvim' },
+  { 'm-pilia/vim-ccls' },
+  { 'p00f/clangd_extensions.nvim' },
+  { 'folke/neodev.nvim' },
+  -- LSP Visualization/Interactive
+  { 'ray-x/lsp_signature.nvim' },
+  { 'jackguo380/vim-lsp-cxx-highlight' },
+  { 'lvimuser/lsp-inlayhints.nvim' },
+  { 'glepnir/lspsaga.nvim' },
+  { 'DNLHC/glance.nvim' },
+  { 'j-hui/fidget.nvim' },
+  { 'stevearc/aerial.nvim' },
 }
 
 local dap = {
-  -- Debug
+  -- DAP VIF
   { 'mfussenegger/nvim-dap' },
   { 'theHamsta/nvim-dap-virtual-text' },
   { 'rcarriga/nvim-dap-ui' },
