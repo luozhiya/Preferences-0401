@@ -222,6 +222,7 @@ M.wk = function(wk)
       t = { '<cmd>ClangdTypeHierarchy<cr>', 'Clang Type Hierarchy' },
       h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
       m = { '<cmd>ClangdMemoryUsage<cr>', 'Clangd Memory Usage' },
+      d = { function() require('cppdoc').open() end, 'Search cppreference Local' },
     },
     w = {
       name = 'Windows',
@@ -249,7 +250,7 @@ M.wk = function(wk)
     l = {
       name = 'LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
-      h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
+      l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
       o = { '<cmd>AerialToggle<cr>', 'Outline' },
       f = { function() _format() end, 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
@@ -257,7 +258,7 @@ M.wk = function(wk)
       d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics' },
       D = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Document Diagnostics' },
       q = { '<cmd>TroubleToggle quickfix<cr>', 'Trouble Quickfix' },
-      l = { '<cmd>TroubleToggle loclist<cr>', 'Trouble Loclist' },
+      L = { '<cmd>TroubleToggle loclist<cr>', 'Trouble Loclist' },
       r = { '<cmd>TroubleToggle lsp_references<cr>', 'Trouble LSP References' },
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols' },
       S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols' },
@@ -511,7 +512,7 @@ M.setup_autocmd = function()
   local _next = function()
     vim.schedule(function()
       if vim.v.exiting ~= vim.NIL then return end
-      if base.is_kernel() then vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false }) end
+      if vim.g.NeXT == true then vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false }) end
     end)
   end
   vim.api.nvim_create_autocmd('UIEnter', {
@@ -537,6 +538,7 @@ M.setup_autocmd = function()
   vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
     callback = function() _nofold() end,
   })
+  vim.cmd([[:autocmd TermClose * execute 'bdelete! ' . expand('<abuf>')]])
 end
 
 return M

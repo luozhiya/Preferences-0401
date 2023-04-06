@@ -61,6 +61,7 @@ local list = {
   { 'L3MON4D3/LuaSnip' },
   -- C++
   { 'p00f/godbolt.nvim' },
+  { 'Xertes0/cppdoc.nvim' },
   -- Diagnostics
   { 'folke/trouble.nvim' },
   -- LSP Functional

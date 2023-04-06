@@ -372,6 +372,9 @@ run['C++'] = {
       })
     end,
   },
+  ['Xertes0/cppdoc.nvim'] = {
+    config = function() require('cppdoc').setup() end,
+  },
 }
 
 run['Diagnostics'] = {

@@ -7,6 +7,7 @@
   "cmp-cmdline": { "branch": "main", "commit": "8fcc934a52af96120fe26358985c10c035984b53" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "0e6b2ed705ddcff9738ec4ea838141654f12eeef" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
+  "cppdoc.nvim": { "branch": "master", "commit": "36b474b8c038c2473f576a11a104197310df34b4" },
   "diffview.nvim": { "branch": "main", "commit": "46bc1e102935054c2714377e3c48dd4314a98b78" },
   "dressing.nvim": { "branch": "master", "commit": "5f44f829481640be0f96759c965ae22a3bcaf7ce" },
   "fidget.nvim": { "branch": "main", "commit": "0ba1e16d07627532b6cae915cc992ecac249fb97" },
