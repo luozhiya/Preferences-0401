@@ -4,7 +4,8 @@ local M = {}
 local run = {}
 run['Bars And Lines'] = {
   ['luukvbaal/statuscol.nvim'] = {
-    event = 'User NeXT',
+    event = 'BufReadPost',
+    -- event = 'User NeXT',
     config = function()
       vim.opt.foldcolumn = '1'
       local builtin = require('statuscol.builtin')
@@ -88,9 +89,13 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['rcarriga/nvim-notify'] = {
+    enabled = false,
     event = 'User NeXT',
     config = function()
-      require('notify').setup()
+      local opts = {
+        stages = 'static',
+      }
+      require('notify').setup(opts)
       vim.notify = require('notify')
     end,
   },
@@ -115,6 +120,19 @@ run['Builtin UI Improved'] = {
           lsp_doc_border = false, -- add a border to hover docs and signature help
         },
       })
+    end,
+  },
+  ['vigoux/notifier.nvim'] = {
+    event = 'VeryLazy',
+    -- event = 'User NeXT',
+    config = function()
+      local opts = {
+        components = { -- Order of the components to draw from top to bottom (first nvim notifications, then lsp)
+          'nvim', -- Nvim notifications (vim.notify and such)
+          -- "lsp"  -- LSP status updates
+        },
+      }
+      require('notifier').setup(opts)
     end,
   },
 }

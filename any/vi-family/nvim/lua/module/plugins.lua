@@ -14,6 +14,7 @@ local list = {
   { 'stevearc/dressing.nvim' },
   { 'rcarriga/nvim-notify' },
   { 'folke/noice.nvim' },
+  { 'vigoux/notifier.nvim' },
   -- File Explorer
   { 'nvim-tree/nvim-tree.lua' },
   { 'obaland/vfiler.vim' },

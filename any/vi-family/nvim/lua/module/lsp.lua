@@ -65,8 +65,8 @@ local _lsp_preferences = function()
 end
 
 local _lsp_ui = function()
-  if not vim.g.NeXT then require('lsp_signature').setup({ hint_prefix = '< ' }) end
-  require('fidget').setup({ window = { blend = 0 } })
+  if not vim.g.NeXT then require('lsp_signature') end
+  require('fidget')
 end
 
 M.lsp = function()
