@@ -185,6 +185,15 @@ M.wk = function(wk)
       vim.cmd('FormatWriteLock')
     end
   end
+  local _projects = function()
+    require('project_nvim')
+    local timer = vim.loop.new_timer()
+    local picker = function()
+      timer:stop()
+      require('telescope').extensions.projects.projects()
+    end
+    timer:start(8, 0, vim.schedule_wrap(picker))
+  end
   -- stylua: ignore start
   local wk_ve = function()
     return {
@@ -318,7 +327,8 @@ M.wk = function(wk)
       v = { '<cmd>VFiler<cr>', 'VFiler File explorer' },
       s = { '<cmd>Telescope find_files theme=get_dropdown previewer=false<cr>', 'Find files' },
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
-      p = { '<cmd>Telescope projects<cr>', 'Projects' },
+      -- p = { '<cmd>Telescope projects<cr>', 'Projects' },
+      p = { function() _projects() end, 'Projects' },
       f = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
       o = { function() _open_with_default_app() end, 'Open With Default APP' },

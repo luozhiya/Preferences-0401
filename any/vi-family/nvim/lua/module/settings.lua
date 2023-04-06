@@ -73,7 +73,7 @@ run['Colorschemes'] = {
 
 run['Builtin UI Improved'] = {
   ['stevearc/dressing.nvim'] = {
-    event = { 'VeryLazy' },
+    event = { 'User NeXT' },
     config = function()
       require('dressing').setup({
         input = {
@@ -183,7 +183,6 @@ run['Terminal Integration'] = {
 
 run['Project'] = {
   ['ahmedkhalf/project.nvim'] = {
-    event = { 'VeryLazy' },
     config = function()
       require('project_nvim').setup({
         silent_chdir = true,
@@ -421,6 +420,12 @@ run['LSP VIF'] = {
   ['neovim/nvim-lspconfig'] = {
     ft = { 'c', 'cpp', 'lua' },
     config = require('module.lsp').lsp,
+  },
+  ['j-hui/fidget.nvim'] = {
+    config = function() require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } }) end,
+  },
+  ['ray-x/lsp_signature.nvim'] = {
+    config = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
   },
 }
 

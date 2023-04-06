@@ -18,8 +18,8 @@ function M.before()
   require('NeXT')
 
   vim.g.neovide_remember_window_size = true
-  vim.g.neovide_refresh_rate_idle = 120
-  vim.g.neovide_no_idle = true
+  -- vim.g.neovide_refresh_rate_idle = 120
+  -- vim.g.neovide_no_idle = true
 
   vim.g.loaded_python3_provider = 0
   vim.g.loaded_pythonx_provider = 0
