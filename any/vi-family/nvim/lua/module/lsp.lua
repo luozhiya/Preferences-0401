@@ -44,35 +44,61 @@ local _setup_lsp_cpp = function(on_attach, capabilities)
   end
 end
 
-local _lsp_handlers = function()
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics,
-    { virtual_text = false, signs = false, update_in_insert = false, underline = false }
-  )
+local _lsp_signdefine = function()
+  local signs = {
+    { name = 'DiagnosticSignError', text = '' },
+    { name = 'DiagnosticSignWarn', text = '' },
+    { name = 'DiagnosticSignHint', text = '' },
+    { name = 'DiagnosticSignInfo', text = '' },
+  }
+  for _, sign in ipairs(signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
+  end
 end
 
-local _lsp_preferences = function()
+local _lsp_handlers = function()
+  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+  -- vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+  --   vim.lsp.diagnostic.on_publish_diagnostics,
+  --   { virtual_text = false, signs = false, update_in_insert = false, underline = false }
+  -- )
+end
+
+local _lsp_diagnostic = function()
+  local config = {
+    virtual_text = true,
+    signs = false,
+    update_in_insert = false,
+    underline = true,
+    severity_sort = false,
+  }
+  vim.diagnostic.config(config)
+end
+
+local _lsp_client_preferences = function()
   local on_attach = function(client, buffer)
     for _, keys in pairs(bindings.lsp) do
       bindings.map(keys.mode or 'n', keys[1], keys[2], { noremap = true, silent = true, buffer = buffer })
     end
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.resolveSupport =
+    { properties = { 'documentation', 'detail', 'additionalTextEdits' } }
   return on_attach, capabilities
 end
 
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
+  _lsp_signdefine()
+  _lsp_diagnostic()
   _lsp_handlers()
-  local on_attach, capabilities = _lsp_preferences()
-  if vim.g.lsp_lua_enhance == true then
-    -- mason: It's important that you set up the plugins in the following order
-    require('mason').setup()
-    require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
-    require('neodev').setup()
-    require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-  end
+  local on_attach, capabilities = _lsp_client_preferences()
+  -- mason: It's important that you set up the plugins in the following order
+  require('mason').setup()
+  require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
+  require('neodev').setup()
+  require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
   _setup_lsp_cpp(on_attach, capabilities)
 end
 

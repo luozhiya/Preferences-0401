@@ -23,6 +23,7 @@ run['Bars And Lines'] = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
+    enable = false,
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
@@ -98,8 +99,39 @@ run['Builtin UI Improved'] = {
   },
   ['folke/noice.nvim'] = {
     enabled = false,
+    event = { 'User NeXT' },
     config = function()
       require('noice').setup({
+        views = {
+          cmdline_popup = {
+            position = {
+              row = 5,
+              col = '50%',
+            },
+            size = {
+              width = 60,
+              height = 'auto',
+            },
+          },
+          popupmenu = {
+            relative = 'editor',
+            position = {
+              row = 8,
+              col = '50%',
+            },
+            size = {
+              width = 60,
+              height = 10,
+            },
+            border = {
+              style = 'rounded',
+              padding = { 0, 1 },
+            },
+            win_options = {
+              winhighlight = { Normal = 'Normal', FloatBorder = 'DiagnosticInfo' },
+            },
+          },
+        },
         lsp = {
           -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
           override = {
@@ -108,18 +140,22 @@ run['Builtin UI Improved'] = {
             ['cmp.entry.get_documentation'] = true,
           },
         },
+        notify = {
+          -- enable = false,
+        },
         -- you can enable a preset for easier configuration
         presets = {
           bottom_search = true, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
+          lsp_doc_border = true, -- add a border to hover docs and signature help
         },
       })
     end,
   },
   ['vigoux/notifier.nvim'] = {
+    -- enabled = false,
     event = 'VeryLazy',
     config = function()
       local opts = {
@@ -433,12 +469,34 @@ run['LSP VIF'] = {
     config = require('module.lsp').lsp,
   },
   ['j-hui/fidget.nvim'] = {
+    -- enabled = false,
     event = { 'LspAttach' },
     config = function() require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } }) end,
   },
   ['ray-x/lsp_signature.nvim'] = {
+    -- enabled = false,
     event = { 'LspAttach' },
     config = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
+  },
+  ['glepnir/lspsaga.nvim'] = {
+    enabled = false,
+    cmd = { 'Lspsaga' },
+    config = function()
+      local opts = {
+        diagnostic = {
+          show_code_action = true,
+          show_source = true,
+          jump_num_shortcut = true,
+          max_width = 0.7,
+          keys = {
+            exec_action = 'o',
+            quit = 'q',
+            go_action = 'g',
+          },
+        },
+      }
+      require('lspsaga').setup(opts)
+    end,
   },
 }
 

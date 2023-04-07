@@ -648,3 +648,23 @@ vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf);if [ $?
   if vim.g.NeXT == true then
     vim.list_extend(opts.ensure_installed, { 'regex', 'bash', 'markdown', 'markdown_inline' })
   end  
+
+  local config = {
+    virtual_text = false,
+    -- virtual_text = {
+    --   prefix = style.icons.misc.circle,
+    --   only_current_line = true,
+    -- },
+    signs = false,
+    update_in_insert = false,
+    underline = true,
+    severity_sort = false,
+    -- float = {
+    --   focusable = true,
+    --   style = 'normal',
+    --   border = 'rounded',
+    --   source = 'always',
+    --   header = '',
+    --   prefix = '',
+    -- },
+  }  

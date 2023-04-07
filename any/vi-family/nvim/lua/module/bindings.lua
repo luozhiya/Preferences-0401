@@ -26,7 +26,7 @@ M.lsp = {
 }
 
 M.cmp = function(cmp)
-  local forward = function()
+  local _forward = function()
     return cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -37,7 +37,7 @@ M.cmp = function(cmp)
       end
     end, { 'i', 's' })
   end
-  local backward = function()
+  local _backward = function()
     return cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
@@ -56,8 +56,8 @@ M.cmp = function(cmp)
       ['<down>'] = cmp.mapping.select_next_item(),
       ['<cr>'] = cmp.mapping.confirm({ select = true }),
       ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-      ['<tab>'] = forward(),
-      ['<s-tab>'] = backward(),
+      ['<tab>'] = _forward(),
+      ['<s-tab>'] = _backward(),
       ['<c-y>'] = cmp.mapping.confirm({ select = false }),
       ['<c-e>'] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
     },
@@ -195,8 +195,7 @@ M.wk = function(wk)
     timer:start(8, 0, vim.schedule_wrap(picker))
   end
   -- stylua: ignore start
-  local wk_ve = function()
-    return {
+  local wk_ve = {
       name = 'Edit Config',
       i = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/init.lua') end,                'init.lua (bootstrap)' },
       b = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/lua/base.lua') end,            'base.lua' },
@@ -206,7 +205,6 @@ M.wk = function(wk)
       p = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/lua/module/plugins.lua') end,  'plugins.lua' },
       s = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/lua/module/settings.lua') end, 'settings.lua' },
     }
-  end
   -- stylua: ignore end
   local n = {
     q = {
@@ -254,14 +252,14 @@ M.wk = function(wk)
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
-      e = wk_ve(),
+      e = wk_ve,
     },
     l = {
       name = 'LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
-      l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
+      -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
       o = { '<cmd>AerialToggle<cr>', 'Outline' },
-      f = { function() _format() end, 'Code Format' },
+      f = { _format, 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
       w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Trouble Workspace Diagnostics' },
       d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics' },
@@ -281,7 +279,7 @@ M.wk = function(wk)
         l = { '<cmd>PBLoad<cr>', 'Load Saved Breakpoint' },
         d = { '<cmd>PBClearAllBreakpoints<cr>', 'Clear All Breakpoint' },
       },
-      c = { function() _dap_continue() end, 'Continue' },
+      c = { _dap_continue, 'Continue' },
       o = { function() require('dap').step_over() end, 'Step Over' },
       i = { function() require('dap').step_into() end, 'Step Into' },
       f = { function() require('dap').step_out() end, 'Step Out' },
@@ -310,12 +308,12 @@ M.wk = function(wk)
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
       c = {
         name = 'Copy Information',
-        c = { function() _copy_content() end, 'Copy Content' },
-        n = { function() _copy_name() end, 'Copy File Name' },
-        e = { function() _copy_name_without_ext() end, 'Copy File Name Without Ext' },
-        d = { function() _copy_contain_directory() end, 'Copy Contain Directory' },
-        p = { function() _copy_path() end, 'Copy Path' },
-        r = { function() _copy_relative_path() end, 'Copy Relative Path' },
+        c = { _copy_content, 'Copy Content' },
+        n = { _copy_name, 'Copy File Name' },
+        e = { _copy_name_without_ext, 'Copy File Name Without Ext' },
+        d = { _copy_contain_directory, 'Copy Contain Directory' },
+        p = { _copy_path, 'Copy Path' },
+        r = { _copy_relative_path, 'Copy Relative Path' },
       },
     },
     f = {
@@ -328,11 +326,11 @@ M.wk = function(wk)
       s = { '<cmd>Telescope find_files theme=get_dropdown previewer=false<cr>', 'Find files' },
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
       -- p = { '<cmd>Telescope projects<cr>', 'Projects' },
-      p = { function() _projects() end, 'Projects' },
+      p = { _projects, 'Projects' },
       f = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
-      o = { function() _open_with_default_app() end, 'Open With Default APP' },
-      r = { function() _reveal_file_in_file_explorer() end, 'Reveal In File Explorer' },
+      o = { _open_with_default_app, 'Open With Default APP' },
+      r = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
     },
   }
   wk.register(n, { mode = 'n', prefix = '<leader>' })
@@ -434,6 +432,8 @@ M.setup_comands = function()
       wise(vim.fn.visualmode())
     end
   end
+  local _comment_line = function() _any_comment(require('Comment.api').toggle.linewise) end
+  local _comment_block = function() _any_comment(require('Comment.api').toggle.blockwise) end
   local _close_view = function()
     if #vim.api.nvim_list_wins() == 1 then
       require('close_buffers').delete({ type = 'this' })
@@ -441,52 +441,34 @@ M.setup_comands = function()
       vim.api.nvim_win_close(0, true)
     end
   end
-  vim.api.nvim_create_user_command(
-    'ToggleFullScreen',
-    function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end,
-    { desc = 'Toggle Full Screen' }
-  )
-  vim.api.nvim_create_user_command(
-    'ToggleWrap',
-    function() vim.opt.wrap = vim.opt.wrap._value == false end,
-    { desc = 'Toggle Wrap' }
-  )
-  vim.api.nvim_create_user_command(
-    'ToggleFocusMode',
-    function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end,
-    { desc = 'Toggle Focus Mode' }
-  )
-  vim.api.nvim_create_user_command(
-    'ToggleCaseSensitive',
-    function() vim.opt.ignorecase = vim.opt.ignorecase._value == false end,
-    { desc = 'Toggle Case Sensitive' }
-  )
-  vim.api.nvim_create_user_command(
-    'RemoveExclusiveORM',
-    function() vim.cmd([[:%s/\r//g]]) end,
-    { desc = 'Remove Exclusive ORM' }
-  )
-  vim.api.nvim_create_user_command(
-    'CommentLine',
-    function() _any_comment(require('Comment.api').toggle.linewise) end,
-    { desc = 'Comment Line' }
-  )
-  vim.api.nvim_create_user_command(
-    'CommentBlock',
-    function() _any_comment(require('Comment.api').toggle.blockwise) end,
-    { desc = 'Comment Block' }
-  )
-  vim.api.nvim_create_user_command(
-    'SublimeMerge',
-    function() require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync() end,
-    { desc = 'Sublime Merge' }
-  )
-  vim.api.nvim_create_user_command(
-    'SublimeText',
-    function() require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync() end,
-    { desc = 'Sublime Text' }
-  )
-  vim.api.nvim_create_user_command('CloseView', function() _close_view() end, { desc = 'Close View' })
+  local _toggle_wrap = function()
+    vim.opt.wrap = vim.opt.wrap._value == false
+    vim.notify(vim.opt.wrap._value == true and 'Wrap Hard' or 'Not Wrap', vim.log.levels.INFO)
+  end
+  local _toggle_case_sensitive = function()
+    vim.opt.ignorecase = vim.opt.ignorecase._value == false
+    vim.notify(vim.opt.ignorecase._value == true and 'Ignore Case' or 'Case Sensitive', vim.log.levels.INFO)
+  end
+  local _toggle_fullscreen = function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end
+  local _toggle_focus_mode = function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end
+  local _remove_exclusive_orm = function() vim.cmd([[:%s/\r//g]]) end
+  local _sublime_merge = function()
+    require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync()
+  end
+  local _sublime_text = function()
+    require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync()
+  end
+
+  vim.api.nvim_create_user_command('ToggleFullScreen', _toggle_fullscreen, { desc = 'Toggle Full Screen' })
+  vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
+  vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
+  vim.api.nvim_create_user_command('ToggleCaseSensitive', _toggle_case_sensitive, { desc = 'Toggle Case Sensitive' })
+  vim.api.nvim_create_user_command('RemoveExclusiveORM', _remove_exclusive_orm, { desc = 'Remove Exclusive ORM' })
+  vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
+  vim.api.nvim_create_user_command('CommentLine', _comment_line, { desc = 'Comment Line' })
+  vim.api.nvim_create_user_command('CommentBlock', _comment_block, { desc = 'Comment Block' })
+  vim.api.nvim_create_user_command('SublimeMerge', _sublime_merge, { desc = 'Sublime Merge' })
+  vim.api.nvim_create_user_command('SublimeText', _sublime_text, { desc = 'Sublime Text' })
 end
 
 M.setup_autocmd = function()

@@ -14,7 +14,6 @@ function M.before()
   bindings.setup_leader()
 
   vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
-  vim.g.lsp_lua_enhance = false
 
   vim.g.neovide_remember_window_size = true
   -- vim.g.neovide_refresh_rate_idle = 120
