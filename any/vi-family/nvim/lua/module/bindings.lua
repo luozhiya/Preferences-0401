@@ -522,7 +522,7 @@ M.setup_autocmd = function()
   local _next = function()
     vim.schedule(function()
       if vim.v.exiting ~= vim.NIL then return end
-      if vim.g.NeXT == true then vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false }) end
+      vim.api.nvim_exec_autocmds('User', { pattern = 'NeXT', modeline = false })
     end)
   end
   vim.api.nvim_create_autocmd('UIEnter', {

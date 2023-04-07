@@ -644,3 +644,7 @@ vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf);if [ $?
   vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf); if [ $? -ne 130 ]; then firefox "..M.config.install_dir.."/reference/en/$RESP.html;fi")
   vim.cmd("normal! i")
   -- vim.cmd("startinsert!")
+
+  if vim.g.NeXT == true then
+    vim.list_extend(opts.ensure_installed, { 'regex', 'bash', 'markdown', 'markdown_inline' })
+  end  

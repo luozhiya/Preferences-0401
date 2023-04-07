@@ -45,9 +45,7 @@ local _setup_lsp_cpp = function(on_attach, capabilities)
 end
 
 local _lsp_handlers = function()
-  if not vim.g.NeXT then
-    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
-  end
+  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
   vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics,
     { virtual_text = false, signs = false, update_in_insert = false, underline = false }
@@ -64,11 +62,6 @@ local _lsp_preferences = function()
   return on_attach, capabilities
 end
 
-local _lsp_ui = function()
-  if not vim.g.NeXT then require('lsp_signature') end
-  require('fidget')
-end
-
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
@@ -81,7 +74,6 @@ M.lsp = function()
     require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
   end
   _setup_lsp_cpp(on_attach, capabilities)
-  _lsp_ui()
 end
 
 M.dap = function()

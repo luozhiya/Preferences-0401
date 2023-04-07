@@ -5,7 +5,6 @@ local run = {}
 run['Bars And Lines'] = {
   ['luukvbaal/statuscol.nvim'] = {
     event = 'BufReadPost',
-    -- event = 'User NeXT',
     config = function()
       vim.opt.foldcolumn = '1'
       local builtin = require('statuscol.builtin')
@@ -24,7 +23,6 @@ run['Bars And Lines'] = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
-    event = 'User NeXT',
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
@@ -43,7 +41,7 @@ run['Bars And Lines'] = {
     end,
   },
   ['nvim-lualine/lualine.nvim'] = {
-    event = 'User NeXT',
+    event = { 'User NeXT' },
     config = function()
       local function lsp_active()
         local names = {}
@@ -90,7 +88,6 @@ run['Builtin UI Improved'] = {
   },
   ['rcarriga/nvim-notify'] = {
     enabled = false,
-    event = 'User NeXT',
     config = function()
       local opts = {
         stages = 'static',
@@ -100,7 +97,7 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['folke/noice.nvim'] = {
-    event = 'User NeXT',
+    enabled = false,
     config = function()
       require('noice').setup({
         lsp = {
@@ -124,7 +121,6 @@ run['Builtin UI Improved'] = {
   },
   ['vigoux/notifier.nvim'] = {
     event = 'VeryLazy',
-    -- event = 'User NeXT',
     config = function()
       local opts = {
         components = { -- Order of the components to draw from top to bottom (first nvim notifications, then lsp)
@@ -290,9 +286,6 @@ run['Syntax'] = {
         matchup = { enable = true },
         ensure_installed = { 'cpp', 'c', 'lua', 'cmake' },
       }
-      if vim.g.NeXT == true then
-        vim.list_extend(opts.ensure_installed, { 'regex', 'bash', 'markdown', 'markdown_inline' })
-      end
       require('nvim-treesitter.configs').setup(opts)
     end,
   },
@@ -440,9 +433,11 @@ run['LSP VIF'] = {
     config = require('module.lsp').lsp,
   },
   ['j-hui/fidget.nvim'] = {
+    event = { 'LspAttach' },
     config = function() require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } }) end,
   },
   ['ray-x/lsp_signature.nvim'] = {
+    event = { 'LspAttach' },
     config = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
   },
 }

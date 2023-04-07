@@ -15,7 +15,6 @@ function M.before()
 
   vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
   vim.g.lsp_lua_enhance = false
-  require('NeXT')
 
   vim.g.neovide_remember_window_size = true
   -- vim.g.neovide_refresh_rate_idle = 120
