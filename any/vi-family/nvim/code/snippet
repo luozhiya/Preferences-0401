@@ -668,3 +668,47 @@ vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf);if [ $?
     --   prefix = '',
     -- },
   }  
+
+
+local _lsp_diagnostic = function()
+  local config = {
+    virtual_text = {
+      severity_limit = "Error",
+    },
+    signs = false,
+    update_in_insert = false,
+    underline = false,
+    severity_sort = false,
+  }
+  vim.diagnostic.config(config)
+end
+
+------------------------------------------------------------------------------------------------------------
+
+local _lsp_signdefine = function()
+  local signs = {
+    { name = 'DiagnosticSignError', text = '' },
+    { name = 'DiagnosticSignWarn', text = '' },
+    { name = 'DiagnosticSignHint', text = '' },
+    { name = 'DiagnosticSignInfo', text = '' },
+  }
+  for _, sign in ipairs(signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
+  end
+end
+
+
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.resolveSupport =
+    { properties = { 'documentation', 'detail', 'additionalTextEdits' } }
+
+
+" Right Click Context Menu (Copy-Cut-Paste)
+" nnoremap <silent><RightMouse> :call GuiShowContextMenu()<CR>
+" inoremap <silent><RightMouse> <Esc>:call GuiShowContextMenu()<CR>
+" xnoremap <silent><RightMouse> :call GuiShowContextMenu()<CR>gv
+" snoremap <silent><RightMouse> <C-G>:call GuiShowContextMenu()<CR>gv
+
+
+
+

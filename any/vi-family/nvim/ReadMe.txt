@@ -181,6 +181,8 @@ https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text
 https://github.com/neovim/neovim/issues/9877
 https://vi.stackexchange.com/questions/39285/is-it-possible-to-set-a-vim-api-nvim-create-autocmd-for-a-filetype-not-just-a-p
 https://stackoverflow.com/questions/68598026/running-async-lua-function-in-neovim
+https://github.com/neovim/neovim/issues/13314
+https://vi.stackexchange.com/questions/31748/how-to-set-the-diagnostic-level-for-neovim-lsp
 
 Lua
 ---

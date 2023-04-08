@@ -23,12 +23,13 @@ run['Bars And Lines'] = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
-    enable = false,
+    event = { 'User NeXT' },
+    -- enable = false,
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
       scrollbar.setup({
-        handle = { color = colors.bg_highlight },
+        handle = { color = colors.green2 },
         excluded_filetypes = { 'prompt', 'TelescopePrompt', 'noice', 'notify' },
         marks = {
           Search = { color = colors.orange },
@@ -426,6 +427,7 @@ run['C++'] = {
 run['Diagnostics'] = {
   ['folke/trouble.nvim'] = {
     cmd = { 'TroubleToggle' },
+    config = function() require('trouble').setup({ icons = false }) end,
   },
 }
 
