@@ -1,3 +1,15 @@
+Roadmap
+-------
+support clangd/ccls
+godbolt
+cppdocs
+sematic highlight
+cpp debug
+cpp test
+cpp run
+cpp cmake
+cpp project
+
 Modes
 -----
   normal_mode = "n",

@@ -50,16 +50,18 @@ run['Bars And Lines'] = {
         for _, client in pairs(vim.lsp.get_active_clients()) do
           table.insert(names, client.name)
         end
-        return 'LSP<' .. table.concat(names, ', ') .. '>'
+        return vim.tbl_isempty(names) and '' or ' ' .. table.concat(names, ' ')
+        -- return 'LSP<' .. table.concat(names, ', ') .. '>'
       end
       local function location() return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) end
       local fileformat = { 'fileformat', icons_enabled = false }
-      require('lualine').setup({
+      local opts = {
         sections = {
           lualine_x = { lsp_active, 'encoding', fileformat, 'filetype' },
           lualine_z = { location },
         },
-      })
+      }
+      require('lualine').setup(opts)
     end,
   },
 }
