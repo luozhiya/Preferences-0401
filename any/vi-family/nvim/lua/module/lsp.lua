@@ -66,9 +66,85 @@ local _lsp_client_preferences = function()
   return on_attach, capabilities
 end
 
+local _lsp_lightbulb = function()
+  local _hl_group = function() return 'LightBulb' end
+  local _is_codeaction = function()
+    for _, client in pairs(vim.lsp.buf_get_clients()) do
+      if client and client.supports_method('textDocument/codeAction') then return true end
+    end
+    return false
+  end
+  local _init = function()
+    if vim.tbl_isempty(vim.fn.sign_getdefined(_hl_group())) then
+      vim.fn.sign_define(_hl_group(), { text = 'A', texthl = _hl_group() }) -- 
+    end
+  end
+  local _update_bulb = function(buffer, line)
+    if vim.w.lightbulb_line == 0 then vim.w.lightbulb_line = 1 end
+    if vim.w.lightbulb_line ~= 0 then
+      vim.fn.sign_unplace(_hl_group(), { id = vim.w.lightbulb_line, buffer = buffer })
+    end
+    if line then
+      vim.fn.sign_place(line, _hl_group(), _hl_group(), buffer, { lnum = line + 1, priority = 10 })
+      vim.w.lightbulb_line = line
+    end
+  end
+  local _send_request = function()
+    local buf = vim.api.nvim_get_current_buf()
+    vim.w.lightbulb_line = vim.w.lightbulb_line or 0
+    local diagnostics = vim.lsp.diagnostic.get_line_diagnostics(buf)
+    local context = { diagnostics = diagnostics }
+    local params = vim.lsp.util.make_range_params()
+    params.context = context
+    local line = params.range.start.line
+    local _responses_slove = function(responses)
+      local has_actions = false
+      for _, resp in pairs(responses or {}) do
+        if resp.result and not vim.tbl_isempty(resp.result) then
+          has_actions = true
+          break
+        end
+      end
+      _update_bulb(buf, has_actions == true and line or nil)
+    end
+    vim.lsp.buf_request_all(buf, 'textDocument/codeAction', params, _responses_slove)
+  end
+  local _render_bulb = function(buffer)
+    -- if not _is_codeaction() then return end
+    require('plenary.async').run(_send_request)
+  end
+  local _autocmd = function()
+    vim.api.nvim_create_autocmd('LspAttach', {
+      group = vim.api.nvim_create_augroup('LspLightBulb', { clear = true }),
+      callback = function(opt)
+        local buf = opt.buf
+        local group = vim.api.nvim_create_augroup(_hl_group() .. tostring(buf), {})
+        vim.api.nvim_create_autocmd('CursorHold', {
+          group = group,
+          buffer = buf,
+          callback = function() _render_bulb(buf) end,
+        })
+        vim.api.nvim_create_autocmd('BufLeave', {
+          group = group,
+          buffer = buf,
+          callback = function() _update_bulb(buf, nil) end,
+        })
+        vim.api.nvim_create_autocmd('BufDelete', {
+          buffer = buf,
+          once = true,
+          callback = function() pcall(vim.api.nvim_del_augroup_by_id, group) end,
+        })
+      end,
+    })
+  end
+  _init()
+  _autocmd()
+end
+
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
+  -- _lsp_lightbulb()
   local on_attach, capabilities = _lsp_client_preferences()
   -- mason: It's important that you set up the plugins in the following order
   require('mason').setup()

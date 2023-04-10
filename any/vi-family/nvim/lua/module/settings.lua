@@ -475,7 +475,11 @@ run['LSP VIF'] = {
   ['j-hui/fidget.nvim'] = {
     -- enabled = false,
     event = { 'LspAttach' },
-    config = function() require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } }) end,
+    config = function()
+      vim.cmd([[highlight FidgetTitle ctermfg=110 guifg=#0887c7]])
+      vim.cmd([[highlight FidgetTask ctermfg=110 guifg=#0887c7]])
+      require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } })
+    end,
   },
   ['ray-x/lsp_signature.nvim'] = {
     -- enabled = false,
