@@ -17,6 +17,7 @@ local _lsp_clangd = function(on_attach, capabilities)
     on_attach(client, buffer)
   end
   local opts = {
+    cmd = { 'clangd', '--header-insertion=never' },
     filetypes = { 'c', 'cpp' },
     -- root_dir = function(fname) return require('lspconfig.util').find_git_ancestor(fname) end,
     on_attach = on_attach,

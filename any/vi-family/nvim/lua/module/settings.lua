@@ -367,6 +367,7 @@ run['Formatting'] = {
     event = { 'BufReadPost', 'BufNewFile' },
   },
   ['HiPhish/nvim-ts-rainbow2'] = {
+    enabled = false,
     event = 'BufReadPost',
     config = function()
       require('nvim-treesitter.configs').setup({
