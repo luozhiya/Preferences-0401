@@ -2,6 +2,20 @@ local bindings = require('module.bindings')
 local M = {}
 
 local _lsp_clangd = function(on_attach, capabilities)
+  local _clangd_on_attach = function(client, buffer)
+    local caps = client.server_capabilities
+    if caps.semanticTokensProvider and caps.semanticTokensProvider.full then
+      local augroup = vim.api.nvim_create_augroup('SemanticTokens', {})
+      vim.api.nvim_create_autocmd('TextChanged', {
+        group = augroup,
+        buffer = bufnr,
+        callback = function() vim.lsp.buf.semantic_tokens_full() end,
+      })
+      -- fire it first time on load as well
+      vim.lsp.buf.semantic_tokens_full()
+    end
+    on_attach(client, buffer)
+  end
   local opts = {
     filetypes = { 'c', 'cpp' },
     -- root_dir = function(fname) return require('lspconfig.util').find_git_ancestor(fname) end,
@@ -144,7 +158,7 @@ end
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
-  -- _lsp_lightbulb()
+  _lsp_lightbulb()
   local on_attach, capabilities = _lsp_client_preferences()
   -- mason: It's important that you set up the plugins in the following order
   require('mason').setup()

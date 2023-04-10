@@ -72,6 +72,7 @@ local list = {
   { 'm-pilia/vim-ccls' },
   { 'p00f/clangd_extensions.nvim' },
   { 'folke/neodev.nvim' },
+  { 'theHamsta/nvim-semantic-tokens' },
   -- LSP Visualization/Interactive
   { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },
