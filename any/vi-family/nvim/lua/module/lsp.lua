@@ -91,8 +91,9 @@ local _lsp_lightbulb = function()
   end
   local _init = function()
     if vim.tbl_isempty(vim.fn.sign_getdefined(_hl_group())) then
-      vim.fn.sign_define(_hl_group(), { text = 'A', texthl = _hl_group() }) -- 
+      vim.fn.sign_define(_hl_group(), { text = '', texthl = _hl_group() }) -- 
     end
+    vim.api.nvim_set_hl(0, _hl_group(), { link = 'DiagnosticSignHint', default = true })
   end
   local _update_bulb = function(buffer, line)
     if vim.w.lightbulb_line == 0 then vim.w.lightbulb_line = 1 end
@@ -156,10 +157,19 @@ local _lsp_lightbulb = function()
   _autocmd()
 end
 
+local _lsp_signdefine = function()
+  local signs = { Error = ' ', Warn = ' ', Hint = ' ', Info = ' ' }
+  for type, icon in pairs(signs) do
+    local hl = 'DiagnosticSign' .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
+  end
+end
+
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
   _lsp_lightbulb()
+  _lsp_signdefine()
   local on_attach, capabilities = _lsp_client_preferences()
   -- mason: It's important that you set up the plugins in the following order
   require('mason').setup()

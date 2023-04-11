@@ -57,12 +57,25 @@ run['Bars And Lines'] = {
       local fileformat = { 'fileformat', icons_enabled = false }
       local opts = {
         sections = {
-          lualine_x = { lsp_active, 'encoding', fileformat, 'filetype' },
+          lualine_x = { 'ctime', lsp_active, 'encoding', fileformat, 'filetype' },
           lualine_z = { location },
         },
       }
       require('lualine').setup(opts)
     end,
+  },
+  ['utilyre/barbecue.nvim'] = {
+    event = { 'User NeXT' },
+    config = function()
+      local opts = {
+        show_dirname = false,
+      }
+      require('barbecue').setup(opts)
+    end,
+  },
+  ['b0o/incline.nvim'] = {
+    event = { 'BufReadPost' },
+    config = function() require('incline').setup() end,
   },
 }
 
@@ -337,6 +350,10 @@ run['Editing Support'] = {
   ['fedepujol/move.nvim'] = {
     cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' },
   },
+  ['m4xshen/autoclose.nvim'] = {
+    event = 'BufReadPost',
+    config = function() require('autoclose').setup() end,
+  },
 }
 
 run['Search'] = {
@@ -393,11 +410,6 @@ run['Completion'] = {
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.cmp(cmp))
       cmp.setup(opts)
-      require('nvim-autopairs').setup({ disable_filetype = { 'dapui_watches' } })
-      cmp.event:on(
-        'confirm_done',
-        require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } })
-      )
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({

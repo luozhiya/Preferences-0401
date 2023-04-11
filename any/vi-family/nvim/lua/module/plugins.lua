@@ -8,6 +8,10 @@ local list = {
   { 'petertriho/nvim-scrollbar' },
   { 'nvim-lualine/lualine.nvim' },
   { 'luukvbaal/statuscol.nvim' },
+  { 'utilyre/barbecue.nvim' },
+  { 'SmiteshP/nvim-navic' },
+  { 'b0o/incline.nvim' },
+  { 'archibate/lualine-time' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   -- Builtin UI Improved
@@ -47,6 +51,7 @@ local list = {
   { 'andymass/vim-matchup' },
   { 'windwp/nvim-autopairs' },
   { 'numToStr/Comment.nvim' },
+  { 'm4xshen/autoclose.nvim' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   -- Formatting

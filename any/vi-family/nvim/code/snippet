@@ -744,3 +744,9 @@ end
     print(2)
     -- coroutine.resume(_send_request, buffer)
   end
+
+  require('nvim-autopairs').setup({ disable_filetype = { 'dapui_watches' } })
+  cmp.event:on(
+    'confirm_done'
+    require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } })
+  )  
