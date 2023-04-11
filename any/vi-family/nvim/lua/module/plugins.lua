@@ -86,6 +86,7 @@ local list = {
   { 'DNLHC/glance.nvim' },
   { 'j-hui/fidget.nvim' },
   { 'stevearc/aerial.nvim' },
+  { 'VidocqH/lsp-lens.nvim' },
 }
 
 local dap = {

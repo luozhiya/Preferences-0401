@@ -318,7 +318,7 @@ M.wk = function(wk)
     },
     f = {
       name = 'File Explorer',
-      s = { '<cmd>wall<cr>', 'Save All' },
+      s = { '<cmd>confirm wa<cr>', 'Save All' },
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
       e = { '<cmd>NvimTreeFindFile<cr>', 'NvimTree Explorer' },
       d = { '<cmd>Neotree<cr>', 'Neotree Explorer' },

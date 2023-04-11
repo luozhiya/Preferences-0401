@@ -535,6 +535,11 @@ run['LSP VIF'] = {
       require('nvim-semantic-tokens').setup(opts)
     end,
   },
+  ['VidocqH/lsp-lens.nvim'] = {
+    enabled = false,
+    event = { 'LspAttach' },
+    config = function() require('lsp-lens').setup() end,
+  },
 }
 
 run['DAP VIF'] = {
