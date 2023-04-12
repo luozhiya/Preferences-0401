@@ -35,6 +35,7 @@
   "nnn.nvim": { "branch": "master", "commit": "fb5b9d9fc38e9bc06434a4bb1de025cf2a912ae2" },
   "notifier.nvim": { "branch": "master", "commit": "afc9bf7ef8c31cfc716a2b849c34943a9788508b" },
   "nui.nvim": { "branch": "main", "commit": "1f43b13d133eb4b4f53a4485379d9afa58808389" },
+  "numb.nvim": { "branch": "master", "commit": "2c89245d1185e02fec1494c45bc765a38b6b40b3" },
   "nvim-autopairs": { "branch": "master", "commit": "7470af886ffb3df32800e5ef9c072a6cd825770d" },
   "nvim-cmp": { "branch": "main", "commit": "777450fd0ae289463a14481673e26246b5e38bf2" },
   "nvim-hlslens": { "branch": "main", "commit": "5e3e9088fba7508cee3612ee50b14dfdd3ab19af" },

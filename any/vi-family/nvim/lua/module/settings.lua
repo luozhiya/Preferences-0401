@@ -354,6 +354,11 @@ run['Editing Support'] = {
     event = 'BufReadPost',
     config = function() require('autoclose').setup() end,
   },
+  ['nacro90/numb.nvim'] = {
+    -- keys = { { ';' } },
+    event = 'VeryLazy',
+    config = function() require('numb').setup() end,
+  },
 }
 
 run['Search'] = {
@@ -536,7 +541,7 @@ run['LSP VIF'] = {
     end,
   },
   ['VidocqH/lsp-lens.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = { 'LspAttach' },
     config = function() require('lsp-lens').setup() end,
   },

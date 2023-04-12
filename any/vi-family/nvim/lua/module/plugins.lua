@@ -52,6 +52,7 @@ local list = {
   { 'windwp/nvim-autopairs' },
   { 'numToStr/Comment.nvim' },
   { 'm4xshen/autoclose.nvim' },
+  { 'nacro90/numb.nvim' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   -- Formatting
