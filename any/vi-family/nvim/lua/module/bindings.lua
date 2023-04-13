@@ -296,16 +296,16 @@ M.wk = function(wk)
     },
     t = {
       name = 'Run In Command Terminal',
-      h = {
-        function() vim.cmd('ToggleTerm direction=horizontal dir=' .. require('base').get_contain_directory()) end,
-        'Terminal Horizontal',
-      },
-      f = {
-        function() vim.cmd('ToggleTerm direction=float dir=' .. require('base').get_contain_directory()) end,
-        'Terminal Floating',
-      },
-      -- h = { '<cmd>ToggleTerm direction=horizontal<cr>', 'Terminal Horizontal' },
-      -- f = { '<cmd>ToggleTerm direction=float<cr>', 'Terminal Floating' },
+      -- h = {
+      --   function() vim.cmd('ToggleTerm direction=horizontal dir=' .. require('base').get_contain_directory()) end,
+      --   'Terminal Horizontal',
+      -- },
+      -- f = {
+      --   function() vim.cmd('ToggleTerm direction=float dir=' .. require('base').get_contain_directory()) end,
+      --   'Terminal Floating',
+      -- },
+      h = { '<cmd>ToggleTerm direction=horizontal<cr>', 'Terminal Horizontal' },
+      f = { '<cmd>ToggleTerm direction=float<cr>', 'Terminal Floating' },
       l = { function() _any_toggle('lazygit') end, 'Lazygit' },
       g = { function() _any_toggle('gitui') end, 'GitUI' },
       b = { function() _any_toggle('btop') end, 'btop' },
@@ -408,10 +408,10 @@ M.setup_code = function()
   -- Edit
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
-  M.map('n', 'cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
-  M.map('x', 'cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
-  M.map('n', 'cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
-  M.map('x', 'cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
+  M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
+  M.map('x', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
+  M.map('n', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
+  M.map('x', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
   M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
   -- Selection
   M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', { noremap = true, desc = 'Line: Move Up (move.nvim)' })
@@ -434,12 +434,13 @@ M.setup_code = function()
   )
   -- Run
   -- Terminal
-  M.map(
-    'n',
-    [[<c-\>]],
-    function() vim.cmd('ToggleTerm dir=' .. require('base').get_contain_directory()) end,
-    { desc = 'Toggle Terminal' }
-  )
+  M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
+  -- M.map(
+  --   'n',
+  --   [[<c-\>]],
+  --   function() vim.cmd('ToggleTerm dir=' .. require('base').get_contain_directory()) end,
+  --   { desc = 'Toggle Terminal' }
+  -- )
 end
 
 M.setup_comands = function()

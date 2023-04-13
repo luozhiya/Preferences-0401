@@ -84,7 +84,7 @@ run['Colorschemes'] = {
   ['folke/tokyonight.nvim'] = {
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd([[colorscheme tokyonight]]) end,
+    config = function() vim.cmd([[colorscheme tokyonight-moon]]) end,
   },
 }
 
@@ -232,8 +232,8 @@ run['File Explorer'] = {
       vim.g.neo_tree_remove_legacy_commands = 1
       local opts = {
         async_directory_scan = 'never',
-        log_level = 'trace',
-        log_to_file = true,
+        -- log_level = 'trace',
+        log_to_file = false,
         close_if_last_window = true,
         source_selector = { winbar = false, statusline = false },
       }
@@ -252,7 +252,7 @@ run['Terminal Integration'] = {
     cmd = { 'ToggleTerm' },
     config = function()
       local opts = {
-        autochdir = false,
+        autochdir = true,
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.toggleterm())
       require('toggleterm').setup(opts)
@@ -294,6 +294,10 @@ run['Git'] = {
   ['sindrets/diffview.nvim'] = {
     cmd = { 'DiffviewOpen' },
   },
+  ['f-person/git-blame.nvim'] = {
+    enabled = false,
+    event = 'BufReadPost',
+  }
 }
 
 run['Fuzzy Finder'] = {
@@ -560,7 +564,7 @@ run['LSP VIF'] = {
     end,
   },
   ['VidocqH/lsp-lens.nvim'] = {
-    -- enabled = false,
+    enabled = false,
     event = { 'LspAttach' },
     config = function() require('lsp-lens').setup() end,
   },

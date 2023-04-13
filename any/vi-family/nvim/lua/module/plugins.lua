@@ -36,6 +36,7 @@ local list = {
   -- Git
   { 'lewis6991/gitsigns.nvim' },
   { 'sindrets/diffview.nvim' },
+  { 'f-person/git-blame.nvim' },
   -- Fuzzy Finder
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-telescope/telescope-fzf-native.nvim' },
