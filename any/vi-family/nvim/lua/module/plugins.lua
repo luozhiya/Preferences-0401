@@ -19,6 +19,8 @@ local list = {
   { 'rcarriga/nvim-notify' },
   { 'folke/noice.nvim' },
   { 'vigoux/notifier.nvim' },
+  -- Sudo
+  { 'lambdalisue/suda.vim' },
   -- File Explorer
   { 'nvim-tree/nvim-tree.lua' },
   { 'obaland/vfiler.vim' },
@@ -59,6 +61,7 @@ local list = {
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
   { 'HiPhish/nvim-ts-rainbow2' },
+  { 'luochen1990/rainbow' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },

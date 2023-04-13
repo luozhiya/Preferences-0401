@@ -47,7 +47,8 @@ run['Bars And Lines'] = {
     config = function()
       local function lsp_active()
         local names = {}
-        for _, client in pairs(vim.lsp.get_active_clients()) do
+        local bufnr = vim.api.nvim_get_current_buf()
+        for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
           table.insert(names, client.name)
         end
         return vim.tbl_isempty(names) and '' or ' ' .. table.concat(names, ' ')
@@ -185,16 +186,22 @@ run['Builtin UI Improved'] = {
   },
 }
 
+run['Sudo'] = {
+  ['lambdalisue/suda.vim'] = {
+    cmd = { 'SudaRead', 'SudaWrite' },
+  },
+}
+
 run['File Explorer'] = {
   ['nvim-tree/nvim-tree.lua'] = {
     cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
     config = function()
       local opts = {
         sort_by = 'case_sensitive',
-        sync_root_with_cwd = true,
-        respect_buf_cwd = true,
+        sync_root_with_cwd = false,
+        respect_buf_cwd = false,
         hijack_directories = { enable = false },
-        update_focused_file = { enable = true, update_root = true },
+        update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
         view = { adaptive_size = false, preserve_window_proportions = true },
         git = { enable = false },
@@ -243,12 +250,19 @@ run['File Explorer'] = {
 run['Terminal Integration'] = {
   ['akinsho/toggleterm.nvim'] = {
     cmd = { 'ToggleTerm' },
-    config = function() require('toggleterm').setup(bindings.toggleterm()) end,
+    config = function()
+      local opts = {
+        autochdir = false,
+      }
+      opts = vim.tbl_deep_extend('error', opts, bindings.toggleterm())
+      require('toggleterm').setup(opts)
+    end,
   },
 }
 
 run['Project'] = {
   ['ahmedkhalf/project.nvim'] = {
+    event = { 'BufReadPost' },
     config = function()
       require('project_nvim').setup({
         silent_chdir = true,
@@ -400,6 +414,11 @@ run['Formatting'] = {
         },
       })
     end,
+  },
+  ['luochen1990/rainbow'] = {
+    enabled = false,
+    event = 'VeryLazy',
+    init = function() vim.cmd([[let g:rainbow_active = 1]]) end,
   },
 }
 

@@ -194,6 +194,12 @@ M.wk = function(wk)
     end
     timer:start(8, 0, vim.schedule_wrap(picker))
   end
+  local _NvimTree_find = function()
+    local path = require('base').get_path
+    -- require('nvim-tree').change_dir(vim.loop.cwd())
+    -- require('nvim-tree.actions.root.change-dir').fn(vim.loop.cwd())
+    require('nvim-tree.api').tree.open({ find_file = true, focus = true, path = path, update_root = false })
+  end
   -- stylua: ignore start
   local wk_ve = {
       name = 'Edit Config',
@@ -290,8 +296,16 @@ M.wk = function(wk)
     },
     t = {
       name = 'Run In Command Terminal',
-      h = { '<cmd>ToggleTerm direction=horizontal<cr>', 'Terminal Horizontal' },
-      f = { '<cmd>ToggleTerm direction=float<cr>', 'Terminal Floating' },
+      h = {
+        function() vim.cmd('ToggleTerm direction=horizontal dir=' .. require('base').get_contain_directory()) end,
+        'Terminal Horizontal',
+      },
+      f = {
+        function() vim.cmd('ToggleTerm direction=float dir=' .. require('base').get_contain_directory()) end,
+        'Terminal Floating',
+      },
+      -- h = { '<cmd>ToggleTerm direction=horizontal<cr>', 'Terminal Horizontal' },
+      -- f = { '<cmd>ToggleTerm direction=float<cr>', 'Terminal Floating' },
       l = { function() _any_toggle('lazygit') end, 'Lazygit' },
       g = { function() _any_toggle('gitui') end, 'GitUI' },
       b = { function() _any_toggle('btop') end, 'btop' },
@@ -320,7 +334,7 @@ M.wk = function(wk)
       name = 'File Explorer',
       s = { '<cmd>confirm wa<cr>', 'Save All' },
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
-      e = { '<cmd>NvimTreeFindFile<cr>', 'NvimTree Explorer' },
+      e = { _NvimTree_find, 'NvimTree Explorer' },
       d = { '<cmd>Neotree<cr>', 'Neotree Explorer' },
       t = { '<cmd>NvimTreeToggle<cr>', 'Toggle Tree Explorer' },
       v = { '<cmd>VFiler<cr>', 'VFiler File explorer' },
@@ -420,7 +434,12 @@ M.setup_code = function()
   )
   -- Run
   -- Terminal
-  M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
+  M.map(
+    'n',
+    [[<c-\>]],
+    function() vim.cmd('ToggleTerm dir=' .. require('base').get_contain_directory()) end,
+    { desc = 'Toggle Terminal' }
+  )
 end
 
 M.setup_comands = function()
