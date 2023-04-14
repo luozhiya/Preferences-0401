@@ -200,7 +200,7 @@ run['File Explorer'] = {
         sort_by = 'case_sensitive',
         sync_root_with_cwd = false,
         respect_buf_cwd = false,
-        hijack_directories = { enable = false },
+        hijack_directories = { enable = true },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
         view = { adaptive_size = false, preserve_window_proportions = true },
@@ -310,6 +310,7 @@ run['Fuzzy Finder'] = {
           buffers = {
             ignore_current_buffer = false,
             sort_lastused = true,
+            sort_mru = true,
           },
         },
       }
