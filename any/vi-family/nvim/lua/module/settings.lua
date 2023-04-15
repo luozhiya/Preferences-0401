@@ -457,6 +457,12 @@ run['Formatting'] = {
   },
 }
 
+run['Editing Piece'] = {
+  ['AntonVanAssche/date-time-inserter.nvim'] = {
+    enabled = false,
+  },
+}
+
 run['Completion'] = {
   ['hrsh7th/nvim-cmp'] = {
     -- enabled = false,
@@ -608,6 +614,10 @@ run['LSP VIF'] = {
     enabled = false,
     event = { 'LspAttach' },
     config = function() require('lsp-lens').setup() end,
+  },
+  ['simrat39/symbols-outline.nvim'] = {
+    event = { 'LspAttach' },
+    config = function() require('symbols-outline').setup() end,
   },
 }
 

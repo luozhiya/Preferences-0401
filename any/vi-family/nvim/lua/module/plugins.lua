@@ -71,6 +71,8 @@ local list = {
   { 'HiPhish/nvim-ts-rainbow2' },
   { 'luochen1990/rainbow' },
   { 'folke/twilight.nvim' },
+  -- Editing Piece
+  { 'AntonVanAssche/date-time-inserter.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
@@ -100,6 +102,7 @@ local list = {
   { 'j-hui/fidget.nvim' },
   { 'stevearc/aerial.nvim' },
   { 'VidocqH/lsp-lens.nvim' },
+  { 'simrat39/symbols-outline.nvim' },
 }
 
 local dap = {

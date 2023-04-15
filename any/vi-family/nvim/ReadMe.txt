@@ -197,6 +197,7 @@ https://github.com/neovim/neovim/issues/13314
 https://vi.stackexchange.com/questions/31748/how-to-set-the-diagnostic-level-for-neovim-lsp
 https://github.com/folke/trouble.nvim/issues/52
 https://github.com/hrsh7th/nvim-cmp/issues/1035
+https://vi.stackexchange.com/questions/27796/how-to-change-editor-mode-from-lua-or-viml
 
 Lua
 ---

@@ -265,9 +265,10 @@ M.wk = function(wk)
       name = 'LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
       -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
-      o = { '<cmd>AerialToggle<cr>', 'Outline' },
+      a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
       f = { _format, 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
+      o = { '<cmd>SymbolsOutline<cr>', 'Symbols Outline Toggle (symbols-outline.nvim)' },
       w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Trouble Workspace Diagnostics' },
       d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics' },
       D = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Document Diagnostics' },
@@ -475,13 +476,22 @@ M.setup_comands = function()
   local _toggle_fullscreen = function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end
   local _toggle_focus_mode = function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end
   local _remove_exclusive_orm = function() vim.cmd([[:%s/\r//g]]) end
+  local _insert_date = function()
+    -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
+    -- vim.cmd([[i]])
+    vim.cmd([[startinsert]])
+    vim.api.nvim_feedkeys(os.date('%Y-%m-%d', os.time()) .. ' ', 'i', true)
+  end
+  local _insert_time = function()
+    vim.cmd([[startinsert]])
+    vim.api.nvim_feedkeys(os.date('%H:%M:%S', os.time()) .. ' ', 'i', true)
+  end
   local _sublime_merge = function()
     require('plenary.job'):new({ command = 'sublime_merge', args = { '-n', vim.fn.getcwd() } }):sync()
   end
   local _sublime_text = function()
     require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync()
   end
-
   vim.api.nvim_create_user_command('ToggleFullScreen', _toggle_fullscreen, { desc = 'Toggle Full Screen' })
   vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
   vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
@@ -490,6 +500,8 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
   vim.api.nvim_create_user_command('CommentLine', _comment_line, { desc = 'Comment Line' })
   vim.api.nvim_create_user_command('CommentBlock', _comment_block, { desc = 'Comment Block' })
+  vim.api.nvim_create_user_command('InsertDate', _insert_date, { desc = 'Insert Date' })
+  vim.api.nvim_create_user_command('InsertTime', _insert_time, { desc = 'Insert Time' })
   vim.api.nvim_create_user_command('SublimeMerge', _sublime_merge, { desc = 'Sublime Merge' })
   vim.api.nvim_create_user_command('SublimeText', _sublime_text, { desc = 'Sublime Text' })
 end
