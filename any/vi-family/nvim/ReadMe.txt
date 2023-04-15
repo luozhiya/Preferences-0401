@@ -196,6 +196,7 @@ https://stackoverflow.com/questions/68598026/running-async-lua-function-in-neovi
 https://github.com/neovim/neovim/issues/13314
 https://vi.stackexchange.com/questions/31748/how-to-set-the-diagnostic-level-for-neovim-lsp
 https://github.com/folke/trouble.nvim/issues/52
+https://github.com/hrsh7th/nvim-cmp/issues/1035
 
 Lua
 ---

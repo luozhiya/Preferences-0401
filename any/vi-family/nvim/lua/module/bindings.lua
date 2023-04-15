@@ -228,6 +228,7 @@ M.wk = function(wk)
       r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
       -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
       -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
+      a = { '<cmd>lua require("persistence").load()<cr>', 'Restore AutoSaved Session (persistence.nvim)' },
     },
     c = {
       name = 'C++',
@@ -314,7 +315,8 @@ M.wk = function(wk)
     },
     e = {
       name = 'Edit',
-      f = { '<cmd>ToggleFocusMode<cr>', 'Focus Mode' },
+      f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
+      t = { '<cmd>Twilight<cr>', 'Toggle Twilight' },
       o = { '<cmd>BWipeout other<cr>', 'Only Current Buffer' },
       w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
       s = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },

@@ -1,7 +1,15 @@
 local bindings = require('module.bindings')
 local M = {}
-
 local run = {}
+
+run['Start Screen'] = {
+  ['nvimdev/dashboard-nvim'] = {
+    enabled = false,
+    event = 'VimEnter',
+    config = function() require('dashboard').setup() end,
+  },
+}
+
 run['Bars And Lines'] = {
   ['luukvbaal/statuscol.nvim'] = {
     event = 'BufReadPost',
@@ -271,6 +279,13 @@ run['Project'] = {
   },
 }
 
+run['Todo'] = {
+  ['folke/todo-comments.nvim'] = {
+    event = { 'BufReadPost' },
+    config = function() require('todo-comments').setup() end,
+  },
+}
+
 run['Session'] = {
   ['tpope/vim-obsession'] = {
     cmd = { 'Obsession' },
@@ -283,6 +298,17 @@ run['Session'] = {
         sessions_dir = Path:new(require('base').to_native(vim.fn.stdpath('data') .. '/sessions')),
       })
     end,
+  },
+  ['folke/persistence.nvim'] = {
+    event = 'BufReadPre',
+    config = function() require('persistence').setup() end,
+  },
+}
+
+run['View'] = {
+  ['folke/zen-mode.nvim'] = {
+    cmd = { 'ZenMode' },
+    config = function() require('zen-mode').setup() end,
   },
 }
 
@@ -297,7 +323,7 @@ run['Git'] = {
   ['f-person/git-blame.nvim'] = {
     enabled = false,
     event = 'BufReadPost',
-  }
+  },
 }
 
 run['Fuzzy Finder'] = {
@@ -362,7 +388,7 @@ run['Syntax'] = {
   },
 }
 
-run['Editing Support'] = {
+run['Editing Motion Support'] = {
   ['andymass/vim-matchup'] = {
     event = 'BufReadPost',
   },
@@ -377,6 +403,10 @@ run['Editing Support'] = {
     -- keys = { { ';' } },
     event = 'VeryLazy',
     config = function() require('numb').setup() end,
+  },
+  ['folke/twilight.nvim'] = {
+    cmd = { 'Twilight', 'TwilightEnable' },
+    config = function() require('twilight').setup() end,
   },
 }
 
@@ -429,6 +459,7 @@ run['Formatting'] = {
 
 run['Completion'] = {
   ['hrsh7th/nvim-cmp'] = {
+    -- enabled = false,
     event = { 'BufReadPost' },
     dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp' },
     config = function()
@@ -446,6 +477,15 @@ run['Completion'] = {
           { name = 'cmdline', option = { ignore_cmds = { 'Man', '!' } } },
         }),
       })
+      cmp.event:on('confirm_done', function(evt)
+        local cxxindent = { 'public:', 'private:', 'protected:' }
+        if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'i', true)
+          -- local keymap = require('cmp.utils.keymap')
+          -- vim.api.nvim_feedkeys(keymap.t('<cr>'), 'i', true)
+          -- vim.api.nvim_feedkeys('<cr>', 'i', true)
+        end
+      end)
     end,
   },
 }

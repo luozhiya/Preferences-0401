@@ -4,6 +4,8 @@ local list = {
   -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
   { 'MunifTanjim/nui.nvim' },
+  -- Start Screen
+  { 'nvimdev/dashboard-nvim' },
   -- Bars And Lines
   { 'petertriho/nvim-scrollbar' },
   { 'nvim-lualine/lualine.nvim' },
@@ -30,9 +32,14 @@ local list = {
   { 'akinsho/toggleterm.nvim' },
   -- Project
   { 'ahmedkhalf/project.nvim' },
+  -- Todo
+  { 'folke/todo-comments.nvim' },
   -- Session
   { 'tpope/vim-obsession' },
   { 'Shatur/neovim-session-manager' },
+  { 'folke/persistence.nvim' },
+  -- View
+  { 'folke/zen-mode.nvim' },
   -- Git
   { 'lewis6991/gitsigns.nvim' },
   { 'sindrets/diffview.nvim' },
@@ -49,7 +56,7 @@ local list = {
   { 'glepnir/flybuf.nvim' },
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
-  -- Editing Support
+  -- Editing Motion Support
   { 'fedepujol/move.nvim' },
   { 'andymass/vim-matchup' },
   { 'windwp/nvim-autopairs' },
@@ -63,6 +70,7 @@ local list = {
   { 'lukas-reineke/indent-blankline.nvim' },
   { 'HiPhish/nvim-ts-rainbow2' },
   { 'luochen1990/rainbow' },
+  { 'folke/twilight.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
