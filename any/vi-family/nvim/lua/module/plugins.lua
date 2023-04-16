@@ -6,6 +6,8 @@ local list = {
   { 'MunifTanjim/nui.nvim' },
   -- Start Screen
   { 'nvimdev/dashboard-nvim' },
+  { 'echasnovski/mini.starter' },
+  { 'goolord/alpha-nvim' },
   -- Bars And Lines
   { 'petertriho/nvim-scrollbar' },
   { 'nvim-lualine/lualine.nvim' },
@@ -16,6 +18,8 @@ local list = {
   { 'archibate/lualine-time' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
+  -- Icon
+  { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
   { 'stevearc/dressing.nvim' },
   { 'rcarriga/nvim-notify' },
@@ -28,6 +32,7 @@ local list = {
   { 'obaland/vfiler.vim' },
   { 'nvim-neo-tree/neo-tree.nvim' },
   { 'luukvbaal/nnn.nvim' },
+  { 'lmburns/lf.nvim' },
   -- Terminal Integration
   { 'akinsho/toggleterm.nvim' },
   -- Project
@@ -69,8 +74,9 @@ local list = {
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
   { 'HiPhish/nvim-ts-rainbow2' },
-  { 'luochen1990/rainbow' },
   { 'folke/twilight.nvim' },
+  { 'echasnovski/mini.indentscope' },
+  { 'NvChad/nvim-colorizer.lua' },
   -- Editing Piece
   { 'AntonVanAssche/date-time-inserter.nvim' },
   -- Completion
@@ -78,6 +84,7 @@ local list = {
   { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
+  { 'hrsh7th/cmp-buffer' },
   -- Snippet
   { 'L3MON4D3/LuaSnip' },
   -- C++

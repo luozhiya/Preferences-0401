@@ -13,10 +13,6 @@ M.root = base.to_native(vim.fn.stdpath('config') .. '/lazy')
 function M.before()
   bindings.setup_leader()
 
-  vim.g.neovide_remember_window_size = true
-  vim.g.neovide_refresh_rate_idle = 120
-  -- vim.g.neovide_no_idle = true
-
   vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
   vim.g.loaded_python3_provider = 0
   vim.g.loaded_pythonx_provider = 0
@@ -59,11 +55,11 @@ function M.before()
 
   local opts = {
     runtimepath = vim.opt.runtimepath:append(M.lazy),
-    shellslash = true, -- A forward slash is used when expanding file names.
+    -- shellslash = true, -- A forward slash is used when expanding file names.
     laststatus = 3, -- Status line style
     cmdheight = 0, -- command-line
     showmode = false, -- Dont show mode since we have a statusline
-    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = true, -- Print line number
@@ -83,7 +79,8 @@ function M.before()
     clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
     completeopt = { 'menuone', 'noselect', 'noinsert' },
     autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
-    guifont = 'InconsolataGo Nerd Font:h16',
+    -- guifont = 'FiraCode Nerd Font Mono:h13',
+    -- guifont = { 'FiraCode Nerd Font Mono', 'h9' },
     shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
     timeoutlen = 500, -- the timeout when WhichKey opens is controlled by the vim setting timeoutlen.
@@ -97,9 +94,17 @@ function M.before()
     foldcolumn = '0',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
+    fileformats = 'unix',
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v
+  end
+  if vim.g.neovide then
+    vim.opt.guifont = { 'FiraCode Nerd Font Mono', 'h9' }
+    -- vim.g.neovide_scale_factor = 0.3
+    -- vim.g.neovide_remember_window_size = true
+    vim.g.neovide_refresh_rate_idle = 120
+    -- vim.g.neovide_no_idle = true
   end
 end
 

@@ -6,7 +6,113 @@ run['Start Screen'] = {
   ['nvimdev/dashboard-nvim'] = {
     enabled = false,
     event = 'VimEnter',
-    config = function() require('dashboard').setup() end,
+    config = function()
+      local opts = {
+        -- theme = 'doom',
+        config = {
+          header = { 'Paper Tiger' },
+          footer = { 'good good study, day day up' },
+        },
+      }
+      require('dashboard').setup(opts)
+    end,
+  },
+  ['echasnovski/mini.starter'] = {
+    enabled = false,
+    event = 'VimEnter',
+    opts = function()
+      local logo = table.concat({
+        '██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z',
+        '██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z',
+        '██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z',
+        '██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z',
+        '███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║',
+        '╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝',
+      }, '\n')
+      local pad = string.rep(' ', 22)
+      local new_section = function(name, action, section)
+        return { name = name, action = action, section = pad .. section }
+      end
+
+      local starter = require('mini.starter')
+      --stylua: ignore
+      local config = {
+        evaluate_single = true,
+        header = logo,
+        items = {
+          new_section("Find file",    "Telescope find_files", "Telescope"),
+          new_section("Recent files", "Telescope oldfiles",   "Telescope"),
+          new_section("Grep text",    "Telescope live_grep",  "Telescope"),
+          new_section("init.lua",     "e $MYVIMRC",           "Config"),
+          new_section("Lazy",         "Lazy",                 "Config"),
+          new_section("New file",     "ene | startinsert",    "Built-in"),
+          new_section("Quit",         "qa",                   "Built-in"),
+          new_section("Session restore", [[lua require("persistence").load()]], "Session"),
+        },
+        content_hooks = {
+          starter.gen_hook.adding_bullet(pad .. "░ ", false),
+          starter.gen_hook.aligning("center", "center"),
+        },
+      }
+      return config
+    end,
+    config = function(_, config)
+      -- close Lazy and re-open when starter is ready
+      if vim.o.filetype == 'lazy' then
+        vim.cmd.close()
+        vim.api.nvim_create_autocmd('User', {
+          pattern = 'MiniStarterOpened',
+          callback = function() require('lazy').show() end,
+        })
+      end
+
+      local starter = require('mini.starter')
+      starter.setup(config)
+
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'LazyVimStarted',
+        callback = function()
+          local stats = require('lazy').stats()
+          local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+          local pad_footer = string.rep(' ', 8)
+          starter.config.footer = pad_footer .. '⚡ Neovim loaded ' .. stats.count .. ' plugins in ' .. ms .. 'ms'
+          pcall(starter.refresh)
+        end,
+      })
+    end,
+  },
+  ['goolord/alpha-nvim'] = {
+    -- enabled = false,
+    event = 'VimEnter',
+    config = function()
+      local dashboard = require('alpha.themes.dashboard')
+      dashboard.section.header.val = {
+        [[                   Paper Tiger                   ]],
+        -- [[           good good study, day day up           ]],
+      }
+      dashboard.section.buttons.val = bindings.alpha_val(dashboard.button)
+      for _, button in ipairs(dashboard.section.buttons.val) do
+        button.opts.hl = 'AlphaButtons'
+        button.opts.hl_shortcut = 'AlphaShortcut'
+      end
+      dashboard.section.header.opts.hl = 'AlphaHeader'
+      dashboard.section.buttons.opts.hl = 'AlphaButtons'
+      dashboard.section.footer.opts.hl = 'AlphaFooter'
+      dashboard.opts.layout[1].val = 2
+
+      local alpha = require('alpha')
+      alpha.setup(dashboard.config)
+
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'LazyVimStarted',
+        callback = function()
+          local stats = require('lazy').stats()
+          local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+          dashboard.section.footer.val = '⚡ Neovim loaded ' .. stats.count .. ' plugins in ' .. ms .. 'ms'
+          pcall(alpha.redraw)
+        end,
+      })
+    end,
   },
 }
 
@@ -66,7 +172,7 @@ run['Bars And Lines'] = {
       local fileformat = { 'fileformat', icons_enabled = false }
       local opts = {
         sections = {
-          lualine_x = { 'ctime', lsp_active, 'encoding', fileformat, 'filetype' },
+          lualine_x = { 'cdate', 'ctime', lsp_active, 'encoding', fileformat, 'filetype' },
           lualine_z = { location },
         },
       }
@@ -84,7 +190,24 @@ run['Bars And Lines'] = {
   },
   ['b0o/incline.nvim'] = {
     event = { 'BufReadPost' },
-    config = function() require('incline').setup() end,
+    config = function()
+      local colors = require('tokyonight.colors').setup()
+      local opts = {
+        -- highlight = {
+        --   groups = {
+        --     InclineNormal = { guibg = '#FC56B1', guifg = colors.black },
+        --     InclineNormalNC = { guifg = '#FC56B1', guibg = colors.black },
+        --   },
+        -- },
+        window = { margin = { vertical = 0, horizontal = 1 } },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          local icon, color = require('nvim-web-devicons').get_icon_color(filename)
+          return { { icon }, { ' ' }, { filename } }
+        end,
+      }
+      require('incline').setup(opts)
+    end,
   },
 }
 
@@ -93,6 +216,12 @@ run['Colorschemes'] = {
     lazy = false,
     priority = 1000,
     config = function() vim.cmd([[colorscheme tokyonight-moon]]) end,
+  },
+}
+
+run['Icon'] = {
+  ['nvim-tree/nvim-web-devicons'] = {
+    config = function() require('nvim-web-devicons').setup() end,
   },
 }
 
@@ -113,7 +242,7 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['rcarriga/nvim-notify'] = {
-    enabled = false,
+    -- enabled = false,
     config = function()
       local opts = {
         stages = 'static',
@@ -123,52 +252,18 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['folke/noice.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = { 'User NeXT' },
     config = function()
       require('noice').setup({
-        views = {
-          cmdline_popup = {
-            position = {
-              row = 5,
-              col = '50%',
-            },
-            size = {
-              width = 60,
-              height = 'auto',
-            },
-          },
-          popupmenu = {
-            relative = 'editor',
-            position = {
-              row = 8,
-              col = '50%',
-            },
-            size = {
-              width = 60,
-              height = 10,
-            },
-            border = {
-              style = 'rounded',
-              padding = { 0, 1 },
-            },
-            win_options = {
-              winhighlight = { Normal = 'Normal', FloatBorder = 'DiagnosticInfo' },
-            },
-          },
-        },
         lsp = {
-          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-          override = {
-            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-            ['vim.lsp.util.stylize_markdown'] = true,
-            ['cmp.entry.get_documentation'] = true,
+          hover = {
+            enabled = false,
+          },
+          progress = {
+            enabled = false,
           },
         },
-        notify = {
-          -- enable = false,
-        },
-        -- you can enable a preset for easier configuration
         presets = {
           bottom_search = true, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
@@ -180,7 +275,7 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['vigoux/notifier.nvim'] = {
-    -- enabled = false,
+    enabled = false,
     event = 'VeryLazy',
     config = function()
       local opts = {
@@ -211,7 +306,7 @@ run['File Explorer'] = {
         hijack_directories = { enable = true },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
-        view = { adaptive_size = false, preserve_window_proportions = true },
+        view = { adaptive_size = false, preserve_window_proportions = true, width = { min = 40 } },
         git = { enable = false },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.nvim_tree())
@@ -239,11 +334,23 @@ run['File Explorer'] = {
     config = function()
       vim.g.neo_tree_remove_legacy_commands = 1
       local opts = {
-        async_directory_scan = 'never',
+        -- async_directory_scan = 'never',
         -- log_level = 'trace',
-        log_to_file = false,
+        -- log_to_file = false,
         close_if_last_window = true,
-        source_selector = { winbar = false, statusline = false },
+        -- source_selector = { winbar = true, statusline = true },
+        filesystem = {
+          bind_to_cwd = false,
+          follow_current_file = true,
+        },
+        default_component_configs = {
+          indent = {
+            with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+            expander_collapsed = '',
+            expander_expanded = '',
+            expander_highlight = 'NeoTreeExpander',
+          },
+        },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.neotree())
       require('neo-tree').setup(opts)
@@ -252,6 +359,10 @@ run['File Explorer'] = {
   ['luukvbaal/nnn.nvim'] = {
     cmd = { 'NnnExplorer', 'NnnPicker' },
     config = function() require('nnn').setup() end,
+  },
+  ['lmburns/lf.nvim'] = {
+    enabled = false,
+    config = function() require('lf').setup() end,
   },
 }
 
@@ -270,7 +381,8 @@ run['Terminal Integration'] = {
 
 run['Project'] = {
   ['ahmedkhalf/project.nvim'] = {
-    event = { 'BufReadPost' },
+    -- event = { 'BufReadPost' },
+    event = { 'VeryLazy' },
     config = function()
       require('project_nvim').setup({
         silent_chdir = true,
@@ -425,11 +537,15 @@ run['Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
     config = function()
+      local unix_ff = function() vim.cmd([[set ff=unix]]) end
       require('formatter').setup({
         logging = false,
         filetype = {
           lua = { require('formatter.filetypes.lua').stylua },
-          ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
+          ['*'] = {
+            require('formatter.filetypes.any').remove_trailing_whitespace,
+            unix_ff,
+          },
         },
       })
     end,
@@ -438,7 +554,7 @@ run['Formatting'] = {
     event = { 'BufReadPost', 'BufNewFile' },
   },
   ['HiPhish/nvim-ts-rainbow2'] = {
-    enabled = false,
+    -- enabled = false,
     event = 'BufReadPost',
     config = function()
       require('nvim-treesitter.configs').setup({
@@ -450,10 +566,25 @@ run['Formatting'] = {
       })
     end,
   },
-  ['luochen1990/rainbow'] = {
+  ['echasnovski/mini.indentscope'] = {
     enabled = false,
-    event = 'VeryLazy',
-    init = function() vim.cmd([[let g:rainbow_active = 1]]) end,
+    event = 'BufReadPost',
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'help', 'alpha', 'dashboard', 'neo-tree', 'Trouble', 'lazy', 'mason' },
+        callback = function() vim.b.miniindentscope_disable = true end,
+      })
+      local opts = {
+        -- symbol = "▏",
+        symbol = '│',
+        options = { try_as_border = true },
+      }
+      require('mini.indentscope').setup(opts)
+    end,
+  },
+  ['NvChad/nvim-colorizer.lua'] = {
+    event = 'BufReadPost',
+    config = function() require('colorizer').setup() end,
   },
 }
 
@@ -466,8 +597,8 @@ run['Editing Piece'] = {
 run['Completion'] = {
   ['hrsh7th/nvim-cmp'] = {
     -- enabled = false,
-    event = { 'BufReadPost' },
-    dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp' },
+    event = { 'BufReadPost', 'CmdlineEnter' },
+    dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer' },
     config = function()
       local cmp = require('cmp')
       local opts = {
@@ -483,6 +614,7 @@ run['Completion'] = {
           { name = 'cmdline', option = { ignore_cmds = { 'Man', '!' } } },
         }),
       })
+      cmp.setup.cmdline('/', { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } })
       cmp.event:on('confirm_done', function(evt)
         local cxxindent = { 'public:', 'private:', 'protected:' }
         if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
@@ -517,7 +649,7 @@ run['C++'] = {
 run['Diagnostics'] = {
   ['folke/trouble.nvim'] = {
     cmd = { 'TroubleToggle' },
-    config = function() require('trouble').setup({ icons = false }) end,
+    config = function() require('trouble').setup({ icons = true }) end,
   },
 }
 
@@ -570,7 +702,7 @@ run['LSP VIF'] = {
     end,
   },
   ['ray-x/lsp_signature.nvim'] = {
-    -- enabled = false,
+    enabled = false,
     event = { 'LspAttach' },
     config = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
   },

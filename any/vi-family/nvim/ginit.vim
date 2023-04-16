@@ -21,4 +21,3 @@ endif
 if exists(':GuiScrollBar')
     GuiScrollBar 1
 endif
-

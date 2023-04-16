@@ -25,6 +25,19 @@ M.lsp = {
   { ']d', vim.diagnostic.goto_next, desc = 'Goto Diagnostic Next' },
 }
 
+M.alpha_val = function(button)
+  return {
+    button('f', ' ' .. ' Find file', ':Telescope find_files <CR>'),
+    button('n', ' ' .. ' New file', ':ene <BAR> startinsert <CR>'),
+    button('r', ' ' .. ' Recent files', ':Telescope oldfiles <CR>'),
+    button('g', ' ' .. ' Find text', ':Telescope live_grep <CR>'),
+    button('c', ' ' .. ' Config', ':e $MYVIMRC <CR>'),
+    button('s', ' ' .. ' Restore Session', [[:lua require("persistence").load() <cr>]]),
+    button('l', '󰒲 ' .. ' Lazy', ':Lazy<CR>'),
+    button('q', ' ' .. ' Quit', ':qa<CR>'),
+  }
+end
+
 M.cmp = function(cmp)
   local _forward = function()
     return cmp.mapping(function(fallback)
@@ -185,15 +198,6 @@ M.wk = function(wk)
       vim.cmd('FormatWriteLock')
     end
   end
-  local _projects = function()
-    require('project_nvim')
-    local timer = vim.loop.new_timer()
-    local picker = function()
-      timer:stop()
-      require('telescope').extensions.projects.projects()
-    end
-    timer:start(8, 0, vim.schedule_wrap(picker))
-  end
   local _NvimTree_find = function()
     local path = require('base').get_path
     -- require('nvim-tree').change_dir(vim.loop.cwd())
@@ -331,6 +335,12 @@ M.wk = function(wk)
         d = { _copy_contain_directory, 'Copy Contain Directory' },
         p = { _copy_path, 'Copy Path' },
         r = { _copy_relative_path, 'Copy Relative Path' },
+      },
+      e = {
+        name = 'Ending',
+        u = { '<cmd>set ff=unix<cr>', 'Unix Ending' },
+        w = { '<cmd>set ff=dos<cr>', 'Windows Ending' },
+        m = { '<cmd>set ff=mac<cr>', 'Mac Ending' },
       },
     },
     f = {
@@ -475,7 +485,10 @@ M.setup_comands = function()
   end
   local _toggle_fullscreen = function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end
   local _toggle_focus_mode = function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end
-  local _remove_exclusive_orm = function() vim.cmd([[:%s/\r//g]]) end
+  local _remove_exclusive_orm = function()
+    -- vim.cmd([[:%s/\r//g]])
+    vim.cmd([[set ff=unix]])
+  end
   local _insert_date = function()
     -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
     -- vim.cmd([[i]])
