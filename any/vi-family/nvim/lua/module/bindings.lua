@@ -27,14 +27,15 @@ M.lsp = {
 
 M.alpha_val = function(button)
   return {
-    button('f', ' ' .. ' Find file', ':Telescope find_files <CR>'),
-    button('n', ' ' .. ' New file', ':ene <BAR> startinsert <CR>'),
-    button('r', ' ' .. ' Recent files', ':Telescope oldfiles <CR>'),
-    button('g', ' ' .. ' Find text', ':Telescope live_grep <CR>'),
-    button('c', ' ' .. ' Config', ':e $MYVIMRC <CR>'),
+    button('f', ' ' .. ' Find file', ':Telescope find_files <cr>'),
+    button('n', ' ' .. ' New file', ':ene <bar> startinsert <cr>'),
+    button('r', ' ' .. ' Recent files', ':Telescope oldfiles <cr>'),
+    button('p', '󱁕 ' .. ' Projects', ':Projects <cr>'),
+    button('g', ' ' .. ' Find text', ':Telescope live_grep <cr>'),
+    button('c', ' ' .. ' Config', ':e $MYVIMRC <cr>'),
     button('s', ' ' .. ' Restore Session', [[:lua require("persistence").load() <cr>]]),
-    button('l', '󰒲 ' .. ' Lazy', ':Lazy<CR>'),
-    button('q', ' ' .. ' Quit', ':qa<CR>'),
+    button('l', '󰒲 ' .. ' Lazy', ':Lazy<cr>'),
+    button('q', ' ' .. ' Quit', ':qa<cr>'),
   }
 end
 
@@ -67,12 +68,16 @@ M.cmp = function(cmp)
       ['<c-j>'] = cmp.mapping.select_next_item(),
       ['<up>'] = cmp.mapping.select_prev_item(),
       ['<down>'] = cmp.mapping.select_next_item(),
-      ['<cr>'] = cmp.mapping.confirm({ select = true }),
       ['<c-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
       ['<tab>'] = _forward(),
       ['<s-tab>'] = _backward(),
       ['<c-y>'] = cmp.mapping.confirm({ select = false }),
       ['<c-e>'] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
+      ['<cr>'] = cmp.mapping.confirm({ select = true }),
+      ['<s-cr>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     },
   }
 end
@@ -198,11 +203,18 @@ M.wk = function(wk)
       vim.cmd('FormatWriteLock')
     end
   end
+  local _rename = function() vim.cmd('IncRename ' .. vim.fn.expand('<cword>')) end
   local _NvimTree_find = function()
     local path = require('base').get_path
     -- require('nvim-tree').change_dir(vim.loop.cwd())
     -- require('nvim-tree.actions.root.change-dir').fn(vim.loop.cwd())
     require('nvim-tree.api').tree.open({ find_file = true, focus = true, path = path, update_root = false })
+  end
+  local _notify_history = function()
+    require('telescope').extensions.notify.notify({
+      layout_strategy = 'vertical',
+      layout_config = { preview_cutoff = 1, width = 0.8, height = 0.8 },
+    })
   end
   -- stylua: ignore start
   local wk_ve = {
@@ -263,6 +275,8 @@ M.wk = function(wk)
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
+      -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
+      n = { _notify_history, 'Notification History' },
       e = wk_ve,
     },
     l = {
@@ -281,6 +295,9 @@ M.wk = function(wk)
       r = { '<cmd>TroubleToggle lsp_references<cr>', 'Trouble LSP References' },
       s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols' },
       S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols' },
+      -- n = { _rename, 'Incremental LSP renaming (inc-rename.nvim)' },
+      n = { ':IncRename ', 'Incremental LSP renaming (inc-rename.nvim)' },
+      c = { function() require('refactoring').select_refactor() end, 'Refactoring' },
     },
     d = {
       name = 'Debug',
@@ -354,11 +371,12 @@ M.wk = function(wk)
       f = { '<cmd>Telescope find_files theme=get_dropdown previewer=false<cr>', 'Find files' },
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
       -- p = { '<cmd>Telescope projects<cr>', 'Projects' },
-      p = { _projects, 'Projects' },
+      p = { '<cmd>Projects<cr>', 'Projects' },
       f = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
+      r = { '<cmd>Telescope repo list<cr>', 'Repo list' },
       o = { _open_with_default_app, 'Open With Default APP' },
-      r = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
+      e = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
     },
   }
   wk.register(n, { mode = 'n', prefix = '<leader>' })
@@ -505,6 +523,15 @@ M.setup_comands = function()
   local _sublime_text = function()
     require('plenary.job'):new({ command = 'sublime_text', args = { vim.fn.getcwd() } }):sync()
   end
+  local _projects = function()
+    require('project_nvim')
+    local timer = vim.loop.new_timer()
+    local picker = function()
+      timer:stop()
+      require('telescope').extensions.projects.projects()
+    end
+    timer:start(8, 0, vim.schedule_wrap(picker))
+  end
   vim.api.nvim_create_user_command('ToggleFullScreen', _toggle_fullscreen, { desc = 'Toggle Full Screen' })
   vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
   vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
@@ -517,6 +544,7 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('InsertTime', _insert_time, { desc = 'Insert Time' })
   vim.api.nvim_create_user_command('SublimeMerge', _sublime_merge, { desc = 'Sublime Merge' })
   vim.api.nvim_create_user_command('SublimeText', _sublime_text, { desc = 'Sublime Text' })
+  vim.api.nvim_create_user_command('Projects', _projects, { desc = 'Projects' })
 end
 
 M.setup_autocmd = function()

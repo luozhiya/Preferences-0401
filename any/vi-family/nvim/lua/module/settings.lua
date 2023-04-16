@@ -249,6 +249,7 @@ run['Builtin UI Improved'] = {
       }
       require('notify').setup(opts)
       vim.notify = require('notify')
+      require('telescope').load_extension('notify')
     end,
   },
   ['folke/noice.nvim'] = {
@@ -268,7 +269,7 @@ run['Builtin UI Improved'] = {
           bottom_search = true, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          inc_rename = true, -- enables an input dialog for inc-rename.nvim
           lsp_doc_border = true, -- add a border to hover docs and signature help
         },
       })
@@ -382,7 +383,7 @@ run['Terminal Integration'] = {
 run['Project'] = {
   ['ahmedkhalf/project.nvim'] = {
     -- event = { 'BufReadPost' },
-    event = { 'VeryLazy' },
+    -- event = { 'VeryLazy' },
     config = function()
       require('project_nvim').setup({
         silent_chdir = true,
@@ -458,6 +459,10 @@ run['Fuzzy Finder'] = {
       telescope.load_extension('fzf')
       telescope.load_extension('live_grep_args')
       telescope.load_extension('projects')
+      telescope.load_extension('repo')
+      telescope.load_extension('refactoring')
+      telescope.load_extension('notify')
+      vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])
     end,
   },
   ['nvim-telescope/telescope-fzf-native.nvim'] = {
@@ -592,6 +597,26 @@ run['Editing Piece'] = {
   ['AntonVanAssche/date-time-inserter.nvim'] = {
     enabled = false,
   },
+  ['ziontee113/color-picker.nvim'] = {
+    cmd = { 'PickColor', 'PickColorInsert' },
+    config = function() require('color-picker').setup() end,
+  },
+  ['uga-rosa/ccc.nvim'] = {
+    cmd = { 'CccPick', 'CccConvert', 'CccHighlighterToggle' },
+    config = function()
+      local opts = {
+        highlighter = {
+          auto_enable = false,
+          lsp = false,
+        },
+      }
+      require('color-picker').setup(opts)
+    end,
+  },
+  ['ThePrimeagen/refactoring.nvim'] = {
+    keys = {},
+    config = function() require('refactoring').setup() end,
+  },
 }
 
 run['Completion'] = {
@@ -600,10 +625,86 @@ run['Completion'] = {
     event = { 'BufReadPost', 'CmdlineEnter' },
     dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer' },
     config = function()
+      local fmt_presets = {
+        native = {
+          fields = { 'abbr', 'kind', 'menu' },
+          format = function(entry, vim_item)
+            local ellipsis_char = '…'
+            local maxwidth = 50
+            local get_ws = function(max, len) return (' '):rep(max - len) end
+            local icons = require('module.options').icons.kinds
+            vim_item.kind = string.format('%s', icons[vim_item.kind])
+            vim_item.menu = ({
+              nvim_lsp = '[LSP]',
+              luasnip = '[Snippet]',
+              buffer = '[Buffer]',
+              path = '[Path]',
+            })[entry.source.name]
+            local content = vim_item.abbr
+            if type(content) == 'string' then
+              if #content > maxwidth then
+                vim_item.abbr = vim.fn.strcharpart(content, 0, maxwidth) .. ellipsis_char
+              else
+                vim_item.abbr = content .. get_ws(maxwidth, #content)
+              end
+            end
+            return vim_item
+          end,
+        },
+        lazy = {
+          format = function(_, item)
+            local icons = require('module.options').icons.kinds
+            if icons[item.kind] then item.kind = icons[item.kind] .. item.kind end
+            return item
+          end,
+        },
+        wbthomason = {
+          fields = { 'kind', 'abbr', 'menu' },
+          format = function(entry, vim_item)
+            local formated = require('lspkind').cmp_format({
+              mode = 'symbol_text',
+              maxwidth = 50,
+              symbol_map = require('module.options').icons.kinds,
+            })(entry, vim_item)
+            local strings = vim.split(formated.kind, '%s', { trimempty = true })
+            formated.kind = ' ' .. strings[1] .. ' '
+            if vim.tbl_count(strings) == 2 then formated.menu = '    (' .. strings[2] .. ')' end
+            return formated
+          end,
+        },
+        vscode = {
+          format = require('lspkind').cmp_format({
+            symbol_map = require('module.options').icons.kinds,
+            mode = 'symbol_text',
+            maxwidth = 50,
+            before = function(entry, vim_item) return vim_item end,
+            menu = {
+              nvim_lsp = '[LSP]',
+              luasnip = '[Snippet]',
+              buffer = '[Buffer]',
+              path = '[Path]',
+            },
+          }),
+        },
+      }
       local cmp = require('cmp')
       local opts = {
-        sources = { { name = 'nvim_lsp' }, { name = 'path' } },
+        completion = {
+          completeopt = 'menuone,noselect,noinsert',
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'buffer' },
+          { name = 'path' },
+        },
         snippet = { expand = function(args) require('luasnip').lsp_expand(args.body) end },
+        formatting = fmt_presets.vscode,
+        experimental = {
+          ghost_text = {
+            hl_group = 'LspCodeLens',
+          },
+        },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.cmp(cmp))
       cmp.setup(opts)
@@ -618,7 +719,7 @@ run['Completion'] = {
       cmp.event:on('confirm_done', function(evt)
         local cxxindent = { 'public:', 'private:', 'protected:' }
         if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'i', true)
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<cr>', true, true, true), 'i', true)
           -- local keymap = require('cmp.utils.keymap')
           -- vim.api.nvim_feedkeys(keymap.t('<cr>'), 'i', true)
           -- vim.api.nvim_feedkeys('<cr>', 'i', true)
@@ -698,13 +799,17 @@ run['LSP VIF'] = {
     config = function()
       vim.cmd([[highlight FidgetTitle ctermfg=110 guifg=#0887c7]])
       vim.cmd([[highlight FidgetTask ctermfg=110 guifg=#0887c7]])
-      require('fidget').setup({ text = { done = ' ' }, window = { blend = 0 } })
+      local icons = require('module.options').icons
+      require('fidget').setup({ text = { done = icons.lsp.CodeAction }, window = { blend = 0 } })
     end,
   },
   ['ray-x/lsp_signature.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = { 'LspAttach' },
-    config = function() require('lsp_signature').setup({ hint_prefix = ' ' }) end,
+    config = function()
+      local icons = require('module.options').icons
+      require('lsp_signature').setup({ hint_prefix = icons.lsp.CodeAction })
+    end,
   },
   ['glepnir/lspsaga.nvim'] = {
     enabled = false,
@@ -741,6 +846,10 @@ run['LSP VIF'] = {
       }
       require('nvim-semantic-tokens').setup(opts)
     end,
+  },
+  ['smjonas/inc-rename.nvim'] = {
+    cmd = { 'IncRename' },
+    config = function() require('inc_rename').setup() end,
   },
   ['VidocqH/lsp-lens.nvim'] = {
     enabled = false,

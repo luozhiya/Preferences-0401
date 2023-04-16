@@ -37,6 +37,7 @@ local list = {
   { 'akinsho/toggleterm.nvim' },
   -- Project
   { 'ahmedkhalf/project.nvim' },
+  { 'cljoly/telescope-repo.nvim' },
   -- Todo
   { 'folke/todo-comments.nvim' },
   -- Session
@@ -79,12 +80,16 @@ local list = {
   { 'NvChad/nvim-colorizer.lua' },
   -- Editing Piece
   { 'AntonVanAssche/date-time-inserter.nvim' },
+  { 'ziontee113/color-picker.nvim' },
+  { 'uga-rosa/ccc.nvim' },
+  { 'ThePrimeagen/refactoring.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
+  { 'onsails/lspkind.nvim' },
   -- Snippet
   { 'L3MON4D3/LuaSnip' },
   -- C++
@@ -100,6 +105,7 @@ local list = {
   { 'p00f/clangd_extensions.nvim' },
   { 'folke/neodev.nvim' },
   { 'theHamsta/nvim-semantic-tokens' },
+  { 'smjonas/inc-rename.nvim' },
   -- LSP Visualization/Interactive
   { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },

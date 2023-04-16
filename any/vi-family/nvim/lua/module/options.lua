@@ -10,6 +10,60 @@ local M = {}
 M.lazy = base.to_native(vim.fn.stdpath('config') .. '/lazy/lazy.nvim')
 M.root = base.to_native(vim.fn.stdpath('config') .. '/lazy')
 
+M.icons = {
+  diagnostics = {
+    Error = ' ', -- 
+    Warn = ' ', -- 
+    Hint = ' ',
+    Info = ' ', -- 
+  },
+  lsp = {
+    CodeAction = ' ',
+  },
+  git = {
+    added = ' ',
+    modified = ' ',
+    removed = ' ',
+  },
+  kinds = {
+    Array = ' ',
+    Boolean = ' ',
+    Class = ' ',
+    Color = ' ',
+    Constant = ' ',
+    Constructor = ' ',
+    Copilot = ' ',
+    Enum = ' ',
+    EnumMember = ' ',
+    Event = ' ',
+    Field = ' ',
+    File = ' ',
+    Folder = ' ',
+    Function = ' ',
+    Interface = ' ',
+    Key = ' ',
+    Keyword = ' ',
+    Method = ' ',
+    Module = ' ',
+    Namespace = ' ',
+    Null = ' ',
+    Number = ' ',
+    Object = ' ',
+    Operator = ' ',
+    Package = ' ',
+    Property = ' ',
+    Reference = ' ',
+    Snippet = ' ',
+    String = ' ',
+    Struct = ' ',
+    Text = ' ',
+    TypeParameter = ' ',
+    Unit = ' ',
+    Value = ' ',
+    Variable = ' ',
+  },
+}
+
 function M.before()
   bindings.setup_leader()
 
@@ -59,7 +113,7 @@ function M.before()
     laststatus = 3, -- Status line style
     cmdheight = 0, -- command-line
     showmode = false, -- Dont show mode since we have a statusline
-    lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = true, -- Print line number

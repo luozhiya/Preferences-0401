@@ -90,8 +90,9 @@ local _lsp_lightbulb = function()
     return false
   end
   local _init = function()
+    local icons = require('module.options').icons
     if vim.tbl_isempty(vim.fn.sign_getdefined(_hl_group())) then
-      vim.fn.sign_define(_hl_group(), { text = '', texthl = _hl_group() }) -- 
+      vim.fn.sign_define(_hl_group(), { text = icons.lsp.CodeAction, texthl = _hl_group() })
     end
     vim.api.nvim_set_hl(0, _hl_group(), { link = 'DiagnosticSignHint', default = true })
   end
@@ -158,8 +159,8 @@ local _lsp_lightbulb = function()
 end
 
 local _lsp_signdefine = function()
-  local signs = { Error = ' ', Warn = ' ', Hint = ' ', Info = ' ' }
-  for type, icon in pairs(signs) do
+  local icons = require('module.options').icons
+  for type, icon in pairs(icons.diagnostics) do
     local hl = 'DiagnosticSign' .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
   end

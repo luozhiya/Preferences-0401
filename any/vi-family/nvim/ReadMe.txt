@@ -198,6 +198,9 @@ https://vi.stackexchange.com/questions/31748/how-to-set-the-diagnostic-level-for
 https://github.com/folke/trouble.nvim/issues/52
 https://github.com/hrsh7th/nvim-cmp/issues/1035
 https://vi.stackexchange.com/questions/27796/how-to-change-editor-mode-from-lua-or-viml
+https://github.com/rcarriga/nvim-notify/issues/11
+https://github.com/folke/which-key.nvim/issues/67
+https://github.com/nvim-telescope/telescope.nvim/issues/2196
 
 Lua
 ---

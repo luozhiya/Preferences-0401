@@ -750,3 +750,8 @@ end
     'confirm_done'
     require('nvim-autopairs.completion.cmp').on_confirm_done({ map_char = { tex = '' } })
   )  
+
+  wk.register({
+		['<C-Space>'] = { 'compe#complete()', 'Trigger completion', expr=true},
+		['<CR>'] = { "compe#confirm('<CR>')", 'Confirm completion', expr=true },
+}, {mode = 'i'})  
