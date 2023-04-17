@@ -169,4 +169,6 @@ M.toggle = function(option, _local, msg)
   end
 end
 
+function M.has(plugin) return require('lazy.core.config').plugins[plugin] ~= nil end
+
 return M

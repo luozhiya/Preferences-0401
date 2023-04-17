@@ -92,7 +92,7 @@ local _lsp_lightbulb = function()
   local _init = function()
     local icons = require('module.options').icons
     if vim.tbl_isempty(vim.fn.sign_getdefined(_hl_group())) then
-      vim.fn.sign_define(_hl_group(), { text = icons.lsp.CodeAction, texthl = _hl_group() })
+      vim.fn.sign_define(_hl_group(), { text = icons.diagnostics.Hint, texthl = _hl_group() })
     end
     vim.api.nvim_set_hl(0, _hl_group(), { link = 'DiagnosticSignHint', default = true })
   end

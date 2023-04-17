@@ -217,6 +217,11 @@ DAP
 ---
 https://microsoft.github.io/debug-adapter-protocol/overview
 
+Resource
+--------
+https://fontawesome.com/icons
+https://fontawesome.com.cn/v4/cheatsheet
+
 QA
 --
 1. confusion root?

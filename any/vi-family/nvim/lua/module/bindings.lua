@@ -26,16 +26,18 @@ M.lsp = {
 }
 
 M.alpha_val = function(button)
+  local icons = require('module.options').icons.collects
+  -- stylua: ignore
   return {
-    button('f', ' ' .. ' Find file', ':Telescope find_files <cr>'),
-    button('n', ' ' .. ' New file', ':ene <bar> startinsert <cr>'),
-    button('r', ' ' .. ' Recent files', ':Telescope oldfiles <cr>'),
-    button('p', '󱁕 ' .. ' Projects', ':Projects <cr>'),
-    button('g', ' ' .. ' Find text', ':Telescope live_grep <cr>'),
-    button('c', ' ' .. ' Config', ':e $MYVIMRC <cr>'),
-    button('s', ' ' .. ' Restore Session', [[:lua require("persistence").load() <cr>]]),
-    button('l', '󰒲 ' .. ' Lazy', ':Lazy<cr>'),
-    button('q', ' ' .. ' Quit', ':qa<cr>'),
+    button('f', icons.Search ..         ' Find file', ':Telescope find_files <cr>'),
+    button('n', icons.File ..           ' New file', ':ene <bar> startinsert <cr>'),
+    button('r', icons.Connectdevelop .. ' Recent files', ':Telescope oldfiles <cr>'), --    -- 
+    button('p', icons.Chrome ..         ' Projects', ':Projects <cr>'),
+    button('g', icons.ListAlt ..        ' Find text', ':Telescope live_grep <cr>'),
+    button('c', icons.Cogs ..           ' Config', ':e $MYVIMRC <cr>'), --    -- 
+    button('s', icons.IE ..             ' Restore Session', [[:lua require("persistence").load() <cr>]]),
+    button('l', icons.Firefox ..        ' Lazy', ':Lazy<cr>'),
+    button('q', icons.Modx ..           ' Quit', ':qa<cr>'), -- 
   }
 end
 
@@ -269,6 +271,8 @@ M.wk = function(wk)
     b = {
       name = 'Buffer',
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
+      p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
+      o = { '<Cmd>BufferLineGroupClose ungrouped<CR>', 'Delete non-pinned buffers, Only pinned' },
     },
     v = {
       name = 'Vim',
@@ -278,6 +282,7 @@ M.wk = function(wk)
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
       n = { _notify_history, 'Notification History' },
+      s = { '<cmd>lua vim.show_pos<cr>', 'Inspect Pos' },
       e = wk_ve,
     },
     l = {
@@ -374,11 +379,11 @@ M.wk = function(wk)
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
       -- p = { '<cmd>Telescope projects<cr>', 'Projects' },
       p = { '<cmd>Projects<cr>', 'Projects' },
-      f = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
+      o = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
       r = { '<cmd>Telescope repo list<cr>', 'Repo list' },
-      o = { _open_with_default_app, 'Open With Default APP' },
-      e = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
+      a = { _open_with_default_app, 'Open With Default APP' },
+      x = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
     },
   }
   wk.register(n, { mode = 'n', prefix = '<leader>' })
@@ -412,7 +417,7 @@ M.nvim_tree = function()
     if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
     return basedir
   end
--- stylua: ignore start
+  -- stylua: ignore start
   return { view = { mappings = { list = {
           { key = '<c-f>', action_cb = function() telescope.find_files(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },
           { key = '<c-g>', action_cb = function() telescope.live_grep(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },
@@ -423,30 +428,43 @@ end
 M.setup_code = function()
   -- Core
   M.semicolon_to_colon()
+  -- Better up/down
   M.map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, noremap = true })
   M.map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, noremap = true })
-  M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { noremap = true, desc = 'Escape And Clear hlsearch' })
+  -- Better move cursor
   M.map('n', '<c-j>', '15gj', { noremap = true, desc = 'Move Down 15 Lines' })
   M.map('n', '<c-k>', '15gk', { noremap = true, desc = 'Move Up 15 Lines' })
+  -- Move to window using the <ctrl> hjkl keys
   M.map('n', '<c-h>', '<c-w>h', { desc = 'Jump Left' })
   -- M.map('n', '<c-j>', '<c-w>j', { desc = 'Jump Down' })
   -- M.map('n', '<c-k>', '<c-w>k', { desc = 'Jump Up' })
   M.map('n', '<c-l>', '<c-w>l', { desc = 'Jump Right' })
+  -- Resize window using <ctrl> arrow keys
+  M.map('n', '<C-Up>', '<cmd>resize +2<cr>', { desc = 'Increase window height' })
+  M.map('n', '<C-Down>', '<cmd>resize -2<cr>', { desc = 'Decrease window height' })
+  M.map('n', '<C-Left>', '<cmd>vertical resize -2<cr>', { desc = 'Decrease window width' })
+  M.map('n', '<C-Right>', '<cmd>vertical resize +2<cr>', { desc = 'Increase window width' })
   M.map('n', '<a-q>', '<cmd>ToggleWrap<cr>', { desc = 'Toggle Wrap' })
+  -- Better indenting
   M.map('v', '<', '<gv', { noremap = true, desc = 'deIndent Continuously' })
   M.map('v', '>', '>gv', { noremap = true, desc = 'Indent Continuously' })
+  -- Add undo break-points
+  M.map('i', ',', ',<c-g>u')
+  M.map('i', '.', '.<c-g>u')
+  M.map('i', ';', ';<c-g>u')
   -- File
   M.map('n', '<c-q>', '<cmd>CloseView<cr>', { desc = 'Close' })
   M.map('n', '<c-n>', '<cmd>ene<cr>', { desc = 'New Text File' })
   -- Edit
+  M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
+  -- Comment
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
   M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
   M.map('x', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
   M.map('n', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
   M.map('x', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
-  M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
-  -- Selection
+  -- Selection/ Move Lines
   M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', { noremap = true, desc = 'Line: Move Up (move.nvim)' })
   M.map('n', '<a-k>', '<cmd>MoveLine(-1)<cr>', { noremap = true, desc = 'Line: Move Down (move.nvim)' })
   M.map('n', '<a-h>', '<cmd>MoveHChar(-1)<cr>', { noremap = true, desc = 'Line: Move Left (move.nvim)' })
@@ -455,9 +473,20 @@ M.setup_code = function()
   M.map('v', '<a-k>', '<cmd>MoveBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Down (move.nvim)' })
   M.map('v', '<a-h>', '<cmd>MoveHBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Left (move.nvim)' })
   M.map('v', '<a-l>', '<cmd>MoveHBlock(1)<cr>', { noremap = true, desc = 'Block: Move Right (move.nvim)' })
+  -- Search
+  M.map({ 'n', 'x' }, 'gw', '*N', { desc = 'Search word under cursor' })
+  -- Clear search with <esc>
+  M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { noremap = true, desc = 'Escape And Clear hlsearch' })
   -- View
   M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   M.map('n', [[\]], '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
+  -- Tabs
+  M.map('n', '<leader><tab>l', '<cmd>tablast<cr>', { desc = 'Last Tab' })
+  M.map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', { desc = 'First Tab' })
+  M.map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', { desc = 'New Tab' })
+  M.map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = 'Next Tab' })
+  M.map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = 'Close Tab' })
+  M.map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab' })
   -- Go
   M.map(
     'n',

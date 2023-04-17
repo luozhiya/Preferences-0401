@@ -159,22 +159,26 @@ run['Bars And Lines'] = {
   ['nvim-lualine/lualine.nvim'] = {
     event = { 'User NeXT' },
     config = function()
+      local icons = require('module.options').icons.collects
       local function lsp_active()
         local names = {}
         local bufnr = vim.api.nvim_get_current_buf()
         for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
           table.insert(names, client.name)
         end
-        return vim.tbl_isempty(names) and '' or ' ' .. table.concat(names, ' ')
+        return vim.tbl_isempty(names) and '' or icons.Tomatoes .. table.concat(names, ' ')
         -- return 'LSP<' .. table.concat(names, ', ') .. '>'
       end
-      local function location() return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) end
+      local function location()
+        return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) .. icons.Pagelines
+      end
       local fileformat = { 'fileformat', icons_enabled = false }
       local opts = {
         sections = {
           lualine_x = { 'cdate', 'ctime', lsp_active, 'encoding', fileformat, 'filetype' },
           lualine_z = { location },
         },
+        extensions = { 'neo-tree', 'lazy' },
       }
       require('lualine').setup(opts)
     end,
@@ -210,13 +214,55 @@ run['Bars And Lines'] = {
       require('incline').setup(opts)
     end,
   },
+  ['nanozuki/tabby.nvim'] = {
+    enabled = false,
+    event = { 'VeryLazy' },
+    config = true,
+  },
+  ['akinsho/bufferline.nvim'] = {
+    -- event = { 'VeryLazy' },
+    event = { 'User AlphaClosed' },
+    config = function()
+      local opts = {
+        options = {
+          -- diagnostics = false,
+          diagnostics = 'nvim_lsp',
+          separator_style = 'slant', -- slope thick thin slant
+          always_show_bufferline = true,
+          diagnostics_indicator = function(_, _, diag)
+            local icons = require('module.options').icons.diagnostics
+            local ret = (diag.error and icons.Error .. diag.error .. ' ' or '')
+              .. (diag.warning and icons.Warn .. diag.warning or '')
+            return vim.trim(ret)
+          end,
+          offsets = {
+            {
+              filetype = 'NvimTree',
+              text = 'File Explorer',
+              highlight = 'Directory',
+              separator = true,
+              text_align = 'left',
+            },
+            {
+              filetype = 'neo-tree',
+              text = 'Neo Explorer',
+              highlight = 'Directory',
+              separator = true,
+              text_align = 'left',
+            },
+          },
+        },
+      }
+      require('bufferline').setup(opts)
+    end,
+  },
 }
 
 run['Colorschemes'] = {
   ['folke/tokyonight.nvim'] = {
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd([[colorscheme tokyonight-moon]]) end,
+    config = function() vim.cmd([[colorscheme tokyonight]]) end,
   },
 }
 
@@ -305,10 +351,10 @@ run['File Explorer'] = {
         sort_by = 'case_sensitive',
         sync_root_with_cwd = false,
         respect_buf_cwd = false,
-        hijack_directories = { enable = true },
+        hijack_directories = { enable = false },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
-        view = { adaptive_size = false, preserve_window_proportions = true, width = { min = 40 } },
+        view = { adaptive_size = false, preserve_window_proportions = true, width = 40 },
         git = { enable = false },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.nvim_tree())
@@ -336,11 +382,17 @@ run['File Explorer'] = {
     config = function()
       vim.g.neo_tree_remove_legacy_commands = 1
       local opts = {
+        source_selector = {
+          winbar = false, -- toggle to show selector on winbar
+          statusline = false, -- toggle to show selector on statusline
+          show_scrolled_off_parent_node = false, -- boolean
+        },
+        enable_git_status = false,
+        enable_diagnostics = false,
         -- async_directory_scan = 'never',
         -- log_level = 'trace',
         -- log_to_file = false,
         close_if_last_window = true,
-        -- source_selector = { winbar = true, statusline = true },
         filesystem = {
           bind_to_cwd = false,
           follow_current_file = true,
@@ -378,6 +430,13 @@ run['Terminal Integration'] = {
       opts = vim.tbl_deep_extend('error', opts, bindings.toggleterm())
       require('toggleterm').setup(opts)
     end,
+  },
+}
+
+run['Window Management'] = {
+  ['spolu/dwm.vim'] = {
+    enabled = false,
+    event = { 'VeryLazy' },
   },
 }
 
@@ -590,7 +649,12 @@ run['Formatting'] = {
   },
   ['NvChad/nvim-colorizer.lua'] = {
     event = 'BufReadPost',
-    config = function() require('colorizer').setup() end,
+    config = function()
+      local opts = {
+        filetypes = { 'css', 'html', 'lua' },
+      }
+      require('colorizer').setup(opts)
+    end,
   },
 }
 
@@ -801,7 +865,7 @@ run['LSP VIF'] = {
       vim.cmd([[highlight FidgetTitle ctermfg=110 guifg=#0887c7]])
       vim.cmd([[highlight FidgetTask ctermfg=110 guifg=#0887c7]])
       local icons = require('module.options').icons
-      require('fidget').setup({ text = { done = icons.lsp.CodeAction }, window = { blend = 0 } })
+      require('fidget').setup({ text = { done = icons.collects.Tomatoes }, window = { blend = 0 } })
     end,
   },
   ['ray-x/lsp_signature.nvim'] = {
@@ -809,7 +873,7 @@ run['LSP VIF'] = {
     event = { 'LspAttach' },
     config = function()
       local icons = require('module.options').icons
-      require('lsp_signature').setup({ hint_prefix = icons.lsp.CodeAction })
+      require('lsp_signature').setup({ hint_prefix = icons.collects.Tomatoes })
     end,
   },
   ['glepnir/lspsaga.nvim'] = {

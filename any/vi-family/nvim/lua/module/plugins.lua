@@ -16,8 +16,11 @@ local list = {
   { 'SmiteshP/nvim-navic' },
   { 'b0o/incline.nvim' },
   { 'archibate/lualine-time' },
+  { 'nanozuki/tabby.nvim' },
+  { 'akinsho/bufferline.nvim' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
+  { 'gosukiwi/vim-atom-dark' },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
@@ -35,6 +38,8 @@ local list = {
   { 'lmburns/lf.nvim' },
   -- Terminal Integration
   { 'akinsho/toggleterm.nvim' },
+  -- Window Management
+  { 'spolu/dwm.vim' },
   -- Project
   { 'ahmedkhalf/project.nvim' },
   { 'cljoly/telescope-repo.nvim' },

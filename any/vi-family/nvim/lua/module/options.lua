@@ -14,11 +14,21 @@ M.icons = {
   diagnostics = {
     Error = ' ', -- 
     Warn = ' ', -- 
-    Hint = ' ',
+    Hint = ' ', -- 
     Info = ' ', -- 
   },
-  lsp = {
-    CodeAction = ' ',
+  collects = {
+    Tomatoes = ' ',
+    Pagelines = ' ',
+    Search = ' ',
+    File = ' ',
+    Connectdevelop = ' ',
+    Chrome = ' ',
+    Firefox = ' ',
+    IE = ' ',
+    ListAlt = ' ',
+    Modx = ' ',
+    Cogs = ' ',
   },
   git = {
     added = ' ',
@@ -109,9 +119,9 @@ function M.before()
 
   local opts = {
     runtimepath = vim.opt.runtimepath:append(M.lazy),
-    shellslash = true, -- A forward slash is used when expanding file names.
+    -- shellslash = true, -- A forward slash is used when expanding file names. -- Bug: neo-tree
     laststatus = 3, -- Status line style
-    cmdheight = 0, -- command-line
+    cmdheight = 0, -- Command-line
     showmode = false, -- Dont show mode since we have a statusline
     -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
@@ -120,14 +130,14 @@ function M.before()
     signcolumn = 'yes:1',
     termguicolors = true, -- True color support
     wrap = false, -- Disable line wrap
-    tabstop = 2, -- length of an actual \t character
-    expandtab = true, -- if set, only insert spaces; otherwise insert \t and complete with spaces
+    tabstop = 2, -- Length of an actual \t character
+    expandtab = true, -- Ff set, only insert spaces; otherwise insert \t and complete with spaces
     shiftwidth = 0, -- Number of spaces to use for each step of (auto)indent. (0 for ‘tabstop’)
     softtabstop = 0, -- length to use when editing text (eg. TAB and BS keys). (0 for ‘tabstop’, -1 for ‘shiftwidth’)
-    shiftround = true, -- round indentation to multiples of 'shiftwidth' when shifting text
+    shiftround = true, -- Round indentation to multiples of 'shiftwidth' when shifting text
     smartindent = true, -- Insert indents automatically
     cinoptions = vim.opt.cinoptions:append({ 'g0', 'N-s', ':0', 'E-s' }), -- gN. See https://neovim.io/doc/user/indent.html#cinoptions-values
-    synmaxcol = 300, -- don't syntax-highlight long lines
+    synmaxcol = 300, -- Don't syntax-highlight long lines
     ignorecase = true, -- Ignore case
     smartcase = true, -- Don't ignore case with capitals
     clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
@@ -135,7 +145,7 @@ function M.before()
     autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
     shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
-    timeoutlen = 500, -- the timeout when WhichKey opens is controlled by the vim setting timeoutlen.
+    timeoutlen = 500, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
     wildmode = 'full',
     updatetime = 300,
     incsearch = false,
@@ -146,7 +156,8 @@ function M.before()
     foldcolumn = '0',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
-    fileformats = 'unix,dos,mac', -- detect formats
+    fileformats = 'unix,dos,mac', -- Detect formats
+    -- showtabline = 2, -- Always display tabline
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v
