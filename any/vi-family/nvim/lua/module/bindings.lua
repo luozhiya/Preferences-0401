@@ -198,10 +198,11 @@ M.wk = function(wk)
   end
   local _format = function()
     if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('cpp') then
-      vim.lsp.buf.format({ async = true })
+      vim.lsp.buf.format({ async = false })
     else
       vim.cmd('FormatWriteLock')
     end
+    vim.cmd([[set ff=unix]])
   end
   local _rename = function() vim.cmd('IncRename ' .. vim.fn.expand('<cword>')) end
   local _NvimTree_find = function()
@@ -355,6 +356,7 @@ M.wk = function(wk)
       },
       e = {
         name = 'Ending',
+        l = { '<cmd>RemoveExclusiveORM<cr>', 'ORM Ending' },
         u = { '<cmd>set ff=unix<cr>', 'Unix Ending' },
         w = { '<cmd>set ff=dos<cr>', 'Windows Ending' },
         m = { '<cmd>set ff=mac<cr>', 'Mac Ending' },
@@ -493,16 +495,19 @@ M.setup_comands = function()
       vim.api.nvim_win_close(0, true)
     end
   end
-  local _toggle_wrap = function()
-    vim.opt.wrap = vim.opt.wrap._value == false
-    vim.notify(vim.opt.wrap._value == true and 'Wrap Hard' or 'Not Wrap', vim.log.levels.INFO)
-  end
-  local _toggle_case_sensitive = function()
-    vim.opt.ignorecase = vim.opt.ignorecase._value == false
-    vim.notify(vim.opt.ignorecase._value == true and 'Ignore Case' or 'Case Sensitive', vim.log.levels.INFO)
-  end
+  local _toggle_wrap = function() base.toggle('wrap', false, { 'Wrap Hard', 'Not Wrap' }) end
+  local _toggle_case_sensitive = function() base.toggle('ignorecase', false, { 'Ignore Case', 'Case Sensitive' }) end
   local _toggle_fullscreen = function() vim.g.neovide_fullscreen = vim.g.neovide_fullscreen == false end
   local _toggle_focus_mode = function() vim.opt.laststatus = vim.opt.laststatus._value == 0 and 3 or 0 end
+  local _toggle_diagnostics = function()
+    if vim.diagnostic.is_disabled() then
+      vim.diagnostic.enable()
+      base.info('Enabled diagnostics', { title = 'Diagnostics' })
+    else
+      vim.diagnostic.disable()
+      base.warn('Disabled diagnostics', { title = 'Diagnostics' })
+    end
+  end
   local _remove_exclusive_orm = function()
     -- vim.cmd([[:%s/\r//g]])
     vim.cmd([[set ff=unix]])
@@ -536,6 +541,7 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
   vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
   vim.api.nvim_create_user_command('ToggleCaseSensitive', _toggle_case_sensitive, { desc = 'Toggle Case Sensitive' })
+  vim.api.nvim_create_user_command('ToggleDiagnostics', _toggle_diagnostics, { desc = 'Toggle Diagnostics' })
   vim.api.nvim_create_user_command('RemoveExclusiveORM', _remove_exclusive_orm, { desc = 'Remove Exclusive ORM' })
   vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
   vim.api.nvim_create_user_command('CommentLine', _comment_line, { desc = 'Comment Line' })

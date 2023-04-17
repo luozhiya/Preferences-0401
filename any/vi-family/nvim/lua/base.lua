@@ -121,4 +121,52 @@ M.get_contain_directory = function()
   return i and string.sub(path, 1, #path - i + 1) or nil
 end
 
+M.notify = function(msg, opts)
+  if vim.in_fast_event() then return vim.schedule(function() M.notify(msg, opts) end) end
+  opts = opts or {}
+  if type(msg) == 'table' then
+    msg = table.concat(vim.tbl_filter(function(line) return line or false end, msg), '\n')
+  end
+  vim.notify(msg, opts.level or vim.log.levels.INFO, {
+    title = opts.title or 'notify from base.lua',
+  })
+end
+
+M.info = function(msg, opts)
+  opts = opts or {}
+  opts.level = vim.log.levels.INFO
+  M.notify(msg, opts)
+end
+
+M.warn = function(msg, opts)
+  opts = opts or {}
+  opts.level = vim.log.levels.WARN
+  M.notify(msg, opts)
+end
+
+M.fetch = function(option, _local)
+  if _local then return vim.opt_local[option]:get() end
+  return vim.opt[option]:get()
+end
+
+M.set = function(option, _local, value)
+  if _local then
+    vim.opt_local[option] = value
+  else
+    vim.opt[option] = value
+  end
+  M.info('Set ' .. option .. ' to ' .. tostring(value), { title = 'Option Changed' })
+end
+
+M.toggle = function(option, _local, msg)
+  M.set(option, _local, not M.fetch(option, _local))
+  if msg and vim.tbl_count(msg) == 2 then
+    if M.fetch(option, _local) then
+      M.info(msg[1], { title = 'Option Toggle' })
+    else
+      M.info(msg[2], { title = 'Option Toggle' })
+    end
+  end
+end
+
 return M

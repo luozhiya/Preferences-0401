@@ -146,7 +146,7 @@ function M.before()
     foldcolumn = '0',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
-    fileformats = 'unix',
+    fileformats = 'unix,dos,mac', -- detect formats
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v
