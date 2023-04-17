@@ -7,7 +7,6 @@ M.is_kernel = function() return vim.loop.os_uname().sysname == 'Linux' end
 M.nt_sep = function() return '\\' end
 M.kernel_sep = function() return '/' end
 M.os_sep = function() return package.config:sub(1, 1) end
-M.nvim_sep = function() return (M.is_windows() and vim.opt.shellslash._value == 0) and M.nt_sep() or M.kernel_sep() end
 M.to_nt = function(s) return s:gsub(M.kernel_sep(), M.nt_sep()) end
 M.to_kernel = function(s) return s:gsub(M.nt_sep(), M.kernel_sep()) end
 M.to_native = function(s) return M.is_windows() and M.to_nt(s) or M.to_kernel(s) end
@@ -19,7 +18,10 @@ M.root = function()
   return M.is_windows() and M.shellslash_safe(string.sub(vim.loop.cwd(), 1, 1) .. ':' .. M.nt_sep()) or M.kernel_sep()
 end
 M.concat_paths = function(...) return table.concat({ ... }, M.nvim_sep()) end
-
+M.nvim_sep = function()
+  if M.is_kernel() or (M.is_windows() and vim.opt.shellslash._value == true) then return M.kernel_sep() end
+  return M.nt_sep()
+end
 M.open = function(uri)
   if uri == nil then return vim.notify('Open nil URI', vim.log.levels.INFO) end
   local cmd
@@ -98,7 +100,7 @@ M.get_relative_path = function() return M.path_relative(M.get_current_buffer_nam
 
 M.get_current_buffer_name = function()
   local name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-  return name ~= '' and name or '[No Name]'
+  return M.shellslash_safe(name ~= '' and name or '[No Name]')
 end
 
 M.name = function()
@@ -110,7 +112,7 @@ end
 M.get_name_without_ext = function()
   local name = M.name()
   local i = M.rfind(name, '.')
-  return i and string.sub(name, 1, i) or name
+  return i and string.sub(name, 1, -i - 1) or name
 end
 
 M.get_contain_directory = function()

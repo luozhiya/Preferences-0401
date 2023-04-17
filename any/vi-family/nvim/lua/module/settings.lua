@@ -180,7 +180,8 @@ run['Bars And Lines'] = {
     end,
   },
   ['utilyre/barbecue.nvim'] = {
-    event = { 'User NeXT' },
+    -- event = { 'User NeXT' },
+    event = { 'BufReadPost' },
     config = function()
       local opts = {
         show_dirname = false,
