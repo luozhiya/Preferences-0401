@@ -128,7 +128,7 @@ M.notify = function(msg, opts)
     msg = table.concat(vim.tbl_filter(function(line) return line or false end, msg), '\n')
   end
   vim.notify(msg, opts.level or vim.log.levels.INFO, {
-    title = opts.title or 'notify from base.lua',
+    title = opts.title or 'Notify From Base',
   })
 end
 
@@ -169,6 +169,23 @@ M.toggle = function(option, _local, msg)
   end
 end
 
-function M.has(plugin) return require('lazy.core.config').plugins[plugin] ~= nil end
+M.has = function(plugin) return require('lazy.core.config').plugins[plugin] ~= nil end
+
+M.on_attach = function(on_attach)
+  vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+      local buffer = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      on_attach(client, buffer)
+    end,
+  })
+end
+
+M.on_very_lazy = function(fn)
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'VeryLazy',
+    callback = function() fn() end,
+  })
+end
 
 return M

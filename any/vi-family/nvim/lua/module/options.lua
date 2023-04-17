@@ -28,7 +28,7 @@ M.icons = {
     IE = ' ',
     ListAlt = ' ',
     Modx = ' ',
-    Cogs = ' ',
+    Cogs = ' ',
   },
   git = {
     added = ' ',
@@ -127,7 +127,7 @@ function M.before()
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = true, -- Print line number
-    signcolumn = 'yes:1',
+    signcolumn = 'yes:1', -- Always show the signcolumn, otherwise it would shift the text each time
     termguicolors = true, -- True color support
     wrap = false, -- Disable line wrap
     tabstop = 2, -- Length of an actual \t character
@@ -139,15 +139,15 @@ function M.before()
     cinoptions = vim.opt.cinoptions:append({ 'g0', 'N-s', ':0', 'E-s' }), -- gN. See https://neovim.io/doc/user/indent.html#cinoptions-values
     synmaxcol = 300, -- Don't syntax-highlight long lines
     ignorecase = true, -- Ignore case
-    smartcase = true, -- Don't ignore case with capitals
-    clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
+    -- smartcase = true, -- Don't ignore case with capitals
+    clipboard = 'unnamedplus', -- Allows neovim to access the system clipboard
     completeopt = { 'menuone', 'noselect', 'noinsert' },
     autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
     shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
     timeoutlen = 500, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
-    wildmode = 'full',
-    updatetime = 300,
+    wildmode = 'full', -- Command-line completion mode
+    updatetime = 200, -- Save swap file and trigger CursorHold
     incsearch = false,
     fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ', vert = ' ' },
     foldlevel = 99,
@@ -158,6 +158,11 @@ function M.before()
     foldexpr = 'nvim_treesitter#foldexpr()',
     fileformats = 'unix,dos,mac', -- Detect formats
     -- showtabline = 2, -- Always display tabline
+    conceallevel = 3, -- Hide * markup for bold and italic
+    confirm = true, -- Confirm to save changes before exiting modified buffer
+    cursorline = true, -- Enable highlighting of the current line
+    relativenumber = true, -- Relative line numbers
+    sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v

@@ -219,6 +219,7 @@ M.wk = function(wk)
       layout_config = { preview_cutoff = 1, width = 0.8, height = 0.8 },
     })
   end
+  local _purge_notify = function() require('notify').dismiss({ silent = true, pending = true }) end
   -- stylua: ignore start
   local wk_ve = {
       name = 'Edit Config',
@@ -263,10 +264,10 @@ M.wk = function(wk)
       j = { '<C-w>j', 'Jump Down' },
       k = { '<C-w>k', 'Jump Up' },
       l = { '<C-w>l', 'Jump Right' },
-      y = { '<cmd>vsplit<cr><esc>', 'Split Left' },
-      u = { '<cmd>split<cr><C-w>j<esc>', 'Split Down' },
-      i = { '<cmd>split<cr><esc>', 'Split Up' },
-      o = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
+      e = { '<cmd>vsplit<cr><esc>', 'Split Left' },
+      d = { '<cmd>split<cr><C-w>j<esc>', 'Split Down' },
+      u = { '<cmd>split<cr><esc>', 'Split Up' },
+      r = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
     },
     b = {
       name = 'Buffer',
@@ -282,7 +283,10 @@ M.wk = function(wk)
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
       n = { _notify_history, 'Notification History' },
+      d = { _purge_notify, 'Delete all Notifications' },
       s = { '<cmd>lua vim.show_pos<cr>', 'Inspect Pos' },
+      l = { '<cmd>lopen<cr>', 'Location List' },
+      q = { '<cmd>copen<cr>', 'Quickfix List' },
       e = wk_ve,
     },
     l = {
@@ -453,11 +457,15 @@ M.setup_code = function()
   M.map('i', '.', '.<c-g>u')
   M.map('i', ';', ';<c-g>u')
   -- File
-  M.map('n', '<c-q>', '<cmd>CloseView<cr>', { desc = 'Close' })
+  -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', { desc = 'Close' })
+  M.map('n', '<c-w>', '<cmd>BDelete this<cr>', { desc = 'Delete current buffer' })
   M.map('n', '<c-n>', '<cmd>ene<cr>', { desc = 'New Text File' })
+  M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
   -- Edit
   M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
+  M.map('n', '<a-w>', '<cmd>ToggleWholeWord<cr>')
+  M.map('n', '<c-f>', '<cmd>SearchCode<cr>')
   -- Comment
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
   M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
@@ -487,6 +495,15 @@ M.setup_code = function()
   M.map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = 'Next Tab' })
   M.map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = 'Close Tab' })
   M.map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab' })
+  -- Buffer
+  -- M.map('n', '<tab>', ':bnext<CR>', { desc = 'Next Buffer' })
+  -- M.map('n', '<s-tab>', ':bprevious<CR>', { desc = 'Previous Buffer' })
+  M.map('n', '<s-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
+  M.map('n', '<s-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
+  M.map('n', '[b', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
+  M.map('n', ']b', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
+  M.map('n', '<s-tab>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
+  M.map('n', '<tab>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
   -- Go
   M.map(
     'n',
@@ -566,13 +583,38 @@ M.setup_comands = function()
     end
     timer:start(8, 0, vim.schedule_wrap(picker))
   end
+  local _toggle_wholeword = function()
+    if vim.g.wholeword == nil then vim.g.wholeword = false end
+    vim.g.wholeword = not vim.g.wholeword
+    if vim.g.wholeword == true then
+      base.info('Match Whole Word', { title = 'Search Option' })
+    else
+      base.info('Dont Care Whole Word', { title = 'Search Option' })
+    end
+  end
+  local _search = function()
+    local _has_wholeword = function() return vim.g.wholeword and vim.g.wholeword == true end
+    local mww = _has_wholeword() and 'match whole word + ' or 'dont case whole word + '
+    local mc = vim.opt.ignorecase:get() == false and 'match case' or 'ignore case'
+    local prompt = 'Search (' .. mww .. mc .. ')'
+    local input_opts = { prompt = prompt, completion = 'lsp' }
+    vim.ui.input(input_opts, function(input)
+      if not input then return end
+      if vim.g.wholeword == true then
+        vim.cmd('/\\<' .. input .. '\\>')
+      else
+        vim.cmd('/' .. input)
+      end
+    end)
+  end
   vim.api.nvim_create_user_command('ToggleFullScreen', _toggle_fullscreen, { desc = 'Toggle Full Screen' })
   vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
   vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
   vim.api.nvim_create_user_command('ToggleCaseSensitive', _toggle_case_sensitive, { desc = 'Toggle Case Sensitive' })
+  vim.api.nvim_create_user_command('ToggleWholeWord', _toggle_wholeword, { desc = 'Whole Word Toggle' })
   vim.api.nvim_create_user_command('ToggleDiagnostics', _toggle_diagnostics, { desc = 'Toggle Diagnostics' })
   vim.api.nvim_create_user_command('RemoveExclusiveORM', _remove_exclusive_orm, { desc = 'Remove Exclusive ORM' })
-  vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
+  -- vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
   vim.api.nvim_create_user_command('CommentLine', _comment_line, { desc = 'Comment Line' })
   vim.api.nvim_create_user_command('CommentBlock', _comment_block, { desc = 'Comment Block' })
   vim.api.nvim_create_user_command('InsertDate', _insert_date, { desc = 'Insert Date' })
@@ -580,10 +622,14 @@ M.setup_comands = function()
   vim.api.nvim_create_user_command('SublimeMerge', _sublime_merge, { desc = 'Sublime Merge' })
   vim.api.nvim_create_user_command('SublimeText', _sublime_text, { desc = 'Sublime Text' })
   vim.api.nvim_create_user_command('Projects', _projects, { desc = 'Projects' })
+  vim.api.nvim_create_user_command('SearchCode', _search, { desc = 'Search Code' })
 end
 
 M.setup_autocmd = function()
+  local function augroup(name) return vim.api.nvim_create_augroup('bindings_' .. name, { clear = true }) end
+  -- Unfold all level on open file
   vim.api.nvim_create_autocmd('BufRead', {
+    group = augroup('unfold_open'),
     pattern = { '*.c', '*.cpp', '*.cc', '*.hpp', '*.h', '*.lua' },
     callback = function()
       vim.api.nvim_create_autocmd('BufWinEnter', {
@@ -592,8 +638,13 @@ M.setup_autocmd = function()
       })
     end,
   })
+  local _nofold = function() vim.cmd('set nofoldenable') end
+  vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
+    callback = function() _nofold() end,
+  })
+  -- Close Neovim when all buffer closed
   vim.api.nvim_create_autocmd('BufEnter', {
-    group = vim.api.nvim_create_augroup('NvimTreeClose', { clear = true }),
+    group = augroup('NvimTreeClose'),
     pattern = 'NvimTree_*',
     callback = function()
       local layout = vim.api.nvim_call_function('winlayout', {})
@@ -606,6 +657,7 @@ M.setup_autocmd = function()
       end
     end,
   })
+  -- Create `User Next` event
   vim.api.nvim_create_autocmd('User', {
     pattern = 'NeXT',
     once = true,
@@ -622,26 +674,60 @@ M.setup_autocmd = function()
     once = true,
     callback = function() _next() end,
   })
+  -- For ccls
   vim.api.nvim_create_autocmd('User', {
     pattern = 'ccls',
     once = true,
     -- callback = function() vim.notify('ccls', vim.log.levels.INFO) end,
     callback = function() end,
   })
-  vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  -- Check if we need to reload the file when it changed
+  vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI', 'TermClose', 'TermLeave' }, {
+    group = augroup('checktime'),
     pattern = '*',
     command = 'checktime',
   })
+  -- Disable syntax for loog file
   local _disable_syntax = function() vim.cmd('if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif') end
   vim.api.nvim_create_autocmd('Filetype', {
+    group = augroup('disable_syntax'),
     pattern = 'log',
     callback = function() _disable_syntax() end,
   })
-  local _nofold = function() vim.cmd('set nofoldenable') end
-  vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
-    callback = function() _nofold() end,
-  })
+  -- Terminal return program status
   vim.cmd([[:autocmd TermClose * execute 'bdelete! ' . expand('<abuf>')]])
+  -- Close some filetypes with <q>
+  vim.api.nvim_create_autocmd('FileType', {
+    group = augroup('close_with_q'),
+    pattern = {
+      'PlenaryTestPopup',
+      'help',
+      'lspinfo',
+      'man',
+      'notify',
+      'qf',
+      'spectre_panel',
+      'startuptime',
+      'tsplayground',
+    },
+    callback = function(event)
+      vim.bo[event.buf].buflisted = false
+      vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+    end,
+  })
+  -- Auto create dir when saving a file, in case some intermediate directory does not exist
+  vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+    group = augroup('auto_create_dir'),
+    callback = function(event)
+      local file = vim.loop.fs_realpath(event.match) or event.match
+      vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
+    end,
+  })
+  -- Highlight on yank
+  vim.api.nvim_create_autocmd('TextYankPost', {
+    group = augroup('highlight_yank'),
+    callback = function() vim.highlight.on_yank() end,
+  })
 end
 
 return M

@@ -65,6 +65,7 @@ local list = {
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
+  { 'moll/vim-bbye' },
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
   -- Editing Motion Support

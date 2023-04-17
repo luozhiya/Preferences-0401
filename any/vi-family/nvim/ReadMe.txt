@@ -221,6 +221,8 @@ Resource
 --------
 https://fontawesome.com/icons
 https://fontawesome.com.cn/v4/cheatsheet
+https://github.com/microsoft/vscode-codicons
+https://microsoft.github.io/vscode-codicons/dist/codicon.html
 
 QA
 --

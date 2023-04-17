@@ -159,24 +159,81 @@ run['Bars And Lines'] = {
   ['nvim-lualine/lualine.nvim'] = {
     event = { 'User NeXT' },
     config = function()
-      local icons = require('module.options').icons.collects
-      local function lsp_active()
+      local icons = require('module.options').icons
+      local function _lsp_active()
         local names = {}
         local bufnr = vim.api.nvim_get_current_buf()
         for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
           table.insert(names, client.name)
         end
-        return vim.tbl_isempty(names) and '' or icons.Tomatoes .. table.concat(names, ' ')
+        return vim.tbl_isempty(names) and '' or icons.collects.Tomatoes .. table.concat(names, ' ')
         -- return 'LSP<' .. table.concat(names, ', ') .. '>'
       end
-      local function location()
-        return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) .. icons.Pagelines
+      local function _location()
+        return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) .. icons.collects.Pagelines
+      end
+      local function _fg(name)
+        return function()
+          local hl = vim.api.nvim_get_hl_by_name(name, true)
+          return hl and hl.foreground and { fg = string.format('#%06x', hl.foreground) }
+        end
       end
       local fileformat = { 'fileformat', icons_enabled = false }
       local opts = {
+        options = {
+          theme = 'auto',
+          globalstatus = true,
+          disabled_filetypes = { statusline = { 'dashboard', 'alpha' } },
+        },
         sections = {
-          lualine_x = { 'cdate', 'ctime', lsp_active, 'encoding', fileformat, 'filetype' },
-          lualine_z = { location },
+          lualine_c = {
+            {
+              'diagnostics',
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+            { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+            { 'filename', path = 1, symbols = { modified = '  ', readonly = '', unnamed = '' } },
+            -- stylua: ignore
+            {
+              function() return require("nvim-navic").get_location() end,
+              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
+            },
+          },
+          lualine_x = {
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.command.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+              color = _fg("Statement")
+            },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+              color = _fg("Constant") ,
+            },
+            { require('lazy.status').updates, cond = require('lazy.status').has_updates, color = _fg('Special') },
+            {
+              'diff',
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+            },
+            'cdate',
+            'ctime',
+            _lsp_active,
+            'encoding',
+            fileformat,
+            'filetype',
+          },
+          lualine_z = { _location },
         },
         extensions = { 'neo-tree', 'lazy' },
       }
@@ -220,6 +277,7 @@ run['Bars And Lines'] = {
     config = true,
   },
   ['akinsho/bufferline.nvim'] = {
+    -- enabled = false,
     -- event = { 'VeryLazy' },
     event = { 'User AlphaClosed' },
     config = function()
@@ -254,6 +312,21 @@ run['Bars And Lines'] = {
         },
       }
       require('bufferline').setup(opts)
+    end,
+  },
+  ['SmiteshP/nvim-navic'] = {
+    config = function()
+      vim.g.navic_silence = true
+      require('base').on_attach(function(client, buffer)
+        if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, buffer) end
+      end)
+      local opts = {
+        separator = ' ',
+        highlight = true,
+        depth_limit = 5,
+        icons = require('module.options').icons.kinds,
+      }
+      require('nvim-navic').setup(opts)
     end,
   },
 }
@@ -293,9 +366,13 @@ run['Builtin UI Improved'] = {
     config = function()
       local opts = {
         stages = 'static',
+        timeout = 3000,
+        max_height = function() return math.floor(vim.o.lines * 0.75) end,
+        max_width = function() return math.floor(vim.o.columns * 0.75) end,
       }
-      require('notify').setup(opts)
-      vim.notify = require('notify')
+      local notfiy = require('notify')
+      notfiy.setup(opts)
+      vim.notify = notfiy
       require('telescope').load_extension('notify')
     end,
   },
@@ -354,7 +431,7 @@ run['File Explorer'] = {
         hijack_directories = { enable = false },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
-        view = { adaptive_size = false, preserve_window_proportions = true, width = 40 },
+        view = { adaptive_size = false, preserve_window_proportions = true, width = 30 },
         git = { enable = false },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.nvim_tree())
@@ -543,11 +620,14 @@ run['Key Management'] = {
 
 run['Buffer'] = {
   ['kazhala/close-buffers.nvim'] = {
-    cmd = { 'CloseView', 'BWipeout' },
+    cmd = { 'BWipeout', 'BDelete' },
   },
   ['glepnir/flybuf.nvim'] = {
     cmd = { 'FlyBuf' },
     config = true,
+  },
+  ['moll/vim-bbye'] = {
+    event = { 'BufAdd' },
   },
 }
 
@@ -617,6 +697,14 @@ run['Formatting'] = {
   },
   ['lukas-reineke/indent-blankline.nvim'] = {
     event = { 'BufReadPost', 'BufNewFile' },
+    config = function()
+      require('indent_blankline').setup({
+        char = '│',
+        filetype_exclude = { 'help', 'alpha', 'dashboard', 'neo-tree', 'NvimTree', 'Trouble', 'lazy' },
+        show_trailing_blankline_indent = false,
+        show_current_context = false,
+      })
+    end,
   },
   ['HiPhish/nvim-ts-rainbow2'] = {
     -- enabled = false,
@@ -632,11 +720,11 @@ run['Formatting'] = {
     end,
   },
   ['echasnovski/mini.indentscope'] = {
-    enabled = false,
-    event = 'BufReadPost',
+    -- enabled = false,
+    event = { 'BufReadPost', 'BufNewFile' },
     config = function()
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'help', 'alpha', 'dashboard', 'neo-tree', 'Trouble', 'lazy', 'mason' },
+        pattern = { 'help', 'alpha', 'dashboard', 'neo-tree', 'NvimTree', 'Trouble', 'lazy', 'mason' },
         callback = function() vim.b.miniindentscope_disable = true end,
       })
       local opts = {
