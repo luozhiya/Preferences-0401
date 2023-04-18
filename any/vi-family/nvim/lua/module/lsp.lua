@@ -187,6 +187,18 @@ M.dap = function()
     command = '/usr/bin/lldb-vscode', -- must be absolute path
     name = 'lldb',
   }
+  dap.configurations.cpp = {
+    {
+      name = 'Launch',
+      type = 'lldb',
+      request = 'launch',
+      -- program = '',
+      cwd = '${workspaceFolder}',
+      stopOnEntry = false,
+      args = {},
+    },
+  }
+  dap.configurations.c = dap.configurations.cpp
   local dapui = require('dapui')
   dapui.setup()
   dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open({}) end

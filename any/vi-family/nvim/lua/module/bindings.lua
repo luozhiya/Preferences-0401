@@ -178,21 +178,15 @@ M.wk = function(wk)
     if dap.session() then
       dap.continue()
     else
-      local input_opts =
-        { prompt = 'Path to executable ', default = vim.fn.getcwd() .. '/', 'file', completion = 'file' }
+      local prompt = 'Path to executable '
+      local default = vim.fn.getcwd() .. '/'
+      local input_opts = { prompt = prompt, default = default, 'file', completion = 'file' }
       vim.ui.input(input_opts, function(input)
         if not input then return end
-        dap.configurations.cpp = {
-          {
-            name = 'Launch',
-            type = 'lldb',
-            request = 'launch',
-            program = function() return input end,
-            cwd = '${workspaceFolder}',
-            stopOnEntry = false,
-            args = {},
-          },
+        local cpp = {
+          program = function() return input end,
         }
+        dap.configurations.cpp = vim.tbl_deep_extend('force', dap.configurations.cpp, cpp)
         dap.configurations.c = dap.configurations.cpp
         dap.continue()
       end)
@@ -394,39 +388,47 @@ M.wk = function(wk)
 end
 
 M.nvim_tree = function()
-  local ts_opts = function(path, tree, any)
-    return {
-      cwd = path,
-      search_dirs = { path },
-      attach_mappings = function(prompt_bufnr, map)
-        local actions = require('telescope.actions')
-        actions.select_default:replace(function()
-          actions.close(prompt_bufnr)
-          local selection = require('telescope.actions.state').get_selected_entry()
-          local filename = selection.filename
-          if filename == nil then filename = selection[1] end
-          tree(filename, any)
-        end)
-        return true
-      end,
-    }
+  local _on_attach = function(bufnr)
+    local _ts_opts = function(path, callback, any)
+      return {
+        cwd = path,
+        search_dirs = { path },
+        attach_mappings = function(prompt_bufnr, map)
+          local actions = require('telescope.actions')
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = require('telescope.actions.state').get_selected_entry()
+            local filename = selection.filename
+            if filename == nil then filename = selection[1] end
+            callback(filename, any)
+          end)
+          return true
+        end,
+      }
+    end
+    local _path = function()
+      local node = require('nvim-tree.lib').get_node_at_cursor()
+      if node == nil then return end
+      local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
+      local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
+      if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
+      return basedir
+    end
+    local telescope = require('telescope.builtin')
+    local fs = require('nvim-tree.actions.node.open-file')
+    local _opts = function(desc)
+      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+    vim.keymap.set('n', '<c-f>', function()
+      telescope.find_files(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+    end, _opts('Find'))
+    vim.keymap.set('n', '<c-g>', function()
+      telescope.live_grep(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+    end, _opts('Grep'))
   end
-  local telescope = require('telescope.builtin')
-  local fs = require('nvim-tree.actions.node.open-file')
-  local path = function()
-    local node = require('nvim-tree.lib').get_node_at_cursor()
-    if node == nil then return end
-    local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
-    local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
-    if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
-    return basedir
-  end
-  -- stylua: ignore start
-  return { view = { mappings = { list = {
-          { key = '<c-f>', action_cb = function() telescope.find_files(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },
-          { key = '<c-g>', action_cb = function() telescope.live_grep(ts_opts(path(), function(name) fs.fn('preview', name) end)) end, },
-        }, }, }, }
-  -- stylua: ignore end
+  return {
+    on_attach = _on_attach,
+  }
 end
 
 M.setup_code = function()

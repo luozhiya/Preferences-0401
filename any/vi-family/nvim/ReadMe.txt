@@ -201,6 +201,9 @@ https://vi.stackexchange.com/questions/27796/how-to-change-editor-mode-from-lua-
 https://github.com/rcarriga/nvim-notify/issues/11
 https://github.com/folke/which-key.nvim/issues/67
 https://github.com/nvim-telescope/telescope.nvim/issues/2196
+https://github.com/neovim/neovim/pull/21393
+https://github.com/neovim/neovim/issues/12101
+https://github.com/nvim-tree/nvim-tree.lua/wiki/Migrating-To-on_attach
 
 Lua
 ---
@@ -223,6 +226,10 @@ https://fontawesome.com/icons
 https://fontawesome.com.cn/v4/cheatsheet
 https://github.com/microsoft/vscode-codicons
 https://microsoft.github.io/vscode-codicons/dist/codicon.html
+
+PATH
+----
+%LOCALAPPDATA%\nvim-data
 
 QA
 --
