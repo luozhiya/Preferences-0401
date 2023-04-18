@@ -165,6 +165,10 @@ local _lsp_signdefine = function()
     local hl = 'DiagnosticSign' .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
   end
+  vim.fn.sign_define('DapBreakpoint', { text = 'ﱣ', texthl = 'Error', linehl = '', numhl = '' })
+  vim.fn.sign_define('DapBreakpointCondition', { text = 'ﱣ', texthl = 'Function', linehl = '', numhl = '' })
+  vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Comment', linehl = '', numhl = '' })
+  vim.fn.sign_define('DapStopped', { text = '🠶', texthl = 'String', linehl = 'DiffAdd', numhl = '' })
 end
 
 M.lsp = function()

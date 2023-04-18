@@ -1197,6 +1197,7 @@ run['LSP VIF'] = {
 
 run['DAP VIF'] = {
   ['mfussenegger/nvim-dap'] = {
+    ft = { 'c', 'cpp' },
     config = require('module.lsp').dap,
   },
 }

@@ -301,13 +301,20 @@ M.wk = function(wk)
     else
       local prompt = 'Path to executable '
       local default = vim.fn.getcwd() .. '/'
+      if vim.g.lastdebugfile == nil then
+        vim.g.lastdebugfile = default
+      else
+        default = vim.g.lastdebugfile
+      end
       local input_opts = { prompt = prompt, default = default, 'file', completion = 'file' }
       vim.ui.input(input_opts, function(input)
         if not input then return end
-        local cpp = {
+        vim.g.lastdebugfile = input
+        local cpp = { {
           program = function() return input end,
-        }
-        dap.configurations.cpp = vim.tbl_deep_extend('force', dap.configurations.cpp, cpp)
+        } }
+        dap.configurations.cpp = vim.tbl_deep_extend('force', cpp, dap.configurations.cpp)
+        print(vim.inspect(dap.configurations.cpp))
         dap.configurations.c = dap.configurations.cpp
         dap.continue()
       end)
@@ -366,7 +373,7 @@ M.wk = function(wk)
       s = { '<cmd>w<cr>', 'Save' },
     },
     m = {
-      name = '+Session',
+      name = '+Memory/Session',
       s = { '<cmd>SessionManager save_current_session<cr>', 'Save Current Session' },
       l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
       r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
@@ -375,7 +382,7 @@ M.wk = function(wk)
       a = { '<cmd>lua require("persistence").load()<cr>', 'Restore AutoSaved Session (persistence.nvim)' },
     },
     c = {
-      name = 'C++',
+      name = '+C',
       a = { '<cmd>ClangAST<cr>', 'Clang AST' },
       t = { '<cmd>ClangdTypeHierarchy<cr>', 'Clang Type Hierarchy' },
       h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
@@ -398,32 +405,30 @@ M.wk = function(wk)
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
       p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
       o = { '<Cmd>BufferLineGroupClose ungrouped<CR>', 'Delete non-pinned buffers, Only pinned' },
+      O = { '<cmd>BWipeout other<cr>', 'Only Current Buffer' },
       a = { '<cmd>Telescope buffers show_all_buffers=true<cr>', 'Switch Buffer' },
       d = { function() require('mini.bufremove').delete(0, false) end, 'Delete Buffer' },
       D = { function() require('mini.bufremove').delete(0, true) end, 'Delete Buffer (Force)' },
     },
     v = {
       name = '+Vim',
+      a = { '<cmd>Alpha<cr>', 'Alpha Dashboard Toggle' },
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
-      -- c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
-      c = { '<cmd>Telescope command_history<cr>', 'Command History' },
-      n = {
-        name = 'Noice',
-        -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
-        h = { _notify_history, 'Notification History' },
-        l = { function() require('noice').cmd('last') end, 'Noice Last Message' },
-        n = { function() require('noice').cmd('history') end, 'Noice History' },
-        a = { function() require('noice').cmd('all') end, 'Noice All' },
-      },
-      d = { _purge_notify, 'Delete all Notifications' },
+      c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       s = { vim.show_pos, 'Inspect Pos' },
-      l = { '<cmd>lopen<cr>', 'Location List' },
-      q = { '<cmd>copen<cr>', 'Quickfix List' },
-      a = { '<cmd>Alpha<cr>', 'Alpha Dashboard Toggle' },
-      f = { '<cmd>ToggleAutoFormat<cr>', 'Auto Format Toggle' },
       e = wk_ve,
+    },
+    h = {
+      name = '+History/Notifications',
+      l = { function() require('noice').cmd('last') end, 'Noice Last Message' },
+      h = { function() require('noice').cmd('history') end, 'Noice History' },
+      a = { function() require('noice').cmd('all') end, 'Noice All' },
+      d = { _purge_notify, 'Delete all Notifications' },
+      c = { '<cmd>Telescope command_history<cr>', 'Command History' },
+      -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
+      n = { _notify_history, 'Notification History' },
     },
     l = {
       name = '+LSP',
@@ -472,9 +477,11 @@ M.wk = function(wk)
       q = { '<cmd>TroubleToggle quickfix<cr>', 'Quickfix List (Trouble)' },
       t = { '<cmd>TodoTrouble<cr>', 'Todo (Trouble)' },
       k = { '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme (Trouble)' },
+      L = { '<cmd>lopen<cr>', 'Location List' },
+      Q = { '<cmd>copen<cr>', 'Quickfix List' },
     },
     s = {
-      name = '+Search',
+      name = '+Search Code',
       t = { '<cmd>TodoTelescope<cr>', 'Todo' },
       T = { '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme' },
       r = { function() require('spectre').open() end, 'Replace in files (Spectre)' },
@@ -507,11 +514,14 @@ M.wk = function(wk)
     },
     e = {
       name = '+Edit',
-      f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
-      t = { '<cmd>Twilight<cr>', 'Toggle Twilight' },
-      o = { '<cmd>BWipeout other<cr>', 'Only Current Buffer' },
-      w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
-      s = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
+      t = {
+        name = 'Toggle',
+        a = { '<cmd>ToggleAutoFormat<cr>', 'Auto Format Toggle' },
+        w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
+        c = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
+        f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
+        t = { '<cmd>Twilight<cr>', 'Twilight Dims Inactive' },
+      },
       m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
       i = {
