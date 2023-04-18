@@ -173,6 +173,54 @@ M.neotree = function()
   }
 end
 
+M.nvim_tree = function()
+  local _ts_opts = function(path, callback, any)
+    return {
+      cwd = path,
+      search_dirs = { path },
+      attach_mappings = function(prompt_bufnr, map)
+        local actions = require('telescope.actions')
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+          local selection = require('telescope.actions.state').get_selected_entry()
+          local filename = selection.filename
+          if filename == nil then filename = selection[1] end
+          callback(filename, any)
+        end)
+        return true
+      end,
+    }
+  end
+  local _path = function()
+    local node = require('nvim-tree.lib').get_node_at_cursor()
+    if node == nil then return end
+    local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
+    local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
+    if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
+    return basedir
+  end
+  local _opts = function(desc, bufnr)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+  local telescope = require('telescope.builtin')
+  local fs = require('nvim-tree.actions.node.open-file')
+  local _find = function()
+    telescope.find_files(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+  end
+  local _grep = function()
+    telescope.live_grep(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+  end
+  local _on_attach = function(bufnr)
+    local api = require('nvim-tree.api')
+    api.config.mappings.default_on_attach(bufnr)
+    M.map('n', '<c-f>', _find, _opts('Find', bufnr))
+    M.map('n', '<c-g>', _grep, _opts('Grep', bufnr))
+  end
+  return {
+    on_attach = _on_attach,
+  }
+end
+
 M.gitsigns = function()
   local opts = {
     on_attach = function(buffer)
@@ -516,54 +564,6 @@ M.wk = function(wk)
     ['['] = { name = '+Prev' },
   }
   wk.register(np)
-end
-
-M.nvim_tree = function()
-  local _ts_opts = function(path, callback, any)
-    return {
-      cwd = path,
-      search_dirs = { path },
-      attach_mappings = function(prompt_bufnr, map)
-        local actions = require('telescope.actions')
-        actions.select_default:replace(function()
-          actions.close(prompt_bufnr)
-          local selection = require('telescope.actions.state').get_selected_entry()
-          local filename = selection.filename
-          if filename == nil then filename = selection[1] end
-          callback(filename, any)
-        end)
-        return true
-      end,
-    }
-  end
-  local _path = function()
-    local node = require('nvim-tree.lib').get_node_at_cursor()
-    if node == nil then return end
-    local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
-    local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
-    if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
-    return basedir
-  end
-  local _opts = function(desc, bufnr)
-    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-  end
-  local telescope = require('telescope.builtin')
-  local fs = require('nvim-tree.actions.node.open-file')
-  local _find = function()
-    telescope.find_files(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
-  end
-  local _grep = function()
-    telescope.live_grep(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
-  end
-  local _on_attach = function(bufnr)
-    local api = require('nvim-tree.api')
-    api.config.mappings.default_on_attach(bufnr)
-    M.map('n', '<c-f>', _find, _opts('Find', bufnr))
-    M.map('n', '<c-g>', _grep, _opts('Grep', bufnr))
-  end
-  return {
-    on_attach = _on_attach,
-  }
 end
 
 M.setup_code = function()
