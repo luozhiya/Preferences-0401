@@ -299,6 +299,12 @@ M.wk = function(wk)
     if dap.session() then
       dap.continue()
     else
+      -- save dap-session to sql
+      -- load dap-session
+      -- telescope select (default selected last)
+      -- New
+      -- ui.input new path
+      -- Enter dap mode
       local prompt = 'Path to executable '
       local default = vim.fn.getcwd() .. '/'
       if vim.g.lastdebugfile == nil then
@@ -314,7 +320,6 @@ M.wk = function(wk)
           program = function() return input end,
         } }
         dap.configurations.cpp = vim.tbl_deep_extend('force', cpp, dap.configurations.cpp)
-        print(vim.inspect(dap.configurations.cpp))
         dap.configurations.c = dap.configurations.cpp
         dap.continue()
       end)

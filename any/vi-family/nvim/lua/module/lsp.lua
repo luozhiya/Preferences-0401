@@ -165,6 +165,11 @@ local _lsp_signdefine = function()
     local hl = 'DiagnosticSign' .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
   end
+  -- `DapBreakpoint` for breakpoints (default: `B`)
+  -- `DapBreakpointCondition` for conditional breakpoints (default: `C`)
+  -- `DapLogPoint` for log points (default: `L`)
+  -- `DapStopped` to indicate where the debugee is stopped (default: `→`)
+  -- `DapBreakpointRejected` to indicate breakpoints rejected by the debug adapter (default: `R`)
   vim.fn.sign_define('DapBreakpoint', { text = 'ﱣ', texthl = 'Error', linehl = '', numhl = '' })
   vim.fn.sign_define('DapBreakpointCondition', { text = 'ﱣ', texthl = 'Function', linehl = '', numhl = '' })
   vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Comment', linehl = '', numhl = '' })
