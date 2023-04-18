@@ -145,7 +145,7 @@ function M.before()
     autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
     shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
-    timeoutlen = 500, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
+    timeoutlen = 300, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
     wildmode = 'full', -- Command-line completion mode
     updatetime = 200, -- Save swap file and trigger CursorHold
     incsearch = false,

@@ -391,7 +391,7 @@ run['Builtin UI Improved'] = {
     -- enabled = false,
     event = { 'User NeXT' },
     config = function()
-      require('noice').setup({
+      local opts = {
         lsp = {
           hover = {
             enabled = false,
@@ -410,7 +410,8 @@ run['Builtin UI Improved'] = {
           inc_rename = true, -- enables an input dialog for inc-rename.nvim
           lsp_doc_border = true, -- add a border to hover docs and signature help
         },
-      })
+      }
+      require('noice').setup(opts)
     end,
   },
   ['vigoux/notifier.nvim'] = {
@@ -640,7 +641,8 @@ run['Fuzzy Finder'] = {
 
 run['Key Management'] = {
   ['folke/which-key.nvim'] = {
-    keys = { { ',' }, { 'g' } },
+    -- keys = { { ',' }, { 'g' } },
+    event = { 'VeryLazy' },
     config = function()
       local wk = require('which-key')
       wk.setup()
@@ -670,19 +672,63 @@ run['Syntax'] = {
   ['nvim-treesitter/nvim-treesitter'] = {
     cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
     build = ':TSUpdate',
+    keys = {
+      { '<c-space>', desc = 'Increment selection' },
+      { '<bs>', desc = 'Decrement selection', mode = 'x' },
+    },
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     config = function()
       local opts = {
         matchup = { enable = true },
         ensure_installed = { 'cpp', 'c', 'lua', 'cmake' },
+        highlight = { enable = true },
+        indent = { enable = true },
+        context_commentstring = { enable = true, enable_autocmd = false },
+        incremental_selection = {
+          enable = true,
+        },
       }
+      opts = vim.tbl_deep_extend('error', opts, bindings.ts())
       require('nvim-treesitter.configs').setup(opts)
     end,
   },
+  ['nvim-treesitter/nvim-treesitter-textobjects'] = {},
 }
 
 run['Editing Motion Support'] = {
   ['andymass/vim-matchup'] = {
     event = 'BufReadPost',
+  },
+  ['numToStr/Comment.nvim'] = {
+    config = function()
+      local opts = {
+        mappings = {
+          ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+          basic = false,
+          ---Extra mapping; `gco`, `gcO`, `gcA`
+          extra = false,
+        },
+      }
+      require('Comment').setup(opts)
+    end,
+  },
+  ['JoosepAlviste/nvim-ts-context-commentstring'] = {},
+  ['echasnovski/mini.comment'] = {
+    event = 'BufReadPost',
+    config = function()
+      local opts = {
+        hooks = {
+          pre = function() require('ts_context_commentstring.internal').update_commentstring() end,
+        },
+      }
+      require('mini.comment').setup(opts)
+    end,
+  },
+  ['echasnovski/mini.pairs'] = {
+    -- event = "VeryLazy",
+    config = function(_, opts) require('mini.pairs').setup(opts) end,
   },
   ['fedepujol/move.nvim'] = {
     cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' },
@@ -724,6 +770,31 @@ run['Editing Motion Support'] = {
       leap.add_default_mappings(true)
       vim.keymap.del({ 'x', 'o' }, 'x')
       vim.keymap.del({ 'x', 'o' }, 'X')
+    end,
+  },
+  ['echasnovski/mini.surround'] = {
+    keys = function(_, keys)
+      local defined_keys = bindings.surround().mappings
+      local descs = {
+        { desc = 'Add surrounding', mode = { 'n', 'v' } },
+        { desc = 'Delete surrounding' },
+        { desc = 'Find right surrounding' },
+        { desc = 'Find left surrounding' },
+        { desc = 'Highlight surrounding' },
+        { desc = 'Replace surrounding' },
+        { desc = 'Update `MiniSurround.config.n_lines`' },
+      }
+      local mappings = {}
+      for _, k in pairs(defined_keys) do
+        mappings[#mappings + 1] = vim.tbl_deep_extend('error', { k }, descs[#mappings + 1])
+      end
+      return mappings
+    end,
+    config = function()
+      local opts = {}
+      opts = vim.tbl_deep_extend('error', opts, bindings.surround())
+      -- use gz mappings instead of s to prevent conflict with leap
+      require('mini.surround').setup(opts)
     end,
   },
 }
@@ -849,8 +920,14 @@ run['Editing Piece'] = {
 run['Completion'] = {
   ['hrsh7th/nvim-cmp'] = {
     -- enabled = false,
-    event = { 'BufReadPost', 'CmdlineEnter' },
-    dependencies = { 'hrsh7th/cmp-cmdline', 'hrsh7th/cmp-path', 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer' },
+    event = { 'InsertEnter', 'CmdlineEnter' },
+    dependencies = {
+      'hrsh7th/cmp-cmdline',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'saadparwaiz1/cmp_luasnip',
+    },
     config = function()
       local fmt_presets = {
         native = {
@@ -956,6 +1033,29 @@ run['Completion'] = {
   },
 }
 
+run['Snippet'] = {
+  ['L3MON4D3/LuaSnip'] = {
+    dependencies = {
+      'rafamadriz/friendly-snippets',
+    },
+    config = function()
+      require('luasnip').config.set_config({
+        history = true,
+        delete_check_events = 'TextChanged',
+        updateevents = 'TextChanged, TextChangedI',
+      })
+    end,
+  },
+  ['rafamadriz/friendly-snippets'] = {
+    config = function()
+      -- Sync load luasnip cost ~600ms
+      vim.loop
+        .new_timer()
+        :start(3000, 0, vim.schedule_wrap(function() require('luasnip.loaders.from_vscode').lazy_load() end))
+    end,
+  },
+}
+
 run['C++'] = {
   ['p00f/godbolt.nvim'] = {
     cmd = { 'Godbolt' },
@@ -986,6 +1086,7 @@ run['Diagnostics'] = {
 
 run['LSP VIF'] = {
   ['stevearc/aerial.nvim'] = {
+    cmd = { 'AerialNext', 'AerialPrev', 'AerialToggle' },
     config = function()
       local opts = { backends = { 'treesitter', 'lsp' }, layout = { max_width = { 60, 0.4 } } }
       opts = vim.tbl_deep_extend('error', opts, bindings.aerial())

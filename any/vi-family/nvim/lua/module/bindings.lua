@@ -71,6 +71,10 @@ M.cmp = function(cmp)
   end
   return {
     mapping = {
+      ['<c-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<c-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<c-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<c-f>'] = cmp.mapping.scroll_docs(4),
       ['<c-k>'] = cmp.mapping.select_prev_item(),
       ['<c-j>'] = cmp.mapping.select_next_item(),
       ['<up>'] = cmp.mapping.select_prev_item(),
@@ -114,10 +118,10 @@ M.telescope = function()
           ['<a-t>'] = function(...) return require('trouble.providers.telescope').open_selected_with_trouble(...) end,
           ['<a-i>'] = function() return require('telescope.builtin')['find_files']({ no_ignore = true }) end,
           ['<a-h>'] = function() return require('telescope.builtin')['find_files']({ hidden = true }) end,
-          ['<C-Down>'] = function(...) return actions.cycle_history_next(...) end,
-          ['<C-Up>'] = function(...) return actions.cycle_history_prev(...) end,
-          ['<C-f>'] = function(...) return actions.preview_scrolling_down(...) end,
-          ['<C-b>'] = function(...) return actions.preview_scrolling_up(...) end,
+          ['<c-down>'] = function(...) return actions.cycle_history_next(...) end,
+          ['<c-up>'] = function(...) return actions.cycle_history_prev(...) end,
+          ['<c-f>'] = function(...) return actions.preview_scrolling_down(...) end,
+          ['<c-b>'] = function(...) return actions.preview_scrolling_up(...) end,
           -- ['<esc>'] = function(...) return actions.close(...) end,
         },
         n = {
@@ -185,6 +189,35 @@ M.gitsigns = function()
       _map('n', '<leader>ghD', function() gs.diffthis('~') end, 'Diff This ~')
       _map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk')
     end,
+  }
+  return opts
+end
+
+M.surround = function()
+  local opts = {
+    mappings = {
+      add = 'gza', -- Add surrounding in Normal and Visual modes
+      delete = 'gzd', -- Delete surrounding
+      find = 'gzf', -- Find surrounding (to the right)
+      find_left = 'gzF', -- Find surrounding (to the left)
+      highlight = 'gzh', -- Highlight surrounding
+      replace = 'gzr', -- Replace surrounding
+      update_n_lines = 'gzn', -- Update `n_lines`
+    },
+  }
+  return opts
+end
+
+M.ts = function()
+  local opts = {
+    incremental_selection = {
+      keymaps = {
+        init_selection = '<c-space>', -- 'Increment selection'
+        node_incremental = '<c-space>', -- 'Increment selection'
+        scope_incremental = '<nop>',
+        node_decremental = '<bs>', -- 'Decrement selection'
+      },
+    },
   }
   return opts
 end
@@ -275,6 +308,7 @@ M.wk = function(wk)
     }
   -- stylua: ignore end
   local n = {
+    ['<tab>'] = { name = '+Tabs' },
     q = {
       name = '+Quit',
       q = { '<cmd>qa<cr>', 'Quit All' },
@@ -327,8 +361,14 @@ M.wk = function(wk)
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
       -- c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       c = { '<cmd>Telescope command_history<cr>', 'Command History' },
-      -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
-      n = { _notify_history, 'Notification History' },
+      n = {
+        name = 'Noice',
+        -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
+        h = { _notify_history, 'Notification History' },
+        l = { function() require('noice').cmd('last') end, 'Noice Last Message' },
+        n = { function() require('noice').cmd('history') end, 'Noice History' },
+        a = { function() require('noice').cmd('all') end, 'Noice All' },
+      },
       d = { _purge_notify, 'Delete all Notifications' },
       s = { vim.show_pos, 'Inspect Pos' },
       l = { '<cmd>lopen<cr>', 'Location List' },
@@ -467,7 +507,15 @@ M.wk = function(wk)
       x = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
     },
   }
-  wk.register(n, { mode = 'n', prefix = '<leader>' })
+  wk.register(n, { mode = { 'n', 'v' }, prefix = '<leader>' })
+  local np = {
+    mode = { 'n', 'v' },
+    ['g'] = { name = '+Goto' },
+    ['gz'] = { name = '+Surround' },
+    [']'] = { name = '+Next' },
+    ['['] = { name = '+Prev' },
+  }
+  wk.register(np)
 end
 
 M.nvim_tree = function()
@@ -496,7 +544,7 @@ M.nvim_tree = function()
     if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
     return basedir
   end
-  local _opts = function(desc)
+  local _opts = function(desc, bufnr)
     return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
   end
   local telescope = require('telescope.builtin')
@@ -510,8 +558,8 @@ M.nvim_tree = function()
   local _on_attach = function(bufnr)
     local api = require('nvim-tree.api')
     api.config.mappings.default_on_attach(bufnr)
-    M.map('n', '<c-f>', _find, _opts('Find'))
-    M.map('n', '<c-g>', _grep, _opts('Grep'))
+    M.map('n', '<c-f>', _find, _opts('Find', bufnr))
+    M.map('n', '<c-g>', _grep, _opts('Grep', bufnr))
   end
   return {
     on_attach = _on_attach,
@@ -578,7 +626,7 @@ M.setup_code = function()
   M.map('n', 'S', 'diw"0P', 'Replace')
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
   M.map('n', '<a-w>', '<cmd>ToggleWholeWord<cr>')
-  M.map('n', '<c-f>', '<cmd>SearchCode<cr>')
+  M.map('n', '<c-c>', '<cmd>SearchCode<cr>')
   -- Comment
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
   M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', 'Comment Line (Comment.nvim)')
@@ -611,10 +659,17 @@ M.setup_code = function()
   M.map('n', '[h', function() require('gitsigns').prev_hunk() end, 'Prev Hunk')
   _ref_map(']r', 'next')
   _ref_map('[r', 'prev')
+  M.map('n', ']a', '<cmd>AerialNext<cr>', 'Jump forwards symbols')
+  M.map('n', '[a', '<cmd>AerialPrev<cr>', 'Jump backwards symbols')
   -- Search
   M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
   -- Clear search with <esc>
   M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { noremap = true, desc = 'Escape And Clear hlsearch' })
+  -- Scroll
+  -- stylua: ignore start
+  M.map({ 'i', 'n', 's' }, '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, { silent = true, expr = true, desc = 'Scroll forward' })
+  M.map({ 'i', 'n', 's' }, '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, { silent = true, expr = true, desc = 'Scroll backward' })
+  -- stylua: ignore end
   -- View
   M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   M.map('n', [[\]], '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
@@ -639,6 +694,7 @@ M.setup_code = function()
     '<cmd>Telescope buffers show_all_buffers=true theme=get_dropdown previewer=false<cr>',
     { noremap = true, desc = 'Go To File... (telescope.nvim)' }
   )
+  M.map('c', '<s-enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, 'Redirect Cmdline')
   -- Run
   -- Debug
 
@@ -718,7 +774,7 @@ M.setup_comands = function()
   end
   local _search = function()
     local _has_wholeword = function() return vim.g.wholeword and vim.g.wholeword == true end
-    local mww = _has_wholeword() and 'match whole word + ' or 'dont case whole word + '
+    local mww = _has_wholeword() and 'match whole word + ' or 'dont care whole word + '
     local mc = vim.opt.ignorecase:get() == false and 'match case' or 'ignore case'
     local prompt = 'Search (' .. mww .. mc .. ')'
     local input_opts = { prompt = prompt, completion = 'lsp' }

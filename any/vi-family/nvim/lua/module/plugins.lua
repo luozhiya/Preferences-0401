@@ -72,15 +72,20 @@ local list = {
   { 'echasnovski/mini.bufremove' },
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
+  { 'nvim-treesitter/nvim-treesitter-textobjects' },
   -- Editing Motion Support
   { 'fedepujol/move.nvim' },
   { 'andymass/vim-matchup' },
   { 'windwp/nvim-autopairs' },
+  { 'echasnovski/mini.pairs' },
   { 'numToStr/Comment.nvim' },
+  { 'JoosepAlviste/nvim-ts-context-commentstring' },
+  { 'echasnovski/mini.comment' },
   { 'm4xshen/autoclose.nvim' },
   { 'nacro90/numb.nvim' },
   { 'ggandor/leap.nvim' },
   { 'ggandor/flit.nvim' },
+  { 'echasnovski/mini.surround' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   { 'windwp/nvim-spectre' },
@@ -103,9 +108,11 @@ local list = {
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
+  { 'saadparwaiz1/cmp_luasnip' },
   { 'onsails/lspkind.nvim' },
   -- Snippet
   { 'L3MON4D3/LuaSnip' },
+  { 'rafamadriz/friendly-snippets' },
   -- C++
   { 'p00f/godbolt.nvim' },
   { 'Xertes0/cppdoc.nvim' },
