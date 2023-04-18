@@ -204,6 +204,8 @@ https://github.com/nvim-telescope/telescope.nvim/issues/2196
 https://github.com/neovim/neovim/pull/21393
 https://github.com/neovim/neovim/issues/12101
 https://github.com/nvim-tree/nvim-tree.lua/wiki/Migrating-To-on_attach
+https://github.com/akinsho/bufferline.nvim/issues/631
+https://github.com/AstroNvim/AstroNvim/blob/cf624ae5870ea5fcf98ff1e2f6354f6a57df3f53/lua/astronvim/autocmds.lua#L148
 
 Lua
 ---

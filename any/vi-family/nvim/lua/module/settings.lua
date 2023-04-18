@@ -565,7 +565,20 @@ run['View'] = {
 run['Git'] = {
   ['lewis6991/gitsigns.nvim'] = {
     event = 'BufReadPost',
-    config = true,
+    config = function()
+      local opts = {
+        signs = {
+          add = { text = '▎' },
+          change = { text = '▎' },
+          delete = { text = '' },
+          topdelete = { text = '' },
+          changedelete = { text = '▎' },
+          untracked = { text = '▎' },
+        },
+      }
+      opts = vim.tbl_deep_extend('error', opts, bindings.gitsigns())
+      require('gitsigns').setup(opts)
+    end,
   },
   ['sindrets/diffview.nvim'] = {
     cmd = { 'DiffviewOpen' },
@@ -582,6 +595,10 @@ run['Fuzzy Finder'] = {
     config = function()
       local telescope = require('telescope')
       local opts = {
+        defaults = {
+          prompt_prefix = ' ',
+          selection_caret = ' ',
+        },
         pickers = {
           buffers = {
             ignore_current_buffer = false,
@@ -903,7 +920,10 @@ run['C++'] = {
 run['Diagnostics'] = {
   ['folke/trouble.nvim'] = {
     cmd = { 'TroubleToggle' },
-    config = function() require('trouble').setup({ icons = true }) end,
+    config = function()
+      local opts = { use_diagnostic_signs = true, icons = true }
+      require('trouble').setup(opts)
+    end,
   },
 }
 

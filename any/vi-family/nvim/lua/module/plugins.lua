@@ -21,6 +21,7 @@ local list = {
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
+  -- { "catppuccin/nvim" },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved

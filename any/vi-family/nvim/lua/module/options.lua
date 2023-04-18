@@ -157,7 +157,7 @@ function M.before()
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
     fileformats = 'unix,dos,mac', -- Detect formats
-    -- showtabline = 2, -- Always display tabline
+    showtabline = 2, -- Always display tabline
     conceallevel = 3, -- Hide * markup for bold and italic
     confirm = true, -- Confirm to save changes before exiting modified buffer
     cursorline = true, -- Enable highlighting of the current line

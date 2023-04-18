@@ -3,8 +3,15 @@ local M = {}
 
 M.map = function(mode, lhs, rhs, opts)
   opts = opts or {}
+  if type(opts) == 'string' then opts = { desc = opts } end
   opts.silent = opts.silent ~= false
   vim.keymap.set(mode, lhs, rhs, opts)
+end
+
+M.command = function(name, func, opts)
+  opts = opts or {}
+  if type(opts) == 'string' then opts = { desc = opts } end
+  vim.api.nvim_create_user_command(name, func, opts)
 end
 
 M.setup_leader = function()
@@ -21,8 +28,6 @@ M.lsp = {
   { 'K', vim.lsp.buf.hover, desc = 'Hover' },
   { 'gn', vim.lsp.buf.rename, desc = 'Rename' },
   { 'ga', vim.lsp.buf.code_action, desc = 'Code Action' },
-  { '[d', vim.diagnostic.goto_prev, desc = 'Goto Diagnostic Prev' },
-  { ']d', vim.diagnostic.goto_next, desc = 'Goto Diagnostic Next' },
 }
 
 M.alpha_val = function(button)
@@ -101,11 +106,26 @@ end
 
 M.telescope = function()
   local actions = require('telescope.actions')
-  -- stylua: ignore start
-  return { defaults = { mappings = { i = {
-          ['<esc>'] = actions.close,
-        }, }, }, }
-  -- stylua: ignore end
+  return {
+    defaults = {
+      mappings = {
+        i = {
+          ['<c-t>'] = function(...) return require('trouble.providers.telescope').open_with_trouble(...) end,
+          ['<a-t>'] = function(...) return require('trouble.providers.telescope').open_selected_with_trouble(...) end,
+          ['<a-i>'] = function() return require('telescope.builtin')['find_files']({ no_ignore = true }) end,
+          ['<a-h>'] = function() return require('telescope.builtin')['find_files']({ hidden = true }) end,
+          ['<C-Down>'] = function(...) return actions.cycle_history_next(...) end,
+          ['<C-Up>'] = function(...) return actions.cycle_history_prev(...) end,
+          ['<C-f>'] = function(...) return actions.preview_scrolling_down(...) end,
+          ['<C-b>'] = function(...) return actions.preview_scrolling_up(...) end,
+          -- ['<esc>'] = function(...) return actions.close(...) end,
+        },
+        n = {
+          ['q'] = function(...) return actions.close(...) end,
+        },
+      },
+    },
+  }
 end
 
 M.neotree = function()
@@ -147,6 +167,26 @@ M.neotree = function()
       },
     },
   }
+end
+
+M.gitsigns = function()
+  local opts = {
+    on_attach = function(buffer)
+      local gs = package.loaded.gitsigns
+      local function _map(mode, l, r, desc) M.map(mode, l, r, { buffer = buffer, desc = desc }) end
+      _map({ 'n', 'v' }, '<leader>ghs', ':Gitsigns stage_hunk<CR>', 'Stage Hunk')
+      _map({ 'n', 'v' }, '<leader>ghr', ':Gitsigns reset_hunk<CR>', 'Reset Hunk')
+      _map('n', '<leader>ghS', gs.stage_buffer, 'Stage Buffer')
+      _map('n', '<leader>ghu', gs.undo_stage_hunk, 'Undo Stage Hunk')
+      _map('n', '<leader>ghR', gs.reset_buffer, 'Reset Buffer')
+      _map('n', '<leader>ghp', gs.preview_hunk, 'Preview Hunk')
+      _map('n', '<leader>ghb', function() gs.blame_line({ full = true }) end, 'Blame Line')
+      _map('n', '<leader>ghd', gs.diffthis, 'Diff This')
+      _map('n', '<leader>ghD', function() gs.diffthis('~') end, 'Diff This ~')
+      _map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk')
+    end,
+  }
+  return opts
 end
 
 M.wk = function(wk)
@@ -192,14 +232,6 @@ M.wk = function(wk)
       end)
     end
   end
-  local _format = function()
-    if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('cpp') then
-      vim.lsp.buf.format({ async = false })
-    else
-      vim.cmd('FormatWriteLock')
-    end
-    vim.cmd([[set ff=unix]])
-  end
   local _rename = function() vim.cmd('IncRename ' .. vim.fn.expand('<cword>')) end
   local _NvimTree_find = function()
     local path = require('base').get_path
@@ -214,9 +246,25 @@ M.wk = function(wk)
     })
   end
   local _purge_notify = function() require('notify').dismiss({ silent = true, pending = true }) end
+  local _telescope_symbols = function(e)
+    require('telescope.builtin')[e]({
+      symbols = {
+        'Class',
+        'Function',
+        'Method',
+        'Constructor',
+        'Interface',
+        'Module',
+        'Struct',
+        'Trait',
+        'Field',
+        'Property',
+      },
+    })
+  end
   -- stylua: ignore start
   local wk_ve = {
-      name = 'Edit Config',
+      name = '+Edit Config',
       i = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/init.lua') end,                'init.lua (bootstrap)' },
       b = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/lua/base.lua') end,            'base.lua' },
       k = { function() vim.cmd('e ' .. vim.fn.stdpath('config') .. '/lua/module/bindings.lua') end, 'bindings.lua' },
@@ -228,15 +276,15 @@ M.wk = function(wk)
   -- stylua: ignore end
   local n = {
     q = {
-      name = 'Quit',
+      name = '+Quit',
       q = { '<cmd>qa<cr>', 'Quit All' },
       w = { '<cmd>wqall<cr>', 'Quit And Save Everything' },
       f = { '<cmd>q!<cr>', 'Quit Force' },
       F = { '<cmd>qa!<cr>', 'Quit All Force' },
       s = { '<cmd>w<cr>', 'Save' },
     },
-    s = {
-      name = 'Session',
+    m = {
+      name = '+Session',
       s = { '<cmd>SessionManager save_current_session<cr>', 'Save Current Session' },
       l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
       r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
@@ -253,7 +301,7 @@ M.wk = function(wk)
       d = { function() require('cppdoc').open() end, 'Search cppreference Local' },
     },
     w = {
-      name = 'Windows',
+      name = '+Windows',
       h = { '<C-w>h', 'Jump Left' },
       j = { '<C-w>j', 'Jump Down' },
       k = { '<C-w>k', 'Jump Up' },
@@ -264,31 +312,36 @@ M.wk = function(wk)
       r = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
     },
     b = {
-      name = 'Buffer',
+      name = '+Buffer',
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
       p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
       o = { '<Cmd>BufferLineGroupClose ungrouped<CR>', 'Delete non-pinned buffers, Only pinned' },
+      a = { '<cmd>Telescope buffers show_all_buffers=true<cr>', 'Switch Buffer' },
     },
     v = {
-      name = 'Vim',
+      name = '+Vim',
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
-      c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
+      -- c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
+      c = { '<cmd>Telescope command_history<cr>', 'Command History' },
       -- n = { '<cmd>Telescope notify<cr>', 'Notification History' },
       n = { _notify_history, 'Notification History' },
       d = { _purge_notify, 'Delete all Notifications' },
-      s = { '<cmd>lua vim.show_pos<cr>', 'Inspect Pos' },
+      s = { vim.show_pos, 'Inspect Pos' },
       l = { '<cmd>lopen<cr>', 'Location List' },
       q = { '<cmd>copen<cr>', 'Quickfix List' },
+      a = { '<cmd>Alpha<cr>', 'Alpha Dashboard Toggle' },
+      f = { '<cmd>ToggleAutoFormat<cr>', 'Auto Format Toggle' },
       e = wk_ve,
     },
     l = {
-      name = 'LSP',
+      name = '+LSP',
       i = { '<cmd>LspInfo<cr>', 'Info' },
       -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
+      l = { vim.diagnostic.open_float, 'Line Diagnostics' },
       a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
-      f = { _format, 'Code Format' },
+      f = { '<cmd>FormatCode<cr>', 'Code Format' },
       x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
       o = { '<cmd>SymbolsOutline<cr>', 'Symbols Outline Toggle (symbols-outline.nvim)' },
       w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Trouble Workspace Diagnostics' },
@@ -297,14 +350,14 @@ M.wk = function(wk)
       q = { '<cmd>TroubleToggle quickfix<cr>', 'Trouble Quickfix' },
       L = { '<cmd>TroubleToggle loclist<cr>', 'Trouble Loclist' },
       r = { '<cmd>TroubleToggle lsp_references<cr>', 'Trouble LSP References' },
-      s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols' },
-      S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols' },
+      s = { function() _telescope_symbols('lsp_document_symbols') end, 'Document Symbols' },
+      c = { function() _telescope_symbols('lsp_dynamic_workspace_symbols') end, 'Workspace Symbols' },
       -- n = { _rename, 'Incremental LSP renaming (inc-rename.nvim)' },
       n = { ':IncRename ', 'Incremental LSP renaming (inc-rename.nvim)' },
-      c = { function() require('refactoring').select_refactor() end, 'Refactoring' },
+      -- g = { function() require('refactoring').select_refactor() end, 'Refactoring' },
     },
     d = {
-      name = 'Debug',
+      name = '+Debug',
       b = {
         name = 'Breakpoint',
         b = { '<cmd>PBToggleBreakpoint<cr>', 'Toggle Breakpoint' },
@@ -321,8 +374,28 @@ M.wk = function(wk)
       x = { function() require('dap').terminate() end, 'Terminate' },
       u = { function() require('dapui').toggle({}) end, 'Dap UI' },
     },
+    x = {
+      name = '+Diagnostics/Quickfix',
+      x = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Document Diagnostics (Trouble)' },
+      w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Workspace Diagnostics (Trouble)' },
+      l = { '<cmd>TroubleToggle loclist<cr>', 'Location List (Trouble)' },
+      q = { '<cmd>TroubleToggle quickfix<cr>', 'Quickfix List (Trouble)' },
+      t = { '<cmd>TodoTrouble<cr>', 'Todo (Trouble)' },
+      k = { '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme (Trouble)' },
+    },
+    s = {
+      name = '+Search',
+      t = { '<cmd>TodoTelescope<cr>', 'Todo' },
+      T = { '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme' },
+    },
+    g = {
+      name = '+Git',
+      h = {
+        name = '+Hunk',
+      },
+    },
     t = {
-      name = 'Run In Command Terminal',
+      name = '+Terminal',
       -- h = {
       --   function() vim.cmd('ToggleTerm direction=horizontal dir=' .. require('base').get_contain_directory()) end,
       --   'Terminal Horizontal',
@@ -340,7 +413,7 @@ M.wk = function(wk)
       p = { function() _any_toggle('python') end, 'python' },
     },
     e = {
-      name = 'Edit',
+      name = '+Edit',
       f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
       t = { '<cmd>Twilight<cr>', 'Toggle Twilight' },
       o = { '<cmd>BWipeout other<cr>', 'Only Current Buffer' },
@@ -348,8 +421,13 @@ M.wk = function(wk)
       s = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
       m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
+      i = {
+        name = '+Insert',
+        t = { '<cmd>InsertTime<cr>', 'Insert Time' },
+        d = { '<cmd>InsertDate<cr>', 'Insert Date' },
+      },
       c = {
-        name = 'Copy Information',
+        name = '+Copy Information',
         c = { _copy_content, 'Copy Content' },
         n = { _copy_name, 'Copy File Name' },
         e = { _copy_name_without_ext, 'Copy File Name Without Ext' },
@@ -358,7 +436,7 @@ M.wk = function(wk)
         r = { _copy_relative_path, 'Copy Relative Path' },
       },
       e = {
-        name = 'Ending',
+        name = '+Ending',
         l = { '<cmd>RemoveExclusiveORM<cr>', 'ORM Ending' },
         u = { '<cmd>set ff=unix<cr>', 'Unix Ending' },
         w = { '<cmd>set ff=dos<cr>', 'Windows Ending' },
@@ -366,7 +444,7 @@ M.wk = function(wk)
       },
     },
     f = {
-      name = 'File Explorer',
+      name = '+File Explorer',
       s = { '<cmd>confirm wa<cr>', 'Save All' },
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
       e = { _NvimTree_find, 'NvimTree Explorer' },
@@ -388,43 +466,47 @@ M.wk = function(wk)
 end
 
 M.nvim_tree = function()
+  local _ts_opts = function(path, callback, any)
+    return {
+      cwd = path,
+      search_dirs = { path },
+      attach_mappings = function(prompt_bufnr, map)
+        local actions = require('telescope.actions')
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+          local selection = require('telescope.actions.state').get_selected_entry()
+          local filename = selection.filename
+          if filename == nil then filename = selection[1] end
+          callback(filename, any)
+        end)
+        return true
+      end,
+    }
+  end
+  local _path = function()
+    local node = require('nvim-tree.lib').get_node_at_cursor()
+    if node == nil then return end
+    local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
+    local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
+    if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
+    return basedir
+  end
+  local _opts = function(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+  local telescope = require('telescope.builtin')
+  local fs = require('nvim-tree.actions.node.open-file')
+  local _find = function()
+    telescope.find_files(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+  end
+  local _grep = function()
+    telescope.live_grep(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
+  end
   local _on_attach = function(bufnr)
-    local _ts_opts = function(path, callback, any)
-      return {
-        cwd = path,
-        search_dirs = { path },
-        attach_mappings = function(prompt_bufnr, map)
-          local actions = require('telescope.actions')
-          actions.select_default:replace(function()
-            actions.close(prompt_bufnr)
-            local selection = require('telescope.actions.state').get_selected_entry()
-            local filename = selection.filename
-            if filename == nil then filename = selection[1] end
-            callback(filename, any)
-          end)
-          return true
-        end,
-      }
-    end
-    local _path = function()
-      local node = require('nvim-tree.lib').get_node_at_cursor()
-      if node == nil then return end
-      local is_folder = node.fs_stat and node.fs_stat.type == 'directory' or false
-      local basedir = is_folder and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ':h')
-      if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
-      return basedir
-    end
-    local telescope = require('telescope.builtin')
-    local fs = require('nvim-tree.actions.node.open-file')
-    local _opts = function(desc)
-      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-    end
-    vim.keymap.set('n', '<c-f>', function()
-      telescope.find_files(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
-    end, _opts('Find'))
-    vim.keymap.set('n', '<c-g>', function()
-      telescope.live_grep(_ts_opts(_path(), function(name) fs.fn('preview', name) end))
-    end, _opts('Grep'))
+    local api = require('nvim-tree.api')
+    api.config.mappings.default_on_attach(bufnr)
+    M.map('n', '<c-f>', _find, _opts('Find'))
+    M.map('n', '<c-g>', _grep, _opts('Grep'))
   end
   return {
     on_attach = _on_attach,
@@ -432,6 +514,22 @@ M.nvim_tree = function()
 end
 
 M.setup_code = function()
+  local _diagnostic_goto = function(next, severity)
+    local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+    severity = severity and vim.diagnostic.severity[severity] or nil
+    return function() go({ severity = severity }) end
+  end
+  local _go_trouble = function(next)
+    return function()
+      if require('trouble').is_open() then
+        local x = next == true and require('trouble').next or require('trouble').previous
+        x({ skip_groups = true, jump = true })
+      else
+        local vimc = next == true and vim.cmd.cnext or vim.cmd.cprev
+        vimc()
+      end
+    end
+  end
   -- Core
   M.semicolon_to_colon()
   -- Better up/down
@@ -441,16 +539,16 @@ M.setup_code = function()
   M.map('n', '<c-j>', '15gj', { noremap = true, desc = 'Move Down 15 Lines' })
   M.map('n', '<c-k>', '15gk', { noremap = true, desc = 'Move Up 15 Lines' })
   -- Move to window using the <ctrl> hjkl keys
-  M.map('n', '<c-h>', '<c-w>h', { desc = 'Jump Left' })
-  -- M.map('n', '<c-j>', '<c-w>j', { desc = 'Jump Down' })
-  -- M.map('n', '<c-k>', '<c-w>k', { desc = 'Jump Up' })
-  M.map('n', '<c-l>', '<c-w>l', { desc = 'Jump Right' })
+  M.map('n', '<c-h>', '<c-w>h', 'Jump Left')
+  -- M.map('n', '<c-j>', '<c-w>j', 'Jump Down')
+  -- M.map('n', '<c-k>', '<c-w>k', 'Jump Up')
+  M.map('n', '<c-l>', '<c-w>l', 'Jump Right')
   -- Resize window using <ctrl> arrow keys
-  M.map('n', '<C-Up>', '<cmd>resize +2<cr>', { desc = 'Increase window height' })
-  M.map('n', '<C-Down>', '<cmd>resize -2<cr>', { desc = 'Decrease window height' })
-  M.map('n', '<C-Left>', '<cmd>vertical resize -2<cr>', { desc = 'Decrease window width' })
-  M.map('n', '<C-Right>', '<cmd>vertical resize +2<cr>', { desc = 'Increase window width' })
-  M.map('n', '<a-q>', '<cmd>ToggleWrap<cr>', { desc = 'Toggle Wrap' })
+  M.map('n', '<C-Up>', '<cmd>resize +2<cr>', 'Increase window height')
+  M.map('n', '<C-Down>', '<cmd>resize -2<cr>', 'Decrease window height')
+  M.map('n', '<C-Left>', '<cmd>vertical resize -2<cr>', 'Decrease window width')
+  M.map('n', '<C-Right>', '<cmd>vertical resize +2<cr>', 'Increase window width')
+  M.map('n', '<a-q>', '<cmd>ToggleWrap<cr>', 'Toggle Wrap')
   -- Better indenting
   M.map('v', '<', '<gv', { noremap = true, desc = 'deIndent Continuously' })
   M.map('v', '>', '>gv', { noremap = true, desc = 'Indent Continuously' })
@@ -459,21 +557,21 @@ M.setup_code = function()
   M.map('i', '.', '.<c-g>u')
   M.map('i', ';', ';<c-g>u')
   -- File
-  -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', { desc = 'Close' })
-  M.map('n', '<c-w>', '<cmd>BDelete this<cr>', { desc = 'Delete current buffer' })
-  M.map('n', '<c-n>', '<cmd>ene<cr>', { desc = 'New Text File' })
-  M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
+  -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', 'Close')
+  M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
+  M.map('n', '<c-n>', '<cmd>ene<cr>', 'New Text File')
+  M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', 'Save file')
   -- Edit
-  M.map('n', 'S', 'diw"0P', { desc = 'Replace' })
+  M.map('n', 'S', 'diw"0P', 'Replace')
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
   M.map('n', '<a-w>', '<cmd>ToggleWholeWord<cr>')
   M.map('n', '<c-f>', '<cmd>SearchCode<cr>')
   -- Comment
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
-  M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
-  M.map('x', '<leader>cc', '<cmd>CommentLine<cr>', { desc = 'Comment Line (Comment.nvim)' })
-  M.map('n', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
-  M.map('x', '<leader>cb', '<cmd>CommentBlock<cr>', { desc = 'Comment Block (Comment.nvim)' })
+  M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', 'Comment Line (Comment.nvim)')
+  M.map('x', '<leader>cc', '<cmd>CommentLine<cr>', 'Comment Line (Comment.nvim)')
+  M.map('n', '<leader>cb', '<cmd>CommentBlock<cr>', 'Comment Block (Comment.nvim)')
+  M.map('x', '<leader>cb', '<cmd>CommentBlock<cr>', 'Comment Block (Comment.nvim)')
   -- Selection/ Move Lines
   M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', { noremap = true, desc = 'Line: Move Up (move.nvim)' })
   M.map('n', '<a-k>', '<cmd>MoveLine(-1)<cr>', { noremap = true, desc = 'Line: Move Down (move.nvim)' })
@@ -483,29 +581,42 @@ M.setup_code = function()
   M.map('v', '<a-k>', '<cmd>MoveBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Down (move.nvim)' })
   M.map('v', '<a-h>', '<cmd>MoveHBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Left (move.nvim)' })
   M.map('v', '<a-l>', '<cmd>MoveHBlock(1)<cr>', { noremap = true, desc = 'Block: Move Right (move.nvim)' })
+  -- [ ] Move
+  M.map('n', ']d', _diagnostic_goto(true), 'Next Diagnostic')
+  M.map('n', '[d', _diagnostic_goto(false), 'Prev Diagnostic')
+  M.map('n', ']e', _diagnostic_goto(true, 'ERROR'), 'Next Error')
+  M.map('n', '[e', _diagnostic_goto(false, 'ERROR'), 'Prev Error')
+  M.map('n', ']w', _diagnostic_goto(true, 'WARN'), 'Next Warning')
+  M.map('n', '[w', _diagnostic_goto(false, 'WARN'), 'Prev Warning')
+  M.map('n', ']b', '<cmd>BufferLineCycleNext<cr>', 'Next buffer')
+  M.map('n', '[b', '<cmd>BufferLineCyclePrev<cr>', 'Previous buffer')
+  M.map('n', ']q', _go_trouble(true), 'Next trouble/quickfix item')
+  M.map('n', '[q', _go_trouble(false), 'Previous trouble/quickfix item')
+  M.map('n', ']t', function() require('todo-comments').jump_next() end, 'Next todo comment')
+  M.map('n', '[t', function() require('todo-comments').jump_prev() end, 'Previous todo comment')
+  M.map('n', ']h', function() require('gitsigns').next_hunk() end, 'Next Hunk')
+  M.map('n', '[h', function() require('gitsigns').prev_hunk() end, 'Prev Hunk')
   -- Search
-  M.map({ 'n', 'x' }, 'gw', '*N', { desc = 'Search word under cursor' })
+  M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
   -- Clear search with <esc>
   M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { noremap = true, desc = 'Escape And Clear hlsearch' })
   -- View
   M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   M.map('n', [[\]], '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
   -- Tabs
-  M.map('n', '<leader><tab>l', '<cmd>tablast<cr>', { desc = 'Last Tab' })
-  M.map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', { desc = 'First Tab' })
-  M.map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', { desc = 'New Tab' })
-  M.map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = 'Next Tab' })
-  M.map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = 'Close Tab' })
-  M.map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab' })
+  M.map('n', '<leader><tab>l', '<cmd>tablast<cr>', 'Last Tab')
+  M.map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', 'First Tab')
+  M.map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', 'New Tab')
+  M.map('n', '<leader><tab>]', '<cmd>tabnext<cr>', 'Next Tab')
+  M.map('n', '<leader><tab>d', '<cmd>tabclose<cr>', 'Close Tab')
+  M.map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', 'Previous Tab')
   -- Buffer
-  -- M.map('n', '<tab>', ':bnext<CR>', { desc = 'Next Buffer' })
-  -- M.map('n', '<s-tab>', ':bprevious<CR>', { desc = 'Previous Buffer' })
-  M.map('n', '<s-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
-  M.map('n', '<s-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
-  M.map('n', '[b', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
-  M.map('n', ']b', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
-  M.map('n', '<s-tab>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous buffer' })
-  M.map('n', '<tab>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
+  -- M.map('n', '<tab>', ':bnext<CR>', 'Next Buffer')
+  -- M.map('n', '<s-tab>', ':bprevious<CR>', 'Previous Buffer')
+  M.map('n', '<s-h>', '<cmd>BufferLineCyclePrev<cr>', 'Previous buffer')
+  M.map('n', '<s-l>', '<cmd>BufferLineCycleNext<cr>', 'Next buffer')
+  M.map('n', '<s-tab>', '<cmd>BufferLineCyclePrev<cr>', 'Previous buffer')
+  M.map('n', '<tab>', '<cmd>BufferLineCycleNext<cr>', 'Next buffer')
   -- Go
   M.map(
     'n',
@@ -514,8 +625,10 @@ M.setup_code = function()
     { noremap = true, desc = 'Go To File... (telescope.nvim)' }
   )
   -- Run
+  -- Debug
+
   -- Terminal
-  M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
+  M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', 'Toggle Terminal')
   -- M.map(
   --   'n',
   --   [[<c-\>]],
@@ -586,13 +699,7 @@ M.setup_comands = function()
     timer:start(8, 0, vim.schedule_wrap(picker))
   end
   local _toggle_wholeword = function()
-    if vim.g.wholeword == nil then vim.g.wholeword = false end
-    vim.g.wholeword = not vim.g.wholeword
-    if vim.g.wholeword == true then
-      base.info('Match Whole Word', { title = 'Search Option' })
-    else
-      base.info('Dont Care Whole Word', { title = 'Search Option' })
-    end
+    base.g_toggle('wholeword', { 'Match Whole Word', 'Dont Care Whole Word', 'Search Option' })
   end
   local _search = function()
     local _has_wholeword = function() return vim.g.wholeword and vim.g.wholeword == true end
@@ -609,22 +716,37 @@ M.setup_comands = function()
       end
     end)
   end
-  vim.api.nvim_create_user_command('ToggleFullScreen', _toggle_fullscreen, { desc = 'Toggle Full Screen' })
-  vim.api.nvim_create_user_command('ToggleWrap', _toggle_wrap, { desc = 'Toggle Wrap' })
-  vim.api.nvim_create_user_command('ToggleFocusMode', _toggle_focus_mode, { desc = 'Toggle Focus Mode' })
-  vim.api.nvim_create_user_command('ToggleCaseSensitive', _toggle_case_sensitive, { desc = 'Toggle Case Sensitive' })
-  vim.api.nvim_create_user_command('ToggleWholeWord', _toggle_wholeword, { desc = 'Whole Word Toggle' })
-  vim.api.nvim_create_user_command('ToggleDiagnostics', _toggle_diagnostics, { desc = 'Toggle Diagnostics' })
-  vim.api.nvim_create_user_command('RemoveExclusiveORM', _remove_exclusive_orm, { desc = 'Remove Exclusive ORM' })
-  -- vim.api.nvim_create_user_command('CloseView', _close_view, { desc = 'Close View' })
-  vim.api.nvim_create_user_command('CommentLine', _comment_line, { desc = 'Comment Line' })
-  vim.api.nvim_create_user_command('CommentBlock', _comment_block, { desc = 'Comment Block' })
-  vim.api.nvim_create_user_command('InsertDate', _insert_date, { desc = 'Insert Date' })
-  vim.api.nvim_create_user_command('InsertTime', _insert_time, { desc = 'Insert Time' })
-  vim.api.nvim_create_user_command('SublimeMerge', _sublime_merge, { desc = 'Sublime Merge' })
-  vim.api.nvim_create_user_command('SublimeText', _sublime_text, { desc = 'Sublime Text' })
-  vim.api.nvim_create_user_command('Projects', _projects, { desc = 'Projects' })
-  vim.api.nvim_create_user_command('SearchCode', _search, { desc = 'Search Code' })
+  local _format = function()
+    if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('cpp') then
+      vim.lsp.buf.format({ async = false })
+    else
+      vim.cmd('FormatWriteLock')
+    end
+    vim.cmd([[set ff=unix]])
+  end
+  local _toggle_autoformat = function()
+    base.g_toggle('autoformat', { 'Auto format before saved', 'Dont auto format', 'Auto Format' })
+  end
+  -- stylua: ignore start
+  M.command('ToggleFullScreen',     _toggle_fullscreen,      'Full Screen Toggle')
+  M.command('ToggleWrap',           _toggle_wrap,            'Wrap Toggle')
+  M.command('ToggleFocusMode',      _toggle_focus_mode,      'Focus Mode Toggle')
+  M.command('ToggleCaseSensitive',  _toggle_case_sensitive,  'Case Sensitive Toggle')
+  M.command('ToggleWholeWord',      _toggle_wholeword,       'Whole Word Toggle')
+  M.command('ToggleDiagnostics',    _toggle_diagnostics,     'Diagnostics Toggle')
+  M.command('ToggleAutoFormat',     _toggle_autoformat,      'Auto Format Toggle')
+  M.command('RemoveExclusiveORM',   _remove_exclusive_orm,   'Remove Exclusive ORM')
+  M.command('CommentLine',          _comment_line,           'Comment Line')
+  M.command('CommentBlock',         _comment_block,          'Comment Block')
+  M.command('InsertDate',           _insert_date,            'Insert Date')
+  M.command('InsertTime',           _insert_time,            'Insert Time')
+  M.command('SublimeMerge',         _sublime_merge,          'Sublime Merge')
+  M.command('SublimeText',          _sublime_text,           'Sublime Text')
+  M.command('Projects',             _projects,               'Projects')
+  M.command('SearchCode',           _search,                 'Search Code')
+  M.command('FormatCode',           _format,                 'Format Code')
+  -- stylua: ignore end
+  -- M.command('CloseView', _close_view, 'Close View')
 end
 
 M.setup_autocmd = function()
@@ -642,6 +764,7 @@ M.setup_autocmd = function()
   })
   local _nofold = function() vim.cmd('set nofoldenable') end
   vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
+    group = augroup('nofoldenable'),
     callback = function() _nofold() end,
   })
   -- Close Neovim when all buffer closed
@@ -729,6 +852,33 @@ M.setup_autocmd = function()
   vim.api.nvim_create_autocmd('TextYankPost', {
     group = augroup('highlight_yank'),
     callback = function() vim.highlight.on_yank() end,
+  })
+  -- Auto toggle status and tablines for alpha
+  -- vim.cmd([[autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2]])
+  vim.api.nvim_create_autocmd('User', {
+    group = augroup('showtabline'),
+    pattern = 'AlphaReady',
+    callback = function()
+      local prev_showtabline = vim.opt.showtabline
+      local prev_status = vim.opt.laststatus
+      vim.opt.laststatus = 0
+      vim.opt.showtabline = 0
+      vim.opt_local.winbar = nil
+      vim.api.nvim_create_autocmd('BufUnload', {
+        pattern = '<buffer>',
+        callback = function()
+          vim.opt.laststatus = prev_status
+          vim.opt.showtabline = prev_showtabline
+        end,
+      })
+    end,
+  })
+  -- Auto format before write
+  vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+    group = augroup('autoformat'),
+    callback = function(event)
+      if vim.g.autoformat == true then vim.cmd([[FormatCode]]) end
+    end,
   })
 end
 

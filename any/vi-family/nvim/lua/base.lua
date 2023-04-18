@@ -169,6 +169,16 @@ M.toggle = function(option, _local, msg)
   end
 end
 
+M.g_toggle = function(option, msg)
+  if vim.g[option] == nil then vim.g[option] = false end
+  vim.g[option] = not vim.g[option]
+  if vim.g[option] == true then
+    M.info(msg[1], { title = msg[3] })
+  else
+    M.info(msg[2], { title = msg[3] })
+  end
+end
+
 M.has = function(plugin) return require('lazy.core.config').plugins[plugin] ~= nil end
 
 M.on_attach = function(on_attach)
