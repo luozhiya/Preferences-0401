@@ -317,6 +317,8 @@ M.wk = function(wk)
       p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
       o = { '<Cmd>BufferLineGroupClose ungrouped<CR>', 'Delete non-pinned buffers, Only pinned' },
       a = { '<cmd>Telescope buffers show_all_buffers=true<cr>', 'Switch Buffer' },
+      d = { function() require('mini.bufremove').delete(0, false) end, 'Delete Buffer' },
+      D = { function() require('mini.bufremove').delete(0, true) end, 'Delete Buffer (Force)' },
     },
     v = {
       name = '+Vim',
@@ -387,6 +389,9 @@ M.wk = function(wk)
       name = '+Search',
       t = { '<cmd>TodoTelescope<cr>', 'Todo' },
       T = { '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme' },
+      r = { function() require('spectre').open() end, 'Replace in files (Spectre)' },
+      f = { function() require('spectre').open_file_search() end, 'Search File' },
+      p = { function() require('spectre').open() end, 'Search Project' },
     },
     g = {
       name = '+Git',
@@ -530,6 +535,14 @@ M.setup_code = function()
       end
     end
   end
+  local _ref_map = function(key, dir)
+    M.map(
+      'n',
+      key,
+      function() require('illuminate')['goto_' .. dir .. '_reference'](false) end,
+      { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. ' Reference' }
+    )
+  end
   -- Core
   M.semicolon_to_colon()
   -- Better up/down
@@ -596,6 +609,8 @@ M.setup_code = function()
   M.map('n', '[t', function() require('todo-comments').jump_prev() end, 'Previous todo comment')
   M.map('n', ']h', function() require('gitsigns').next_hunk() end, 'Next Hunk')
   M.map('n', '[h', function() require('gitsigns').prev_hunk() end, 'Prev Hunk')
+  _ref_map(']r', 'next')
+  _ref_map('[r', 'prev')
   -- Search
   M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
   -- Clear search with <esc>

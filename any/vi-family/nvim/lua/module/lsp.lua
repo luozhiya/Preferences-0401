@@ -76,6 +76,7 @@ local _lsp_client_preferences = function()
     for _, keys in pairs(bindings.lsp) do
       bindings.map(keys.mode or 'n', keys[1], keys[2], { noremap = true, silent = true, buffer = buffer })
     end
+    -- require('lsp_signature').on_attach()
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
   return on_attach, capabilities

@@ -2,6 +2,17 @@ local bindings = require('module.bindings')
 local M = {}
 local run = {}
 
+run['Storage'] = {
+  ['kkharji/sqlite.lua'] = {
+    config = function()
+      if require('base').is_windows() then
+        local nvim = 'nvim.exe'
+        vim.g.sqlite_clib_path = string.sub(vim.loop.exepath(nvim), 1, -(#nvim + 1)) .. 'sqlite3.dll'
+      end
+    end,
+  },
+}
+
 run['Start Screen'] = {
   ['nvimdev/dashboard-nvim'] = {
     enabled = false,
@@ -388,6 +399,9 @@ run['Builtin UI Improved'] = {
           progress = {
             enabled = false,
           },
+          signature = {
+            enabled = false,
+          },
         },
         presets = {
           bottom_search = true, -- use a classic bottom cmdline for search
@@ -646,6 +660,10 @@ run['Buffer'] = {
   ['moll/vim-bbye'] = {
     event = { 'BufAdd' },
   },
+  ['echasnovski/mini.bufremove'] = {
+    keys = { { '<leader>bd' }, { '<leader>bD' } },
+    config = true,
+  },
 }
 
 run['Syntax'] = {
@@ -682,6 +700,32 @@ run['Editing Motion Support'] = {
     cmd = { 'Twilight', 'TwilightEnable' },
     config = function() require('twilight').setup() end,
   },
+  ['ggandor/flit.nvim'] = {
+    keys = function()
+      local ret = {}
+      for _, key in ipairs({ 'f', 'F', 't', 'T' }) do
+        ret[#ret + 1] = { key, mode = { 'n', 'x', 'o' }, desc = key }
+      end
+      return ret
+    end,
+    config = function()
+      local opts = { labeled_modes = 'nx' }
+      require('flit').setup(opts)
+    end,
+  },
+  ['ggandor/leap.nvim'] = {
+    keys = {
+      { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to' },
+      { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to' },
+      { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows' },
+    },
+    config = function()
+      local leap = require('leap')
+      leap.add_default_mappings(true)
+      vim.keymap.del({ 'x', 'o' }, 'x')
+      vim.keymap.del({ 'x', 'o' }, 'X')
+    end,
+  },
 }
 
 run['Search'] = {
@@ -692,6 +736,12 @@ run['Search'] = {
         build_position_cb = function(plist, _, _, _) require('scrollbar.handlers.search').handler.show(plist.start_pos) end,
       })
     end,
+  },
+  ['windwp/nvim-spectre'] = {
+    keys = {
+      { '<leader>sr' },
+    },
+    config = function() require('spectre').setup() end,
   },
 }
 
@@ -759,6 +809,13 @@ run['Formatting'] = {
         filetypes = { 'css', 'html', 'lua' },
       }
       require('colorizer').setup(opts)
+    end,
+  },
+  ['RRethy/vim-illuminate'] = {
+    event = { 'BufReadPost', 'BufNewFile' },
+    config = function()
+      local opts = { delay = 200 }
+      require('illuminate').configure(opts)
     end,
   },
 }
@@ -978,7 +1035,9 @@ run['LSP VIF'] = {
   },
   ['ray-x/lsp_signature.nvim'] = {
     -- enabled = false,
-    event = { 'LspAttach' },
+    -- event = { 'LspAttach' },
+    -- lazy = false,
+    event = { 'VeryLazy' },
     config = function()
       local icons = require('module.options').icons
       require('lsp_signature').setup({ hint_prefix = icons.collects.Tomatoes })

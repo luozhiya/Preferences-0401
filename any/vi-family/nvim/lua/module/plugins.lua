@@ -4,6 +4,8 @@ local list = {
   -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
   { 'MunifTanjim/nui.nvim' },
+  -- Storage
+  { 'kkharji/sqlite.lua' },
   -- Start Screen
   { 'nvimdev/dashboard-nvim' },
   { 'echasnovski/mini.starter' },
@@ -67,6 +69,7 @@ local list = {
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
   { 'moll/vim-bbye' },
+  { 'echasnovski/mini.bufremove' },
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
   -- Editing Motion Support
@@ -76,8 +79,11 @@ local list = {
   { 'numToStr/Comment.nvim' },
   { 'm4xshen/autoclose.nvim' },
   { 'nacro90/numb.nvim' },
+  { 'ggandor/leap.nvim' },
+  { 'ggandor/flit.nvim' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
+  { 'windwp/nvim-spectre' },
   -- Formatting
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
@@ -85,6 +91,7 @@ local list = {
   { 'folke/twilight.nvim' },
   { 'echasnovski/mini.indentscope' },
   { 'NvChad/nvim-colorizer.lua' },
+  { 'RRethy/vim-illuminate' },
   -- Editing Piece
   { 'AntonVanAssche/date-time-inserter.nvim' },
   { 'ziontee113/color-picker.nvim' },
