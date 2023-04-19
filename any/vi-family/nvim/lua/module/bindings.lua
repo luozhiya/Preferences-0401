@@ -55,38 +55,23 @@ end
 
 M.lsp = function(client, buffer)
   local _opts = function(desc) return { noremap = true, silent = true, buffer = buffer, desc = desc } end
-  if client.supports_method('textDocument/publishDiagnostics') then
-    M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
-  end
-  if client.supports_method('textDocument/hover') then
-    M.map('n', 'K', vim.lsp.buf.hover, _opts('Hover'))
-    M.map('n', 'gh', vim.lsp.buf.hover, _opts('Hover'))
-  end
-  if client.supports_method('textDocument/signatureHelp') then
-    M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
-    M.map('i', '<c-k>', vim.lsp.buf.signature_help, _opts('Signature Help'))
-  end
-  if client.supports_method('textDocument/rename') then
-    M.map('n', 'gn', vim.lsp.buf.rename, _opts('Rename'))
-    M.map('n', 'gN', ':IncRename ', _opts('Incremental LSP renaming (inc-rename.nvim)'))
-  end
-  if client.supports_method('textDocument/references') then
-    M.map('n', 'gr', vim.lsp.buf.references, _opts('References'))
-    M.map('n', 'gR', '<cmd>Telescope lsp_references<cr>', _opts('References'))
-  end
-  if client.supports_method('textDocument/definition') then
-    -- M.map('n', 'gd', vim.lsp.buf.definition, _opts('Goto Definition'))
-    M.map('n', 'gd', '<cmd>Glance definitions<cr>', _opts('Goto Definition'))
-    M.map('n', 'gD', '<cmd>Telescope lsp_definitions<cr>', _opts('Goto Definition'))
-    M.map('n', 'gy', '<cmd>Telescope lsp_type_definitions<cr>', _opts('Goto T[y]pe Definition'))
-  end
-  if client.supports_method('textDocument/implementation') then
-    M.map('n', 'gi', vim.lsp.buf.implementation, _opts('Implementation'))
-    M.map('n', 'gI', '<cmd>Telescope lsp_implementations<cr>', _opts('Goto Implementation'))
-  end
-  if client.supports_method('textDocument/codeAction') then
-    M.map({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, _opts('Code Action'))
-  end
+  M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
+  M.map('n', 'K', vim.lsp.buf.hover, _opts('Hover'))
+  M.map('n', 'gh', vim.lsp.buf.hover, _opts('Hover'))
+  M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
+  M.map('i', '<c-k>', vim.lsp.buf.signature_help, _opts('Signature Help'))
+  M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
+  M.map('i', '<c-k>', vim.lsp.buf.signature_help, _opts('Signature Help'))
+  M.map('n', 'gn', vim.lsp.buf.rename, _opts('Rename'))
+  M.map('n', 'gN', ':IncRename ', _opts('Incremental LSP renaming (inc-rename.nvim)'))
+  M.map('n', 'gr', vim.lsp.buf.references, _opts('References'))
+  M.map('n', 'gR', '<cmd>Telescope lsp_references<cr>', _opts('References'))
+  M.map('n', 'gd', '<cmd>Glance definitions<cr>', _opts('Goto Definition'))
+  M.map('n', 'gD', '<cmd>Telescope lsp_definitions<cr>', _opts('Goto Definition'))
+  M.map('n', 'gy', '<cmd>Telescope lsp_type_definitions<cr>', _opts('Goto T[y]pe Definition'))
+  M.map('n', 'gi', vim.lsp.buf.implementation, _opts('Implementation'))
+  M.map('n', 'gI', '<cmd>Telescope lsp_implementations<cr>', _opts('Goto Implementation'))
+  M.map({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, _opts('Code Action'))
   if client.supports_method('textDocument/rangeFormatting') then
     client.server_capabilities.documentRangeFormattingProvider = true
     M.map('x', '<leader>cf', function() vim.lsp.buf.format({ bufnr = buffer, force = true }) end, _opts('Format Range'))
