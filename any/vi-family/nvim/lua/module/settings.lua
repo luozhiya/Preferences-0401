@@ -714,7 +714,11 @@ run['Syntax'] = {
           'yaml',
         },
         highlight = { enable = true },
-        indent = { enable = true },
+        -- indent = { enable = true }, -- ignore cinoptions, set indentexpr=nvim_treesitter#indent()
+        indent = {
+          enable = true,
+          disable = { 'cpp' },
+        },
         context_commentstring = { enable = true, enable_autocmd = false },
         incremental_selection = {
           enable = true,
