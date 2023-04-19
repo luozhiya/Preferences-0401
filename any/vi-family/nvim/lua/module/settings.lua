@@ -101,7 +101,7 @@ run['Start Screen'] = {
         [[                   Paper Tiger                   ]],
         -- [[           good good study, day day up           ]],
       }
-      dashboard.section.buttons.val = bindings.alpha_val(dashboard.button)
+      dashboard.section.buttons.val = bindings.alpha()
       for _, button in ipairs(dashboard.section.buttons.val) do
         button.opts.hl = 'AlphaButtons'
         button.opts.hl_shortcut = 'AlphaShortcut'
@@ -1010,7 +1010,7 @@ run['Completion'] = {
           },
         },
       }
-      opts = vim.tbl_deep_extend('error', opts, bindings.cmp(cmp))
+      opts = vim.tbl_deep_extend('error', opts, bindings.cmp())
       cmp.setup(opts)
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),

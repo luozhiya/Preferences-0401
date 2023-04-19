@@ -53,17 +53,21 @@ local _dap_continue = function()
   end
 end
 
-M.lsp = {
-  { 'gD', vim.lsp.buf.definition, desc = 'Goto Definition' },
-  { 'gd', '<cmd>Glance definitions<cr>', desc = 'Goto Definition' },
-  { 'gh', vim.lsp.buf.hover, desc = 'Hover' },
-  { 'K', vim.lsp.buf.hover, desc = 'Hover' },
-  { 'gn', vim.lsp.buf.rename, desc = 'Rename' },
-  { 'ga', vim.lsp.buf.code_action, desc = 'Code Action' },
-}
+M.lsp = function(bufnr)
+  local _map = function(mode, keys, run, desc)
+    M.map(mode, keys, run, { noremap = true, silent = true, buffer = buffer, desc = desc })
+  end
+  _map('n', 'gD', vim.lsp.buf.definition, 'Goto Definition')
+  _map('n', 'gd', '<cmd>Glance definitions<cr>', 'Goto Definition')
+  _map('n', 'gh', vim.lsp.buf.hover, 'Hover')
+  _map('n', 'K', vim.lsp.buf.hover, 'Hover')
+  _map('n', 'gn', vim.lsp.buf.rename, 'Rename')
+  _map('n', 'ga', vim.lsp.buf.code_action, 'Code Action')
+end
 
-M.alpha_val = function(button)
+M.alpha = function()
   local icons = require('module.options').icons.collects
+  local button = require('alpha.themes.dashboard').button
   -- stylua: ignore
   return {
     button('f', icons.Search ..         ' Find file', ':Telescope find_files <cr>'),
@@ -78,7 +82,8 @@ M.alpha_val = function(button)
   }
 end
 
-M.cmp = function(cmp)
+M.cmp = function()
+  local cmp = require('cmp')
   local _forward = function()
     return cmp.mapping(function(fallback)
       if cmp.visible() then
