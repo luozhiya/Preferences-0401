@@ -599,7 +599,7 @@ run['Git'] = {
     cmd = { 'DiffviewOpen' },
   },
   ['f-person/git-blame.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = 'BufReadPost',
   },
 }

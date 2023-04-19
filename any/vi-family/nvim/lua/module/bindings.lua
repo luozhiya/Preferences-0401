@@ -53,16 +53,53 @@ local _dap_continue = function()
   end
 end
 
-M.lsp = function(bufnr)
-  local _map = function(mode, keys, run, desc)
-    M.map(mode, keys, run, { noremap = true, silent = true, buffer = buffer, desc = desc })
+M.lsp = function(client, buffer)
+  local _opts = function(desc) return { noremap = true, silent = true, buffer = buffer, desc = desc } end
+  if client.supports_method('textDocument/publishDiagnostics') then
+    M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
   end
-  _map('n', 'gD', vim.lsp.buf.definition, 'Goto Definition')
-  _map('n', 'gd', '<cmd>Glance definitions<cr>', 'Goto Definition')
-  _map('n', 'gh', vim.lsp.buf.hover, 'Hover')
-  _map('n', 'K', vim.lsp.buf.hover, 'Hover')
-  _map('n', 'gn', vim.lsp.buf.rename, 'Rename')
-  _map('n', 'ga', vim.lsp.buf.code_action, 'Code Action')
+  if client.supports_method('textDocument/hover') then
+    M.map('n', 'K', vim.lsp.buf.hover, _opts('Hover'))
+    M.map('n', 'gh', vim.lsp.buf.hover, _opts('Hover'))
+  end
+  if client.supports_method('textDocument/signatureHelp') then
+    M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
+    M.map('i', '<c-k>', vim.lsp.buf.signature_help, _opts('Signature Help'))
+  end
+  if client.supports_method('textDocument/rename') then
+    M.map('n', 'gn', vim.lsp.buf.rename, _opts('Rename'))
+    M.map('n', 'gN', ':IncRename ', _opts('Incremental LSP renaming (inc-rename.nvim)'))
+  end
+  if client.supports_method('textDocument/references') then
+    M.map('n', 'gr', vim.lsp.buf.references, _opts('References'))
+    M.map('n', 'gR', '<cmd>Telescope lsp_references<cr>', _opts('References'))
+  end
+  if client.supports_method('textDocument/definition') then
+    -- M.map('n', 'gd', vim.lsp.buf.definition, _opts('Goto Definition'))
+    M.map('n', 'gd', '<cmd>Glance definitions<cr>', _opts('Goto Definition'))
+    M.map('n', 'gD', '<cmd>Telescope lsp_definitions<cr>', _opts('Goto Definition'))
+    M.map('n', 'gy', '<cmd>Telescope lsp_type_definitions<cr>', _opts('Goto T[y]pe Definition'))
+  end
+  if client.supports_method('textDocument/implementation') then
+    M.map('n', 'gi', vim.lsp.buf.implementation, _opts('Implementation'))
+    M.map('n', 'gI', '<cmd>Telescope lsp_implementations<cr>', _opts('Goto Implementation'))
+  end
+  if client.supports_method('textDocument/codeAction') then
+    M.map({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, _opts('Code Action'))
+  end
+  if client.supports_method('textDocument/rangeFormatting') then
+    client.server_capabilities.documentRangeFormattingProvider = true
+    M.map('x', '<leader>cf', function() vim.lsp.buf.format({ bufnr = buffer, force = true }) end, _opts('Format Range'))
+  end
+  if client.supports_method('textDocument/formatting') then
+    client.server_capabilities.documentFormattingProvider = true
+    M.map(
+      'n',
+      '<leader>cf',
+      function() vim.lsp.buf.format({ bufnr = buffer, force = true }) end,
+      _opts('Format Document')
+    )
+  end
 end
 
 M.alpha = function()
@@ -72,13 +109,13 @@ M.alpha = function()
   return {
     button('f', icons.Search ..         ' Find file', ':Telescope find_files <cr>'),
     button('n', icons.File ..           ' New file', ':ene <bar> startinsert <cr>'),
-    button('r', icons.Connectdevelop .. ' Recent files', ':Telescope oldfiles <cr>'), --    -- 
+    button('r', icons.Connectdevelop .. ' Recent files', ':Telescope oldfiles <cr>'),
     button('p', icons.Chrome ..         ' Projects', ':Projects <cr>'),
     button('g', icons.ListAlt ..        ' Find text', ':Telescope live_grep <cr>'),
-    button('c', icons.Cogs ..           ' Config', ':e $MYVIMRC <cr>'), --    -- 
+    button('c', icons.Cogs ..           ' Config', ':e $MYVIMRC <cr>'),
     button('s', icons.IE ..             ' Restore Session', [[:lua require("persistence").load() <cr>]]),
     button('l', icons.Firefox ..        ' Lazy', ':Lazy<cr>'),
-    button('q', icons.Modx ..           ' Quit', ':qa<cr>'), -- 
+    button('q', icons.Modx ..           ' Quit', ':qa<cr>'),
   }
 end
 
@@ -262,17 +299,17 @@ M.gitsigns = function()
   local opts = {
     on_attach = function(buffer)
       local gs = package.loaded.gitsigns
-      local function _map(mode, l, r, desc) M.map(mode, l, r, { buffer = buffer, desc = desc }) end
-      _map({ 'n', 'v' }, '<leader>ghs', ':Gitsigns stage_hunk<CR>', 'Stage Hunk')
-      _map({ 'n', 'v' }, '<leader>ghr', ':Gitsigns reset_hunk<CR>', 'Reset Hunk')
-      _map('n', '<leader>ghS', gs.stage_buffer, 'Stage Buffer')
-      _map('n', '<leader>ghu', gs.undo_stage_hunk, 'Undo Stage Hunk')
-      _map('n', '<leader>ghR', gs.reset_buffer, 'Reset Buffer')
-      _map('n', '<leader>ghp', gs.preview_hunk, 'Preview Hunk')
-      _map('n', '<leader>ghb', function() gs.blame_line({ full = true }) end, 'Blame Line')
-      _map('n', '<leader>ghd', gs.diffthis, 'Diff This')
-      _map('n', '<leader>ghD', function() gs.diffthis('~') end, 'Diff This ~')
-      _map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk')
+      local _opts = function(desc) return { buffer = buffer, desc = desc } end
+      M.map({ 'n', 'v' }, '<leader>ghs', ':Gitsigns stage_hunk<CR>', _opts('Stage Hunk'))
+      M.map({ 'n', 'v' }, '<leader>ghr', ':Gitsigns reset_hunk<CR>', _opts('Reset Hunk'))
+      M.map('n', '<leader>ghS', gs.stage_buffer, _opts('Stage Buffer'))
+      M.map('n', '<leader>ghu', gs.undo_stage_hunk, _opts('Undo Stage Hunk'))
+      M.map('n', '<leader>ghR', gs.reset_buffer, _opts('Reset Buffer'))
+      M.map('n', '<leader>ghp', gs.preview_hunk, _opts('Preview Hunk'))
+      M.map('n', '<leader>ghb', function() gs.blame_line({ full = true }) end, _opts('Blame Line'))
+      M.map('n', '<leader>ghd', gs.diffthis, _opts('Diff This'))
+      M.map('n', '<leader>ghD', function() gs.diffthis('~') end, _opts('Diff This ~'))
+      M.map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', _opts('GitSigns Select Hunk'))
     end,
   }
   return opts
@@ -449,7 +486,8 @@ M.wk = function(wk)
       i = { '<cmd>LspInfo<cr>', 'Info' },
       -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
       l = { vim.diagnostic.open_float, 'Line Diagnostics' },
-      f = { '<cmd>FormatCode<cr>', 'Code Format' },
+      -- f = { '<cmd>FormatCode<cr>', 'Format Code' },
+      f = { '<cmd>FormatDocument<cr>', 'Format Document' },
       a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
       o = { '<cmd>SymbolsOutline<cr>', 'Symbols Outline Toggle (symbols-outline.nvim)' },
       s = { function() _telescope_symbols('lsp_document_symbols') end, 'Document Symbols' },
@@ -575,7 +613,7 @@ M.wk = function(wk)
       x = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
     },
   }
-  wk.register(n, { mode = { 'n', 'v' }, prefix = '<leader>' })
+  wk.register(n, { mode = { 'n', 'v', 'x' }, prefix = '<leader>' })
   local np = {
     mode = { 'n', 'v' },
     ['g'] = { name = '+Goto' },
@@ -853,6 +891,9 @@ M.setup_comands = function()
     else
       vim.cmd('FormatWriteLock')
     end
+  end
+  local _format_document = function()
+    _format()
     vim.cmd([[set ff=unix]])
   end
   local _toggle_autoformat = function()
@@ -875,7 +916,8 @@ M.setup_comands = function()
   M.command('SublimeText',          _sublime_text,           'Sublime Text')
   M.command('Projects',             _projects,               'Projects')
   M.command('SearchCode',           _search,                 'Search Code')
-  M.command('FormatCode',           _format,                 'Format Code')
+  -- M.command('FormatCode',           _format,                 'Format Code')
+  M.command('FormatDocument',       _format_document,        'Format Document')
   -- stylua: ignore end
   -- M.command('CloseView', _close_view, 'Close View')
   if base.is_kernel() then

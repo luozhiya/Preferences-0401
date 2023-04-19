@@ -60,20 +60,26 @@ local _setup_lsp_cpp = function(on_attach, capabilities)
 end
 
 local _lsp_handlers = function()
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+  local diagnostics = {
     virtual_text = {
       severity_limit = 'Error',
+      spacing = 4,
+      prefix = '●',
     },
     signs = true,
     update_in_insert = false,
-    underline = false,
-  })
+    underline = true,
+    severity_sort = true,
+  }
+  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+  vim.lsp.handlers['textDocument/publishDiagnostics'] =
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, diagnostics)
+  vim.diagnostic.config(diagnostics)
 end
 
 local _lsp_client_preferences = function()
   local on_attach = function(client, buffer)
-    bindings.lsp(buffer)
+    bindings.lsp(client, buffer)
     -- require('lsp_signature').on_attach()
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())

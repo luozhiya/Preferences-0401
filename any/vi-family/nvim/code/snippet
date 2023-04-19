@@ -755,3 +755,8 @@ end
 		['<C-Space>'] = { 'compe#complete()', 'Trigger completion', expr=true},
 		['<CR>'] = { "compe#confirm('<CR>')", 'Confirm completion', expr=true },
 }, {mode = 'i'})  
+
+ --    -- 
+  --    -- 
+
+   -- 
