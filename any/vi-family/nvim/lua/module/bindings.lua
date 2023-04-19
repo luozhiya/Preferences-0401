@@ -21,6 +21,38 @@ end
 
 M.semicolon_to_colon = function() M.map('n', ';', ':', { silent = false }) end
 
+local _dap_continue = function()
+  local dap = require('dap')
+  if dap.session() then
+    dap.continue()
+  else
+    -- save dap-session to sql
+    -- load dap-session
+    -- telescope select (default selected last)
+    -- New
+    -- ui.input new path
+    -- Enter dap mode
+    local prompt = 'Path to executable '
+    local default = vim.fn.getcwd() .. '/'
+    if vim.g.lastdebugfile == nil then
+      vim.g.lastdebugfile = default
+    else
+      default = vim.g.lastdebugfile
+    end
+    local input_opts = { prompt = prompt, default = default, 'file', completion = 'file' }
+    vim.ui.input(input_opts, function(input)
+      if not input then return end
+      vim.g.lastdebugfile = input
+      local cpp = { {
+        program = function() return input end,
+      } }
+      dap.configurations.cpp = vim.tbl_deep_extend('force', cpp, dap.configurations.cpp)
+      dap.configurations.c = dap.configurations.cpp
+      dap.continue()
+    end)
+  end
+end
+
 M.lsp = {
   { 'gD', vim.lsp.buf.definition, desc = 'Goto Definition' },
   { 'gd', '<cmd>Glance definitions<cr>', desc = 'Goto Definition' },
@@ -294,37 +326,6 @@ M.wk = function(wk)
   local _reveal_cwd_in_file_explorer = function() base.open(vim.fn.getcwd()) end
   local _reveal_file_in_file_explorer = function() base.open(base.get_contain_directory()) end
   local _open_with_default_app = function() base.open(base.get_current_buffer_name()) end
-  local _dap_continue = function()
-    local dap = require('dap')
-    if dap.session() then
-      dap.continue()
-    else
-      -- save dap-session to sql
-      -- load dap-session
-      -- telescope select (default selected last)
-      -- New
-      -- ui.input new path
-      -- Enter dap mode
-      local prompt = 'Path to executable '
-      local default = vim.fn.getcwd() .. '/'
-      if vim.g.lastdebugfile == nil then
-        vim.g.lastdebugfile = default
-      else
-        default = vim.g.lastdebugfile
-      end
-      local input_opts = { prompt = prompt, default = default, 'file', completion = 'file' }
-      vim.ui.input(input_opts, function(input)
-        if not input then return end
-        vim.g.lastdebugfile = input
-        local cpp = { {
-          program = function() return input end,
-        } }
-        dap.configurations.cpp = vim.tbl_deep_extend('force', cpp, dap.configurations.cpp)
-        dap.configurations.c = dap.configurations.cpp
-        dap.continue()
-      end)
-    end
-  end
   local _rename = function() vim.cmd('IncRename ' .. vim.fn.expand('<cword>')) end
   local _NvimTree_find = function()
     local path = require('base').get_path
@@ -375,16 +376,19 @@ M.wk = function(wk)
       w = { '<cmd>wqall<cr>', 'Quit And Save Everything' },
       f = { '<cmd>q!<cr>', 'Quit Force' },
       F = { '<cmd>qa!<cr>', 'Quit All Force' },
-      s = { '<cmd>w<cr>', 'Save' },
-    },
-    m = {
-      name = '+Memory/Session',
-      s = { '<cmd>SessionManager save_current_session<cr>', 'Save Current Session' },
-      l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
-      r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
-      -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
-      -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
-      a = { '<cmd>lua require("persistence").load()<cr>', 'Restore AutoSaved Session (persistence.nvim)' },
+      -- s = { '<cmd>w<cr>', 'Save' },
+      s = {
+        name = '+Session',
+        s = { '<cmd>SessionManager save_current_session<cr>', 'Save Current Session' },
+        l = { '<cmd>SessionManager load_session<cr>', 'Select And Load Session.' },
+        r = { '<cmd>SessionManager load_last_session<cr>', 'Restore Session' },
+        -- S = { '<cmd>Obsession ~/session.vim<cr>', 'Save Session' },
+        -- R = { '<cmd>Obsession ~/session.vim<cr>:!start neovide -- -S ~/session.vim<cr><cr>:wqall<cr>', 'Quit And Reload' },
+        a = { '<cmd>lua require("persistence").load()<cr>', 'Restore AutoSaved Session (persistence.nvim)' },
+        b = { function() require('persistence').load() end, 'Restore Session' },
+        c = { function() require('persistence').load({ last = true }) end, 'Restore Last Session' },
+        d = { function() require('persistence').stop() end, "Don't Save Current Session" },
+      },
     },
     c = {
       name = '+C',
@@ -440,19 +444,11 @@ M.wk = function(wk)
       i = { '<cmd>LspInfo<cr>', 'Info' },
       -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
       l = { vim.diagnostic.open_float, 'Line Diagnostics' },
-      a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
       f = { '<cmd>FormatCode<cr>', 'Code Format' },
-      x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
+      a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
       o = { '<cmd>SymbolsOutline<cr>', 'Symbols Outline Toggle (symbols-outline.nvim)' },
-      w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Trouble Workspace Diagnostics' },
-      d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics' },
-      D = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Document Diagnostics' },
-      q = { '<cmd>TroubleToggle quickfix<cr>', 'Trouble Quickfix' },
-      L = { '<cmd>TroubleToggle loclist<cr>', 'Trouble Loclist' },
-      r = { '<cmd>TroubleToggle lsp_references<cr>', 'Trouble LSP References' },
       s = { function() _telescope_symbols('lsp_document_symbols') end, 'Document Symbols' },
       c = { function() _telescope_symbols('lsp_dynamic_workspace_symbols') end, 'Workspace Symbols' },
-      -- n = { _rename, 'Incremental LSP renaming (inc-rename.nvim)' },
       n = { ':IncRename ', 'Incremental LSP renaming (inc-rename.nvim)' },
       -- g = { function() require('refactoring').select_refactor() end, 'Refactoring' },
     },
@@ -476,7 +472,7 @@ M.wk = function(wk)
     },
     x = {
       name = '+Diagnostics/Quickfix',
-      x = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Document Diagnostics (Trouble)' },
+      d = { '<cmd>TroubleToggle document_diagnostics<cr>', 'Trouble Document Diagnostics (Trouble)' },
       w = { '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Workspace Diagnostics (Trouble)' },
       l = { '<cmd>TroubleToggle loclist<cr>', 'Location List (Trouble)' },
       q = { '<cmd>TroubleToggle quickfix<cr>', 'Quickfix List (Trouble)' },
@@ -484,9 +480,13 @@ M.wk = function(wk)
       k = { '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme (Trouble)' },
       L = { '<cmd>lopen<cr>', 'Location List' },
       Q = { '<cmd>copen<cr>', 'Quickfix List' },
+      D = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Document Diagnostics' },
+      x = { '<cmd>TroubleToggle<cr>', 'Trouble Toggle' },
+      r = { '<cmd>TroubleToggle lsp_references<cr>', 'Trouble LSP References' },
     },
     s = {
       name = '+Search Code',
+      c = { '<cmd>SearchCode<cr>', 'Search' },
       t = { '<cmd>TodoTelescope<cr>', 'Todo' },
       T = { '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', 'Todo/Fix/Fixme' },
       r = { function() require('spectre').open() end, 'Replace in files (Spectre)' },
@@ -498,6 +498,7 @@ M.wk = function(wk)
       h = {
         name = '+Hunk',
       },
+      m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
     },
     t = {
       name = '+Terminal',
@@ -527,7 +528,6 @@ M.wk = function(wk)
         f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
         t = { '<cmd>Twilight<cr>', 'Twilight Dims Inactive' },
       },
-      m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
       i = {
         name = '+Insert',
@@ -552,7 +552,7 @@ M.wk = function(wk)
       },
     },
     f = {
-      name = '+File Explorer',
+      name = '+File/Explorer',
       s = { '<cmd>confirm wa<cr>', 'Save All' },
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
       e = { _NvimTree_find, 'NvimTree Explorer' },
@@ -712,6 +712,12 @@ M.setup_code = function()
   M.map('c', '<s-enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, 'Redirect Cmdline')
   -- Run
   -- Debug
+  if base.is_kernel() then
+    M.map('n', '<f5>', '<cmd>DAP continue<cr>', 'Start Debug/Conitnue')
+    M.map('n', '<f10>', '<cmd>DAP step_over<cr>', 'Step Over')
+    M.map('n', '<f11>', '<cmd>DAP step_into<cr>', 'Step Into')
+    M.map('n', '<f9>', '<cmd>DAP toggle_bp<cr>', 'Toggle Breakpoint')
+  end
 
   -- Terminal
   M.map('n', [[<c-\>]], '<cmd>ToggleTerm<cr>', 'Toggle Terminal')
@@ -721,6 +727,40 @@ M.setup_code = function()
   --   function() vim.cmd('ToggleTerm dir=' .. require('base').get_contain_directory()) end,
   --   { desc = 'Toggle Terminal' }
   -- )
+end
+
+M._dap_varg = function(...)
+  local function _get_front(...)
+    local args = { ... }
+    if vim.tbl_islist(args) and #args == 1 and type(args[1]) == 'table' then args = args[1] end
+    local opts = {}
+    for key, value in pairs(args) do
+      opts[key] = value
+    end
+    return opts and opts[1] or ''
+  end
+  local action = _get_front(...)
+  if action == 'continue' then
+    _dap_continue()
+  elseif action == 'step_over' then
+    require('dap').step_over()
+  elseif action == 'step_into' then
+    require('dap').step_into()
+  elseif action == 'step_out' then
+    require('dap').step_out()
+  elseif action == 'run_last' then
+    require('dap').run_last()
+  elseif action == 'run_to_cursor' then
+    require('dap').run_to_cursor()
+  elseif action == 'terminate' then
+    require('dap').terminate()
+  elseif action == 'toggle_bp' then
+    vim.cmd([[PBToggleBreakpoint]])
+  elseif action == 'toggle_ui' then
+    require('dapui').toggle({})
+  else
+    base.warn('Unknown option')
+  end
 end
 
 M.setup_comands = function()
@@ -833,6 +873,11 @@ M.setup_comands = function()
   M.command('FormatCode',           _format,                 'Format Code')
   -- stylua: ignore end
   -- M.command('CloseView', _close_view, 'Close View')
+  if base.is_kernel() then
+    vim.cmd([[
+    command! -nargs=* -complete=custom,s:complete DAP lua require'module.bindings'._dap_varg(<f-args>)
+  ]])
+  end
 end
 
 M.setup_autocmd = function()
