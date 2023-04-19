@@ -24,6 +24,7 @@ local list = {
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
   -- { "catppuccin/nvim" },
+  { 'p00f/alabaster.nvim' },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
@@ -65,6 +66,7 @@ local list = {
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
   -- Key Management
   { 'folke/which-key.nvim' },
+  { 'linty-org/key-menu.nvim' },
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
@@ -139,18 +141,20 @@ local list = {
   { 'simrat39/symbols-outline.nvim' },
 }
 
-local dap = {
+local kernel = {
   -- DAP VIF
   { 'mfussenegger/nvim-dap' },
   { 'theHamsta/nvim-dap-virtual-text' },
   { 'rcarriga/nvim-dap-ui' },
   { 'Weissle/persistent-breakpoints.nvim' },
+  -- C++
+  { 'Civitasv/cmake-tools.nvim' },
 }
 
 local cached = {}
 M.computed = function()
   if vim.tbl_isempty(cached) then
-    if require('base').is_kernel() then vim.list_extend(list, dap) end
+    if require('base').is_kernel() then vim.list_extend(list, kernel) end
     for i, v in pairs(list) do
       cached[i] = require('module.settings').spec(v[1])
     end

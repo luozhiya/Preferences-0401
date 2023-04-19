@@ -424,6 +424,7 @@ M.wk = function(wk)
       h = { '<cmd>ClangdSwitchSourceHeader<cr>', 'Switch C/C++ Header/Source' },
       m = { '<cmd>ClangdMemoryUsage<cr>', 'Clangd Memory Usage' },
       d = { function() require('cppdoc').open() end, 'Search cppreference Local' },
+      g = { '<cmd>Godbolt!<cr>', 'Godbolt ASM Code' },
     },
     w = {
       name = '+Windows',
@@ -435,6 +436,8 @@ M.wk = function(wk)
       d = { '<cmd>split<cr><C-w>j<esc>', 'Split Down' },
       u = { '<cmd>split<cr><esc>', 'Split Up' },
       r = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
+      o = { '<cmd>only<cr>', 'Only' },
+      c = { '<cmd>close<cr>', 'Close' },
     },
     b = {
       name = '+Buffer',
