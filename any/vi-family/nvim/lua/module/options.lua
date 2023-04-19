@@ -147,6 +147,7 @@ function M.before()
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
     timeoutlen = 300, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
     wildmode = 'full', -- Command-line completion mode
+    swapfile = false,
     updatetime = 200, -- Save swap file and trigger CursorHold
     incsearch = false,
     fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ', vert = ' ' },
@@ -169,6 +170,7 @@ function M.before()
   end
   if vim.g.neovide then
     vim.opt.guifont = 'InconsolataGo Nerd Font:h16'
+    -- vim.opt.guifont = 'FiraCode Nerd Font Mono:h15'
     -- vim.opt.guifont = { 'FiraCode Nerd Font Mono', 'h9' }
     -- vim.opt.guifont = { 'InconsolataGo Nerd Font', 'h16' }
     -- vim.g.neovide_scale_factor = 0.3

@@ -2,6 +2,12 @@ local bindings = require('module.bindings')
 local M = {}
 local run = {}
 
+run['Neovim Lua Library'] = {
+  ['ray-x/guihua.lua'] = {
+    build = 'cd lua/fzy && make',
+  },
+}
+
 run['Storage'] = {
   ['kkharji/sqlite.lua'] = {
     config = function()
@@ -446,7 +452,7 @@ run['File Explorer'] = {
         hijack_directories = { enable = false },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
-        view = { adaptive_size = false, preserve_window_proportions = true, width = 30 },
+        view = { adaptive_size = false, preserve_window_proportions = true, width = 35 },
         git = { enable = false },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.nvim_tree())
@@ -599,7 +605,7 @@ run['Git'] = {
     cmd = { 'DiffviewOpen' },
   },
   ['f-person/git-blame.nvim'] = {
-    -- enabled = false,
+    enabled = false,
     event = 'BufReadPost',
   },
 }
@@ -669,7 +675,7 @@ run['Buffer'] = {
   },
   ['echasnovski/mini.bufremove'] = {
     keys = { { '<leader>bd' }, { '<leader>bD' } },
-    config = true,
+    -- config = true, -- Bug: no mini module
   },
 }
 
@@ -687,7 +693,23 @@ run['Syntax'] = {
     config = function()
       local opts = {
         matchup = { enable = true },
-        ensure_installed = { 'cpp', 'c', 'lua', 'cmake' },
+        ensure_installed = {
+          'bash',
+          'c',
+          'cpp',
+          'cmake',
+          'html',
+          'javascript',
+          'json',
+          'lua',
+          'luadoc',
+          'python',
+          'regex',
+          'typescript',
+          'vim',
+          'vimdoc',
+          'yaml',
+        },
         highlight = { enable = true },
         indent = { enable = true },
         context_commentstring = { enable = true, enable_autocmd = false },
@@ -1115,6 +1137,11 @@ run['Diagnostics'] = {
 }
 
 run['LSP VIF'] = {
+  ['neovim/nvim-lspconfig'] = {
+    -- ft = { 'c', 'cpp', 'lua' },
+    event = { 'BufReadPre' },
+    config = require('module.lsp').lsp,
+  },
   ['stevearc/aerial.nvim'] = {
     cmd = { 'AerialNext', 'AerialPrev', 'AerialToggle' },
     config = function()
@@ -1149,10 +1176,6 @@ run['LSP VIF'] = {
   },
   ['m-pilia/vim-ccls'] = {
     event = 'User ccls',
-  },
-  ['neovim/nvim-lspconfig'] = {
-    ft = { 'c', 'cpp', 'lua' },
-    config = require('module.lsp').lsp,
   },
   ['j-hui/fidget.nvim'] = {
     -- enabled = false,
@@ -1223,12 +1246,37 @@ run['LSP VIF'] = {
     event = { 'LspAttach' },
     config = function() require('symbols-outline').setup() end,
   },
+  ['rmagatti/goto-preview'] = {
+    enabled = false,
+    event = { 'LspAttach' },
+    config = function()
+      local opts = {
+        width = 120, -- Width of the floating window
+      }
+      require('goto-preview').setup({ opts })
+    end,
+  },
+  ['ray-x/navigator.lua'] = {
+    enabled = false,
+    event = { 'LspAttach' },
+    dependencies = {
+      'ray-x/guihua.lua',
+    },
+    config = function() require('navigator').setup() end,
+  },
 }
 
 run['DAP VIF'] = {
   ['mfussenegger/nvim-dap'] = {
     ft = { 'c', 'cpp' },
     config = require('module.lsp').dap,
+  },
+}
+
+run['Performance'] = {
+  ['dstein64/vim-startuptime'] = {
+    cmd = 'StartupTime',
+    config = function() vim.g.startuptime_tries = 10 end,
   },
 }
 

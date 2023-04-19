@@ -67,11 +67,14 @@ M.lsp = function(client, buffer)
   M.map('n', 'gr', vim.lsp.buf.references, _opts('References'))
   M.map('n', 'gR', '<cmd>Telescope lsp_references<cr>', _opts('References'))
   M.map('n', 'gd', '<cmd>Glance definitions<cr>', _opts('Goto Definition'))
+  -- M.map('n', 'gd', function() require('goto-preview').goto_preview_definition() end, _opts('Goto Definition'))
   M.map('n', 'gD', '<cmd>Telescope lsp_definitions<cr>', _opts('Goto Definition'))
   M.map('n', 'gy', '<cmd>Telescope lsp_type_definitions<cr>', _opts('Goto T[y]pe Definition'))
   M.map('n', 'gi', vim.lsp.buf.implementation, _opts('Implementation'))
   M.map('n', 'gI', '<cmd>Telescope lsp_implementations<cr>', _opts('Goto Implementation'))
-  M.map({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, _opts('Code Action'))
+  if client.supports_method('textDocument/codeAction') then
+    M.map({ 'n', 'v' }, 'ga', vim.lsp.buf.code_action, _opts('Code Action'))
+  end
   if client.supports_method('textDocument/rangeFormatting') then
     client.server_capabilities.documentRangeFormattingProvider = true
     M.map('x', '<leader>cf', function() vim.lsp.buf.format({ bufnr = buffer, force = true }) end, _opts('Format Range'))
@@ -451,7 +454,8 @@ M.wk = function(wk)
     },
     v = {
       name = '+Vim',
-      a = { '<cmd>Alpha<cr>', 'Alpha Dashboard Toggle' },
+      a = { '<cmd>Alpha<cr>', 'Toggle Alpha Dashboard' },
+      f = { '<cmd>ToggleFullScreen<cr>', 'Toggle FullScreen' },
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
@@ -874,15 +878,15 @@ M.setup_comands = function()
     end)
   end
   local _format = function()
-    if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('cpp') then
-      vim.lsp.buf.format({ async = false })
-    else
+    if type(vim.bo.filetype) == 'string' and vim.bo.filetype:match('lua') then
       vim.cmd('FormatWriteLock')
+    else
+      vim.lsp.buf.format({ async = false })
     end
   end
   local _format_document = function()
     _format()
-    vim.cmd([[set ff=unix]])
+    vim.cmd([[confirm! set ff=unix]])
   end
   local _toggle_autoformat = function()
     base.g_toggle('autoformat', { 'Auto format before saved', 'Dont auto format', 'Auto Format' })

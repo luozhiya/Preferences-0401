@@ -51,7 +51,7 @@ local _lsp_ccls = function(on_attach, capabilities)
   vim.api.nvim_exec_autocmds('User', { pattern = 'ccls', modeline = false })
 end
 
-local _setup_lsp_cpp = function(on_attach, capabilities)
+local _lsp_cpp = function(on_attach, capabilities)
   if vim.g.lsp_cpp_provider == 'clangd' then
     _lsp_clangd(on_attach, capabilities)
   elseif vim.g.lsp_cpp_provider == 'ccls' then
@@ -132,7 +132,7 @@ local _lsp_lightbulb = function()
     vim.lsp.buf_request_all(buf, 'textDocument/codeAction', params, _responses_slove)
   end
   local _render_bulb = function(buffer)
-    -- if not _is_codeaction() then return end
+    if not _is_codeaction() then return end
     require('plenary.async').run(_send_request)
   end
   local _autocmd = function()
@@ -180,18 +180,73 @@ local _lsp_signdefine = function()
   vim.fn.sign_define('DapStopped', { text = '🠶', texthl = 'String', linehl = 'DiffAdd', numhl = '' })
 end
 
+local _mason = function()
+  local opts = {
+    ensure_installed = {
+      'stylua',
+      'shfmt',
+      -- "flake8",
+      'prettierd',
+    },
+  }
+  require('mason').setup(opts)
+  local mr = require('mason-registry')
+  local function ensure_installed()
+    for _, tool in ipairs(opts.ensure_installed) do
+      local p = mr.get_package(tool)
+      if not p:is_installed() then p:install() end
+    end
+  end
+  if mr.refresh then
+    mr.refresh(ensure_installed)
+  else
+    ensure_installed()
+  end
+  local lsp = {
+    ensure_installed = {
+      'lua_ls',
+      'cmake',
+      'asm_lsp',
+      'pylsp',
+      'vimls',
+    },
+  }
+  require('mason-lspconfig').setup(lsp)
+end
+
+local _null_ls = function()
+  local null_ls = require('null-ls')
+  local opts = {
+    root_dir = require('null-ls.utils').root_pattern('.null-ls-root', '.neoconf.json', 'Makefile', '.git'),
+    sources = {
+      -- null_ls.builtins.formatting.stylua,
+      -- null_ls.builtins.diagnostics.eslint,
+      -- null_ls.builtins.completion.spell,
+      -- null_ls.builtins.formatting.prettierd,
+      null_ls.builtins.formatting.prettier.with({
+        filetypes = { 'html', 'json', 'yaml', 'markdown' },
+        extra_args = { '--no-semi', '--single-quote', '--jsx-single-quote' },
+      }),
+      -- null_ls.builtins.formatting.black.with({ extra_args = { '--fast' } }),
+      -- null_ls.builtins.formatting.stylua,
+    },
+  }
+  null_ls.setup(opts)
+end
+
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
   _lsp_lightbulb()
   _lsp_signdefine()
-  local on_attach, capabilities = _lsp_client_preferences()
   -- mason: It's important that you set up the plugins in the following order
-  require('mason').setup()
-  require('mason-lspconfig').setup({ ensure_installed = { 'lua_ls' } })
+  _mason()
   require('neodev').setup()
+  _null_ls()
+  local on_attach, capabilities = _lsp_client_preferences()
   require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-  _setup_lsp_cpp(on_attach, capabilities)
+  _lsp_cpp(on_attach, capabilities)
+  require('lspconfig').cmake.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
 M.dap = function()

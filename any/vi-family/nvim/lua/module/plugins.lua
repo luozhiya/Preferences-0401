@@ -4,6 +4,7 @@ local list = {
   -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
   { 'MunifTanjim/nui.nvim' },
+  { 'ray-x/guihua.lua' },
   -- Storage
   { 'kkharji/sqlite.lua' },
   -- Start Screen
@@ -129,6 +130,7 @@ local list = {
   { 'folke/neodev.nvim' },
   { 'theHamsta/nvim-semantic-tokens' },
   { 'smjonas/inc-rename.nvim' },
+  { 'jose-elias-alvarez/null-ls.nvim' },
   -- LSP Visualization/Interactive
   { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },
@@ -139,6 +141,10 @@ local list = {
   { 'stevearc/aerial.nvim' },
   { 'VidocqH/lsp-lens.nvim' },
   { 'simrat39/symbols-outline.nvim' },
+  { 'rmagatti/goto-preview' },
+  { 'ray-x/navigator.lua' },
+  -- Performance
+  { 'dstein64/vim-startuptime' },
 }
 
 local kernel = {
