@@ -831,6 +831,31 @@ run['Editing Motion Support'] = {
       require('mini.surround').setup(opts)
     end,
   },
+  ['Wansmer/treesj'] = {
+    cmd = { 'TSJToggle' },
+    config = function()
+      local opts = { use_default_keymaps = false, max_join_length = 150 }
+      require('treesj').setup(opts)
+    end,
+  },
+}
+
+run['Yank'] = {
+  ['gbprod/yanky.nvim'] = {
+    event = 'BufReadPost',
+    config = function()
+      local opts = {
+        highlight = {
+          timer = 150,
+        },
+        ring = {
+          -- storage = jit.os:find("Windows") and "shada" or "sqlite",
+          storage = 'sqlite',
+        },
+      }
+      require('yanky').setup(opts)
+    end,
+  },
 }
 
 run['Search'] = {
@@ -1028,7 +1053,7 @@ run['Completion'] = {
       local cmp = require('cmp')
       local opts = {
         completion = {
-          completeopt = 'menuone,noselect,noinsert',
+          completeopt = 'menuone,noselect',
         },
         sources = {
           { name = 'nvim_lsp' },
@@ -1047,13 +1072,22 @@ run['Completion'] = {
       opts = vim.tbl_deep_extend('error', opts, bindings.cmp())
       cmp.setup(opts)
       cmp.setup.cmdline(':', {
+        completion = {
+          completeopt = 'menuone,noselect,noinsert',
+        },
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = 'path' },
           { name = 'cmdline', option = { ignore_cmds = { 'Man', '!' } } },
         }),
       })
-      cmp.setup.cmdline('/', { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } })
+      cmp.setup.cmdline('/', {
+        completion = {
+          completeopt = 'menuone,noselect,noinsert',
+        },
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = { { name = 'buffer' } },
+      })
       cmp.event:on('confirm_done', function(evt)
         local cxxindent = { 'public:', 'private:', 'protected:' }
         if vim.tbl_contains(cxxindent, evt.entry:get_word()) then

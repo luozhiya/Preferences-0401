@@ -654,6 +654,11 @@ M.setup_code = function()
   -- M.map('n', '<c-j>', '<c-w>j', 'Jump Down')
   -- M.map('n', '<c-k>', '<c-w>k', 'Jump Up')
   M.map('n', '<c-l>', '<c-w>l', 'Jump Right')
+  -- Move to window using the movement keys
+  M.map('n', '<left>', '<C-w>h', 'Jump Left')
+  M.map('n', '<down>', '<C-w>j', 'Jump Down')
+  M.map('n', '<up>', '<C-w>k', 'Jump Up')
+  M.map('n', '<right>', '<C-w>l', 'Jump Right')
   -- Resize window using <ctrl> arrow keys
   M.map('n', '<C-Up>', '<cmd>resize +2<cr>', 'Increase window height')
   M.map('n', '<C-Down>', '<cmd>resize -2<cr>', 'Decrease window height')
@@ -667,6 +672,8 @@ M.setup_code = function()
   M.map('i', ',', ',<c-g>u')
   M.map('i', '.', '.<c-g>u')
   M.map('i', ';', ';<c-g>u')
+  -- change word with <c-c>
+  M.map('n', '<c-c>', '<cmd>normal! ciw<cr>a', 'Change Word')
   -- File
   -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', 'Close')
   M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
@@ -676,7 +683,7 @@ M.setup_code = function()
   M.map('n', 'S', 'diw"0P', 'Replace')
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
   M.map('n', '<a-w>', '<cmd>ToggleWholeWord<cr>')
-  M.map('n', '<c-c>', '<cmd>SearchCode<cr>')
+  -- M.map('n', '<c-c>', '<cmd>SearchCode<cr>')
   -- Comment
   M.map('n', '<c-/>', '<cmd>CommentLine<cr>')
   M.map('n', '<leader>cc', '<cmd>CommentLine<cr>', 'Comment Line (Comment.nvim)')
@@ -711,6 +718,32 @@ M.setup_code = function()
   _ref_map('[r', 'prev')
   M.map('n', ']a', '<cmd>AerialNext<cr>', 'Jump forwards symbols')
   M.map('n', '[a', '<cmd>AerialPrev<cr>', 'Jump backwards symbols')
+  -- Yank
+  M.map({ 'n', 'x' }, 'y', '<Plug>(YankyYank)')
+  M.map({ 'n', 'x' }, 'p', '<Plug>(YankyPutAfter)')
+  M.map({ 'n', 'x' }, 'P', '<Plug>(YankyPutBefore)')
+  M.map({ 'n', 'x' }, 'gp', '<Plug>(YankyGPutAfter)')
+  M.map({ 'n', 'x' }, 'gP', '<Plug>(YankyGPutBefore)')
+  M.map('n', '<c-n>', '<Plug>(YankyCycleForward)')
+  M.map('n', '<c-p>', '<Plug>(YankyCycleBackward)')
+  M.map('n', ']p', '<Plug>(YankyPutIndentAfterLinewise)')
+  M.map('n', '[p', '<Plug>(YankyPutIndentBeforeLinewise)')
+  M.map('n', ']P', '<Plug>(YankyPutIndentAfterLinewise)')
+  M.map('n', '[P', '<Plug>(YankyPutIndentBeforeLinewise)')
+  M.map('n', '>p', '<Plug>(YankyPutIndentAfterShiftRight)')
+  M.map('n', '<p', '<Plug>(YankyPutIndentAfterShiftLeft)')
+  M.map('n', '>P', '<Plug>(YankyPutIndentBeforeShiftRight)')
+  M.map('n', '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)')
+  M.map('n', '=p', '<Plug>(YankyPutAfterFilter)')
+  M.map('n', '=P', '<Plug>(YankyPutBeforeFilter)')
+  M.map(
+    'n',
+    '<leader>P',
+    function() require('telescope').extensions.yank_history.yank_history({}) end,
+    { desc = 'Paste from Yanky' }
+  )
+  -- Join
+  M.map('n', 'J', '<cmd>TSJToggle<cr>', 'Join Toggle')
   -- Search
   M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
   -- Clear search with <esc>
@@ -1048,6 +1081,25 @@ M.setup_autocmd = function()
     group = augroup('autoformat'),
     callback = function(event)
       if vim.g.autoformat == true then vim.cmd([[FormatCode]]) end
+    end,
+  })
+  -- Show cursor line only in active window
+  vim.api.nvim_create_autocmd({ 'InsertLeave', 'WinEnter' }, {
+    callback = function()
+      local ok, cl = pcall(vim.api.nvim_win_get_var, 0, 'auto-cursorline')
+      if ok and cl then
+        vim.wo.cursorline = true
+        vim.api.nvim_win_del_var(0, 'auto-cursorline')
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd({ 'InsertEnter', 'WinLeave' }, {
+    callback = function()
+      local cl = vim.wo.cursorline
+      if cl then
+        vim.api.nvim_win_set_var(0, 'auto-cursorline', cl)
+        vim.wo.cursorline = false
+      end
     end,
   })
 end

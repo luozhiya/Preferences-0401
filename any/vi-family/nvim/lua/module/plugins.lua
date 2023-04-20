@@ -24,6 +24,8 @@ local list = {
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
+  { 'shaunsingh/oxocarbon.nvim' },
+  { 'ellisonleao/gruvbox.nvim' },
   -- { "catppuccin/nvim" },
   { 'p00f/alabaster.nvim' },
   -- Icon
@@ -89,6 +91,9 @@ local list = {
   { 'ggandor/leap.nvim' },
   { 'ggandor/flit.nvim' },
   { 'echasnovski/mini.surround' },
+  { 'Wansmer/treesj' },
+  -- Yank
+  { 'gbprod/yanky.nvim' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   { 'windwp/nvim-spectre' },

@@ -234,6 +234,14 @@ local _null_ls = function()
   null_ls.setup(opts)
 end
 
+local _lsp = function()
+  local lsp = require('lspconfig')
+  local on_attach, capabilities = _lsp_client_preferences()
+  _lsp_cpp(on_attach, capabilities)
+  lsp.lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
+  lsp.cmake.setup({ on_attach = on_attach, capabilities = capabilities })
+end
+
 M.lsp = function()
   vim.lsp.set_log_level('OFF')
   _lsp_handlers()
@@ -242,11 +250,8 @@ M.lsp = function()
   -- mason: It's important that you set up the plugins in the following order
   _mason()
   require('neodev').setup()
+  _lsp()
   _null_ls()
-  local on_attach, capabilities = _lsp_client_preferences()
-  require('lspconfig').lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
-  _lsp_cpp(on_attach, capabilities)
-  require('lspconfig').cmake.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
 M.dap = function()

@@ -147,7 +147,7 @@ function M.before()
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
     timeoutlen = 300, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
     wildmode = 'full', -- Command-line completion mode
-    swapfile = false,
+    swapfile = false, -- Bug: Crashed Neovide
     updatetime = 200, -- Save swap file and trigger CursorHold
     incsearch = false,
     fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ', vert = ' ' },
