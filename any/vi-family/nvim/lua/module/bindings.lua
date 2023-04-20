@@ -431,19 +431,21 @@ M.wk = function(wk)
     },
     w = {
       name = '+Windows',
-      h = { '<C-w>h', 'Jump Left' },
-      j = { '<C-w>j', 'Jump Down' },
-      k = { '<C-w>k', 'Jump Up' },
-      l = { '<C-w>l', 'Jump Right' },
+      h = { '<c-w>h', 'Jump Left' },
+      j = { '<c-w>j', 'Jump Down' },
+      k = { '<c-w>k', 'Jump Up' },
+      l = { '<c-w>l', 'Jump Right' },
       e = { '<cmd>vsplit<cr><esc>', 'Split Left' },
-      d = { '<cmd>split<cr><C-w>j<esc>', 'Split Down' },
+      d = { '<cmd>split<cr><c-w>j<esc>', 'Split Down' },
       u = { '<cmd>split<cr><esc>', 'Split Up' },
-      r = { '<cmd>vsplit<cr><C-w>l<esc>', 'Split Right' },
+      r = { '<cmd>vsplit<cr><c-w>l<esc>', 'Split Right' },
       o = { '<cmd>only<cr>', 'Only' },
       c = { '<cmd>close<cr>', 'Close' },
     },
     b = {
       name = '+Buffer',
+      b = { '<cmd>Bdelete<cr>', 'Buffer Bye' },
+      n = { ':ene <bar> startinsert <cr>', 'New Buffer' },
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
       p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
       o = { '<Cmd>BufferLineGroupClose ungrouped<CR>', 'Delete non-pinned buffers, Only pinned' },
@@ -456,12 +458,13 @@ M.wk = function(wk)
       name = '+Vim',
       a = { '<cmd>Alpha<cr>', 'Toggle Alpha Dashboard' },
       f = { '<cmd>ToggleFullScreen<cr>', 'Toggle FullScreen' },
+      z = { '<cmd>ZenMode<cr>', 'Zen Mode' },
+      e = wk_ve,
       i = { '<cmd>Lazy<cr>', 'Lazy Dashboard' },
       p = { '<cmd>Lazy profile<cr>', 'Lazy Profile' },
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       s = { vim.show_pos, 'Inspect Pos' },
-      e = wk_ve,
     },
     h = {
       name = '+History/Notifications',
@@ -563,7 +566,6 @@ M.wk = function(wk)
         c = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
         t = { '<cmd>Twilight<cr>', 'Twilight Dims Inactive' },
         f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
-        z = { '<cmd>ZenMode<cr>', 'Zen Mode' },
       },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
       i = {
@@ -657,10 +659,10 @@ M.setup_code = function()
   -- M.map('n', '<c-k>', '<c-w>k', 'Jump Up')
   M.map('n', '<c-l>', '<c-w>l', 'Jump Right')
   -- Move to window using the movement keys
-  M.map('n', '<left>', '<C-w>h', 'Jump Left')
-  M.map('n', '<down>', '<C-w>j', 'Jump Down')
-  M.map('n', '<up>', '<C-w>k', 'Jump Up')
-  M.map('n', '<right>', '<C-w>l', 'Jump Right')
+  M.map('n', '<left>', '<c-w>h', 'Jump Left')
+  M.map('n', '<down>', '<c-w>j', 'Jump Down')
+  M.map('n', '<up>', '<c-w>k', 'Jump Up')
+  M.map('n', '<right>', '<c-w>l', 'Jump Right')
   -- Resize window using <ctrl> arrow keys
   M.map('n', '<C-Up>', '<cmd>resize +2<cr>', 'Increase window height')
   M.map('n', '<C-Down>', '<cmd>resize -2<cr>', 'Decrease window height')
@@ -671,6 +673,7 @@ M.setup_code = function()
   M.map('v', '<', '<gv', { noremap = true, desc = 'deIndent Continuously' })
   M.map('v', '>', '>gv', { noremap = true, desc = 'Indent Continuously' })
   -- Add undo break-points
+  M.map('i', ' ', ' <c-g>u')
   M.map('i', ',', ',<c-g>u')
   M.map('i', '.', '.<c-g>u')
   M.map('i', ';', ';<c-g>u')
@@ -678,7 +681,7 @@ M.setup_code = function()
   M.map('n', '<c-c>', '<cmd>normal! ciw<cr>a', 'Change Word')
   -- File
   -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', 'Close')
-  M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
+  -- M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
   M.map('n', '<c-n>', '<cmd>ene<cr>', 'New Text File')
   M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', 'Save file')
   -- Edit
@@ -921,7 +924,9 @@ M.setup_comands = function()
   end
   local _format_document = function()
     _format()
-    vim.cmd([[confirm! set ff=unix]])
+    -- vim.cmd([[confirm! set ff=unix]])
+    vim.cmd([[set ff=unix]])
+    vim.cmd([[wa]])
   end
   local _toggle_autoformat = function()
     base.g_toggle('autoformat', { 'Auto format before saved', 'Dont auto format', 'Auto Format' })
