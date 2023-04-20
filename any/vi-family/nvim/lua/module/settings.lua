@@ -263,6 +263,7 @@ run['Bars And Lines'] = {
     config = function()
       local opts = {
         show_dirname = false,
+        -- show_basename = false,
       }
       require('barbecue').setup(opts)
     end,
@@ -383,13 +384,14 @@ run['Builtin UI Improved'] = {
     config = function()
       local opts = {
         stages = 'static',
-        timeout = 3000,
+        timeout = 2000,
+        render = 'minimal',
         max_height = function() return math.floor(vim.o.lines * 0.75) end,
         max_width = function() return math.floor(vim.o.columns * 0.75) end,
       }
       local notfiy = require('notify')
       notfiy.setup(opts)
-      vim.notify = notfiy
+      -- vim.notify = notfiy
       require('telescope').load_extension('notify')
     end,
   },
@@ -398,15 +400,50 @@ run['Builtin UI Improved'] = {
     event = { 'User NeXT' },
     config = function()
       local opts = {
+        cmdline = {
+          enabled = false,
+        },
+        popupmenu = {
+          enabled = false,
+        },
+        messages = {
+          -- NOTE: If you enable messages, then the cmdline is enabled automatically.
+          -- This is a current Neovim limitation.
+          enabled = false,
+        },
         lsp = {
           hover = {
-            enabled = false,
+            enabled = true,
           },
           progress = {
             enabled = false,
           },
           signature = {
             enabled = false,
+          },
+          override = {
+            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+            ['vim.lsp.util.stylize_markdown'] = true,
+            ['cmp.entry.get_documentation'] = true,
+          },
+        },
+        notify = {
+          -- Noice can be used as `vim.notify` so you can route any notification like other messages
+          -- Notification messages have their level and other properties set.
+          -- event is always "notify" and kind can be any log level as a string
+          -- The default routes will forward notifications to nvim-notify
+          -- Benefit of using Noice for this is the routing and consistent history view
+          enabled = true,
+          -- view = 'mini',
+          view = 'notify',
+        },
+        routes = {
+          {
+            filter = {
+              event = 'msg_show',
+              find = '%d+L, %d+B',
+            },
+            view = 'mini',
           },
         },
         presets = {
@@ -415,6 +452,20 @@ run['Builtin UI Improved'] = {
           long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = true, -- enables an input dialog for inc-rename.nvim
           lsp_doc_border = true, -- add a border to hover docs and signature help
+          cmdline_output_to_split = false,
+        },
+        commands = {
+          all = {
+            -- options for the message history that you get with `:Noice`
+            view = 'split',
+            opts = { enter = true, format = 'details' },
+            filter = {},
+          },
+        },
+        format = {
+          level = {
+            icons = false,
+          },
         },
       }
       require('noice').setup(opts)
@@ -579,7 +630,16 @@ run['Session'] = {
 run['View'] = {
   ['folke/zen-mode.nvim'] = {
     cmd = { 'ZenMode' },
-    config = function() require('zen-mode').setup() end,
+    config = function()
+      local opts = {
+        plugins = {
+          gitsigns = true,
+          tmux = true,
+          kitty = { enabled = false, font = '+2' },
+        },
+      }
+      require('zen-mode').setup(opts)
+    end,
   },
 }
 
@@ -703,6 +763,8 @@ run['Syntax'] = {
           'json',
           'lua',
           'luadoc',
+          'markdown',
+          'markdown_inline',
           'python',
           'regex',
           'typescript',
@@ -731,6 +793,7 @@ run['Syntax'] = {
 run['Editing Motion Support'] = {
   ['andymass/vim-matchup'] = {
     event = 'BufReadPost',
+    config = function() vim.g.matchup_matchparen_offscreen = { method = 'status_manual' } end,
   },
   ['numToStr/Comment.nvim'] = {
     config = function()
@@ -870,6 +933,10 @@ run['Search'] = {
     },
     config = function() require('spectre').setup() end,
   },
+  ['cshuaimin/ssr.nvim'] = {
+    keys = { { '<leader>sR' } },
+    config = function() require('ssr').setup({}) end,
+  },
 }
 
 run['Formatting'] = {
@@ -896,7 +963,7 @@ run['Formatting'] = {
         char = '│',
         filetype_exclude = { 'help', 'alpha', 'dashboard', 'neo-tree', 'NvimTree', 'Trouble', 'lazy' },
         show_trailing_blankline_indent = false,
-        show_current_context = false,
+        -- show_current_context = true,
       })
     end,
   },
@@ -925,8 +992,16 @@ run['Formatting'] = {
         -- symbol = "▏",
         symbol = '│',
         options = { try_as_border = true },
+        draw = {
+          -- Animation rule for scope's first drawing. A function which, given
+          -- next and total step numbers, returns wait time (in ms). See
+          -- |MiniIndentscope.gen_animation| for builtin options. To disable
+          -- animation, use `require('mini.indentscope').gen_animation.none()`.
+          animation = require('mini.indentscope').gen_animation.none(),
+        },
       }
-      require('mini.indentscope').setup(opts)
+      local indentscope = require('mini.indentscope')
+      indentscope.setup(opts)
     end,
   },
   ['NvChad/nvim-colorizer.lua'] = {
@@ -1228,11 +1303,14 @@ run['LSP VIF'] = {
   ['ray-x/lsp_signature.nvim'] = {
     -- enabled = false,
     -- event = { 'LspAttach' },
-    -- lazy = false,
     event = { 'VeryLazy' },
     config = function()
       local icons = require('module.options').icons
-      require('lsp_signature').setup({ hint_prefix = icons.collects.Tomatoes })
+      local opts = {
+        floating_window = true,
+        hint_prefix = icons.collects.Tomatoes,
+      }
+      require('lsp_signature').setup(opts)
     end,
   },
   ['glepnir/lspsaga.nvim'] = {

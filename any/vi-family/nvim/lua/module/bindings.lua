@@ -527,6 +527,7 @@ M.wk = function(wk)
       r = { function() require('spectre').open() end, 'Replace in files (Spectre)' },
       f = { function() require('spectre').open_file_search() end, 'Search File' },
       p = { function() require('spectre').open() end, 'Search Project' },
+      R = { function() require('ssr').open() end, 'Structural Replace' },
     },
     g = {
       name = '+Git',
@@ -560,8 +561,9 @@ M.wk = function(wk)
         a = { '<cmd>ToggleAutoFormat<cr>', 'Auto Format Toggle' },
         w = { '<cmd>ToggleWrap<cr>', 'Toggle Wrap' },
         c = { '<cmd>ToggleCaseSensitive<cr>', 'Toggle Case Sensitive' },
-        f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
         t = { '<cmd>Twilight<cr>', 'Twilight Dims Inactive' },
+        f = { '<cmd>ToggleFocusMode<cr>', 'Toggle Focus Mode' },
+        z = { '<cmd>ZenMode<cr>', 'Zen Mode' },
       },
       s = { '<cmd>SublimeText<cr>', 'Sublime Text' },
       i = {

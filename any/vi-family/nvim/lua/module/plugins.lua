@@ -97,6 +97,7 @@ local list = {
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   { 'windwp/nvim-spectre' },
+  { 'cshuaimin/ssr.nvim' },
   -- Formatting
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
