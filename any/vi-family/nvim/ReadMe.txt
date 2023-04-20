@@ -207,6 +207,7 @@ https://github.com/nvim-tree/nvim-tree.lua/wiki/Migrating-To-on_attach
 https://github.com/akinsho/bufferline.nvim/issues/631
 https://github.com/AstroNvim/AstroNvim/blob/cf624ae5870ea5fcf98ff1e2f6354f6a57df3f53/lua/astronvim/autocmds.lua#L148
 https://vi.stackexchange.com/questions/38508/paste-command-to-command-mode-instead-of-insert-mode
+https://github.com/kristijanhusak/vim-dadbod-ui/issues/133
 
 Lua
 ---
@@ -246,3 +247,13 @@ C++ accesstor indent
   nvim-cmp, tree-sitter(indent), neovim(builtin-cindoption)
 
 symbol-outline padding too many space
+
+scrolloff for bufferline?
+
+cmp will flash statusbar?
+
+cmake-tools doesn't find correct path? find the .git root insteadof CMakeLists.txt root?
+
+wilder lua rrequire ?? bug?
+
+hydra.nvim as a tips window? no key only text show?

@@ -1,7 +1,3 @@
--- Neovim default
--- vim.cmd([[filetype plugin indent on]]) -- use language‐specific plugins for indenting (better):
--- autoindent = true, -- reproduce the indentation of the previous line
-
 local bindings = require('module.bindings')
 local base = require('base')
 
@@ -112,23 +108,36 @@ function M.before()
     vim.g['loaded_' .. v] = 1
   end
 
+  -- Remove Neovim tips menu
   vim.cmd([[
     aunmenu PopUp.How-to\ disable\ mouse
     aunmenu PopUp.-1-
   ]])
 
+  -- Neovim default
+  -- vim.cmd([[filetype plugin indent on]]) -- use language‐specific plugins for indenting (better):
+  -- autoindent = true, -- reproduce the indentation of the previous line
   local opts = {
+    -- System
     runtimepath = vim.opt.runtimepath:append(M.lazy),
     -- shellslash = true, -- A forward slash is used when expanding file names. -- Bug: neo-tree
+    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    clipboard = 'unnamedplus', -- Allows neovim to access the system clipboard
+    -- Appearance
+    termguicolors = true, -- True color support
+    shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
+    showmode = false, -- Dont show mode since we have a statusline
     laststatus = 3, -- Status line style
     cmdheight = 0, -- Command-line
-    showmode = false, -- Dont show mode since we have a statusline
-    -- lazyredraw = true, -- no redraws in macros. Disabled for: https://github.com/neovim/neovim/issues/22674
+    showtabline = 2, -- Always display tabline
+    signcolumn = 'yes', -- Always show the signcolumn, otherwise it would shift the text each time
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
+    winminwidth = 5, -- Minimum window width
+    cursorline = true, -- Enable highlighting of the current line
     number = true, -- Print line number
-    signcolumn = 'yes', -- Always show the signcolumn, otherwise it would shift the text each time
-    termguicolors = true, -- True color support
+    relativenumber = true, -- Relative line numbers
+    -- Formatting
     wrap = false, -- Disable line wrap
     tabstop = 2, -- Length of an actual \t character
     expandtab = true, -- Ff set, only insert spaces; otherwise insert \t and complete with spaces
@@ -140,16 +149,10 @@ function M.before()
     synmaxcol = 300, -- Don't syntax-highlight long lines
     ignorecase = true, -- Ignore case
     -- smartcase = true, -- Don't ignore case with capitals
-    clipboard = 'unnamedplus', -- Allows neovim to access the system clipboard
+    -- Completion
     completeopt = { 'menuone', 'noselect', 'noinsert' },
-    autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
-    shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
-    timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
-    timeoutlen = 300, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
     wildmode = 'full', -- Command-line completion mode
-    swapfile = false, -- Bug: Crashed Neovide
-    updatetime = 200, -- Save swap file and trigger CursorHold
-    incsearch = false,
+    -- Fold
     fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ', vert = ' ' },
     foldlevel = 99,
     foldlevelstart = 99,
@@ -157,17 +160,29 @@ function M.before()
     foldcolumn = '0',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
+    -- Split Windows
+    splitkeep = 'screen', -- Stable current window line
+    splitbelow = true, -- Put new windows below current
+    splitright = true, -- Put new windows right of current
+    -- Edit
+    incsearch = false,
+    autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
+    undofile = false,
+    -- undolevels = 10000,
+    swapfile = false, -- Bug: Crashed Neovide
+    -- Misc
+    timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
+    timeoutlen = 300, -- The timeout when WhichKey opens is controlled by the vim setting timeoutlen.
+    updatetime = 100, -- Save swap file and trigger CursorHold
     fileformats = 'unix,dos,mac', -- Detect formats
-    showtabline = 2, -- Always display tabline
-    conceallevel = 3, -- Hide * markup for bold and italic
-    confirm = true, -- Confirm to save changes before exiting modified buffer
-    cursorline = true, -- Enable highlighting of the current line
-    relativenumber = true, -- Relative line numbers
     sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
+    confirm = true, -- Confirm to save changes before exiting modified buffer
+    conceallevel = 3, -- Hide * markup for bold and italic
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v
   end
+  -- Neovide GUI
   if vim.g.neovide then
     vim.opt.guifont = 'InconsolataGo Nerd Font:h16'
     -- vim.opt.guifont = 'FiraCode Nerd Font Mono:h15'

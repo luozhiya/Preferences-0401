@@ -2,12 +2,6 @@ local bindings = require('module.bindings')
 local M = {}
 local run = {}
 
-run['Neovim Lua Library'] = {
-  ['ray-x/guihua.lua'] = {
-    build = 'cd lua/fzy && make',
-  },
-}
-
 run['Storage'] = {
   ['kkharji/sqlite.lua'] = {
     config = function()
@@ -16,6 +10,20 @@ run['Storage'] = {
         vim.g.sqlite_clib_path = string.sub(vim.loop.exepath(nvim), 1, -(#nvim + 1)) .. 'sqlite3.dll'
       end
     end,
+  },
+  ['tpope/vim-dadbod'] = {
+    cmd = { 'DB' },
+  },
+  ['kristijanhusak/vim-dadbod-ui'] = {
+    -- sqlite:/path/to/sqlite_database.db
+    cmd = { 'DBUIAddConnection' },
+    dependencies = { 'tpope/vim-dadbod' },
+  },
+}
+
+run['UI Library'] = {
+  ['ray-x/guihua.lua'] = {
+    build = 'cd lua/fzy && make',
   },
 }
 
@@ -641,6 +649,10 @@ run['View'] = {
       require('zen-mode').setup(opts)
     end,
   },
+  ['Pocco81/true-zen.nvim'] = {
+    cmd = { 'TZFocus', 'TZMinimalist', 'TZAtaraxis', 'TZNarrow' },
+    config = function() require('true-zen').setup() end,
+  },
 }
 
 run['Git'] = {
@@ -703,6 +715,9 @@ run['Fuzzy Finder'] = {
   ['nvim-telescope/telescope-fzf-native.nvim'] = {
     build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
   },
+  ['romgrk/fzy-lua-native'] = {
+    build = 'make',
+  },
 }
 
 run['Key Management'] = {
@@ -719,6 +734,12 @@ run['Key Management'] = {
     enabled = false,
     event = { 'VeryLazy' },
     config = function() end,
+  },
+  ['mrjones2014/legendary.nvim'] = {
+    config = function()
+      local opts = { which_key = { auto_register = true } }
+      require('legendary').setup(opts)
+    end,
   },
 }
 
@@ -798,6 +819,7 @@ run['Editing Motion Support'] = {
   ['numToStr/Comment.nvim'] = {
     config = function()
       local opts = {
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
         mappings = {
           ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
           basic = false,
@@ -1051,9 +1073,10 @@ run['Editing Piece'] = {
 run['Completion'] = {
   ['hrsh7th/nvim-cmp'] = {
     -- enabled = false,
-    event = { 'InsertEnter', 'CmdlineEnter' },
+    event = { 'InsertEnter' },
+    -- event = { 'InsertEnter', 'CmdlineEnter' },
     dependencies = {
-      'hrsh7th/cmp-cmdline',
+      -- 'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
@@ -1143,23 +1166,23 @@ run['Completion'] = {
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.cmp())
       cmp.setup(opts)
-      cmp.setup.cmdline(':', {
-        completion = {
-          completeopt = 'menuone,noselect,noinsert',
-        },
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' },
-          { name = 'cmdline', option = { ignore_cmds = { 'Man', '!' } } },
-        }),
-      })
-      cmp.setup.cmdline('/', {
-        completion = {
-          completeopt = 'menuone,noselect,noinsert',
-        },
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = { { name = 'buffer' } },
-      })
+      -- cmp.setup.cmdline(':', {
+      --   completion = {
+      --     completeopt = 'menuone,noselect,noinsert',
+      --   },
+      --   mapping = cmp.mapping.preset.cmdline(),
+      --   sources = cmp.config.sources({
+      --     { name = 'path' },
+      --     { name = 'cmdline', option = { ignore_cmds = { 'Man', '!' } } },
+      --   }),
+      -- })
+      -- cmp.setup.cmdline('/', {
+      --   completion = {
+      --     completeopt = 'menuone,noselect,noinsert',
+      --   },
+      --   mapping = cmp.mapping.preset.cmdline(),
+      --   sources = { { name = 'buffer' } },
+      -- })
       cmp.event:on('confirm_done', function(evt)
         local cxxindent = { 'public:', 'private:', 'protected:' }
         if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
@@ -1169,6 +1192,23 @@ run['Completion'] = {
           -- vim.api.nvim_feedkeys('<cr>', 'i', true)
         end
       end)
+    end,
+  },
+  ['gelguy/wilder.nvim'] = {
+    -- enabled = false,
+    event = { 'CmdlineEnter' },
+    config = function()
+      local wilder = require('wilder')
+      wilder.setup({ modes = { ':', '/', '?' } })
+      wilder.set_option('pipeline', {
+        wilder.branch(wilder.cmdline_pipeline(), wilder.search_pipeline()),
+      })
+      wilder.set_option(
+        'renderer',
+        wilder.wildmenu_renderer({
+          highlighter = wilder.basic_highlighter(),
+        })
+      )
     end,
   },
 }

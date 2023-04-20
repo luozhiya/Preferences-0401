@@ -3,10 +3,14 @@ local M = {}
 local list = {
   -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
-  { 'MunifTanjim/nui.nvim' },
-  { 'ray-x/guihua.lua' },
   -- Storage
   { 'kkharji/sqlite.lua' },
+  { 'tpope/vim-dadbod' },
+  { 'kristijanhusak/vim-dadbod-ui' },
+  -- UI Library
+  { 'MunifTanjim/nui.nvim' },
+  { 'ray-x/guihua.lua' },
+  { 'anuvyklack/hydra.nvim' },
   -- Start Screen
   { 'nvimdev/dashboard-nvim' },
   { 'echasnovski/mini.starter' },
@@ -58,6 +62,7 @@ local list = {
   { 'folke/persistence.nvim' },
   -- View
   { 'folke/zen-mode.nvim' },
+  { 'Pocco81/true-zen.nvim' },
   -- Git
   { 'lewis6991/gitsigns.nvim' },
   { 'sindrets/diffview.nvim' },
@@ -67,9 +72,11 @@ local list = {
   { 'nvim-telescope/telescope-fzf-native.nvim' },
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
+  { 'romgrk/fzy-lua-native' },
   -- Key Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
+  { 'mrjones2014/legendary.nvim' },
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
@@ -119,6 +126,7 @@ local list = {
   { 'hrsh7th/cmp-buffer' },
   { 'saadparwaiz1/cmp_luasnip' },
   { 'onsails/lspkind.nvim' },
+  { 'gelguy/wilder.nvim' },
   -- Snippet
   { 'L3MON4D3/LuaSnip' },
   { 'rafamadriz/friendly-snippets' },
