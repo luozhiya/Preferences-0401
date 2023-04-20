@@ -234,9 +234,15 @@ PATH
 ----
 %LOCALAPPDATA%\nvim-data
 
-QA
---
-1. confusion root?
+TODO
+----
+confusion root?
   LSP(lsp-file, no lsp-file)
   nvim-tree(change root, even in same dir)
   project
+
+C++ accesstor indent
+  public/private/protected
+  nvim-cmp, tree-sitter(indent), neovim(builtin-cindoption)
+
+symbol-outline padding too many space

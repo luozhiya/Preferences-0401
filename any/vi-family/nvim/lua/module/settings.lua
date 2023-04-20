@@ -140,7 +140,7 @@ run['Bars And Lines'] = {
       vim.opt.foldcolumn = '1'
       local builtin = require('statuscol.builtin')
       require('statuscol').setup({
-        ft_ignore = { 'NvimTree' },
+        ft_ignore = { 'NvimTree', 'Outline' },
         segments = {
           { text = { '%s' }, click = 'v:lua.ScSa' },
           { text = { builtin.lnumfunc }, click = 'v:lua.ScLa' },
@@ -1258,7 +1258,7 @@ run['LSP VIF'] = {
   ['stevearc/aerial.nvim'] = {
     cmd = { 'AerialNext', 'AerialPrev', 'AerialToggle' },
     config = function()
-      local opts = { backends = { 'treesitter', 'lsp' }, layout = { max_width = { 60, 0.4 } } }
+      local opts = { backends = { 'treesitter', 'lsp' }, layout = { width = 35 } }
       opts = vim.tbl_deep_extend('error', opts, bindings.aerial())
       require('aerial').setup(opts)
     end,

@@ -127,7 +127,7 @@ function M.before()
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- The minimal number of screen columns to keep to the left and to the right of the cursor if 'nowrap' is set.
     number = true, -- Print line number
-    signcolumn = 'yes:1', -- Always show the signcolumn, otherwise it would shift the text each time
+    signcolumn = 'yes', -- Always show the signcolumn, otherwise it would shift the text each time
     termguicolors = true, -- True color support
     wrap = false, -- Disable line wrap
     tabstop = 2, -- Length of an actual \t character
