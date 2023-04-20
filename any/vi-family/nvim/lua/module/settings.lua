@@ -213,13 +213,13 @@ run['Bars And Lines'] = {
                 hint = icons.diagnostics.Hint,
               },
             },
-            -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+            { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
             { 'filename', path = 1, symbols = { modified = '  ', readonly = '', unnamed = '' } },
             -- stylua: ignore
-            -- {
-            --   function() return require("nvim-navic").get_location() end,
-            --   cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-            -- },
+            {
+              function() return require("nvim-navic").get_location() end,
+              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
+            },
           },
           lualine_x = {
             -- stylua: ignore
@@ -248,8 +248,7 @@ run['Bars And Lines'] = {
             _lsp_active,
             'encoding',
             fileformat,
-            -- 'filetype',
-            { 'filetype', icons_enabled = false },
+            'filetype',
           },
           lualine_z = { _location },
         },
@@ -269,7 +268,6 @@ run['Bars And Lines'] = {
     end,
   },
   ['b0o/incline.nvim'] = {
-    enabled = false,
     event = { 'BufReadPost' },
     config = function()
       local colors = require('tokyonight.colors').setup()
@@ -281,11 +279,11 @@ run['Bars And Lines'] = {
         --   },
         -- },
         window = { margin = { vertical = 0, horizontal = 1 } },
-        -- render = function(props)
-        --   local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-        --   local icon, color = require('nvim-web-devicons').get_icon_color(filename)
-        --   return { { icon }, { ' ' }, { filename } }
-        -- end,
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          local icon, color = require('nvim-web-devicons').get_icon_color(filename)
+          return { { icon }, { ' ' }, { filename } }
+        end,
       }
       require('incline').setup(opts)
     end,
@@ -302,16 +300,15 @@ run['Bars And Lines'] = {
     config = function()
       local opts = {
         options = {
-          show_buffer_icons = false,
-          diagnostics = false,
-          -- diagnostics = 'nvim_lsp',
+          -- diagnostics = false,
+          diagnostics = 'nvim_lsp',
           separator_style = 'slant', -- slope thick thin slant
           always_show_bufferline = true,
           diagnostics_indicator = function(_, _, diag)
-            -- local icons = require('module.options').icons.diagnostics
-            -- local ret = (diag.error and icons.Error .. diag.error .. ' ' or '')
-            --   .. (diag.warning and icons.Warn .. diag.warning or '')
-            -- return vim.trim(ret)
+            local icons = require('module.options').icons.diagnostics
+            local ret = (diag.error and icons.Error .. diag.error .. ' ' or '')
+              .. (diag.warning and icons.Warn .. diag.warning or '')
+            return vim.trim(ret)
           end,
           offsets = {
             {
