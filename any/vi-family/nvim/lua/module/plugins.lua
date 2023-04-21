@@ -39,6 +39,7 @@ local list = {
   { 'rcarriga/nvim-notify' },
   { 'folke/noice.nvim' },
   { 'vigoux/notifier.nvim' },
+  { 'kevinhwang91/nvim-bqf' },
   -- Sudo
   { 'lambdalisue/suda.vim' },
   -- File Explorer
@@ -72,6 +73,7 @@ local list = {
   { 'nvim-telescope/telescope-fzf-native.nvim' },
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
+  { 'junegunn/fzf' },
   -- Key Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
@@ -112,6 +114,8 @@ local list = {
   { 'echasnovski/mini.indentscope' },
   { 'NvChad/nvim-colorizer.lua' },
   { 'RRethy/vim-illuminate' },
+  { 'kevinhwang91/promise-async' },
+  { 'kevinhwang91/nvim-ufo' },
   -- Editing Piece
   { 'AntonVanAssche/date-time-inserter.nvim' },
   { 'ziontee113/color-picker.nvim' },

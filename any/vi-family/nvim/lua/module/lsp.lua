@@ -71,6 +71,7 @@ local _lsp_handlers = function()
     underline = true,
     severity_sort = true,
   }
+  -- Use Noice hover, fix rainbow pairs in hover window
   -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
   vim.lsp.handlers['textDocument/publishDiagnostics'] =
     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, diagnostics)
@@ -83,6 +84,13 @@ local _lsp_client_preferences = function()
     -- require('lsp_signature').on_attach()
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true,
+  }
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.resolveSupport =
+    { properties = { 'documentation', 'detail', 'additionalTextEdits' } }
   return on_attach, capabilities
 end
 

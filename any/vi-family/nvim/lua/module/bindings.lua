@@ -55,10 +55,14 @@ local _dap_continue = function()
 end
 
 M.lsp = function(client, buffer)
+  local _hover = function()
+    local winid = require('ufo').peekFoldedLinesUnderCursor()
+    if not winid then vim.lsp.buf.hover() end
+  end
   local _opts = function(desc) return { buffer = buffer, desc = desc } end
   M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
-  M.map('n', 'K', vim.lsp.buf.hover, _opts('Hover'))
-  M.map('n', 'gh', vim.lsp.buf.hover, _opts('Hover'))
+  M.map('n', 'K', _hover, _opts('Hover'))
+  M.map('n', 'gh', _hover, _opts('Hover'))
   M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
   M.map('i', '<c-k>', vim.lsp.buf.signature_help, _opts('Signature Help'))
   M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
@@ -385,6 +389,12 @@ M.wk = function(wk)
       },
     })
   end
+  local _hlslens_qf = function()
+    vim.schedule(function()
+      if require('hlslens').exportLastSearchToQuickfix() then vim.cmd('cw') end
+    end)
+    return vim.cmd([[noh]])
+  end
   -- stylua: ignore start
   local wk_ve = {
       name = '+Edit Config',
@@ -530,6 +540,7 @@ M.wk = function(wk)
       f = { function() require('spectre').open_file_search() end, 'Search File' },
       p = { function() require('spectre').open() end, 'Search Project' },
       R = { function() require('ssr').open() end, 'Structural Replace' },
+      l = { _hlslens_qf, 'Run `:nohlsearch` And Export Results To Quickfix' },
     },
     g = {
       name = '+Git',
@@ -682,7 +693,11 @@ M.setup_code = function()
   -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', 'Close')
   -- M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
   M.map('n', '<c-n>', '<cmd>ene<cr>', 'New Text File')
-  M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', 'Save file')
+  -- Alternative way to save and exit in Normal mode.
+  -- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
+  M.map('n', '<c-s>', '<cmd>silent! update | redraw<cr>', { desc = 'Save' })
+  M.map({ 'i', 'x' }, '<c-s>', '<esc><cmd>silent! update | redraw<cr>', { desc = 'Save and go to Normal mode' })
+  -- M.map({ 'i', 'v', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', 'Save file')
   -- Edit
   M.map('n', 'S', 'diw"0P', 'Replace')
   M.map('n', '<a-c>', '<cmd>ToggleCaseSensitive<cr>')
@@ -746,12 +761,43 @@ M.setup_code = function()
     function() require('telescope').extensions.yank_history.yank_history({}) end,
     { desc = 'Paste from Yanky' }
   )
+  -- Reselect latest changed, put, or yanked text
+  M.map('n', 'gV', '"`[" . strpart(getregtype(), 0, 1) . "`]"', { expr = true, desc = 'Visually select changed text' })
   -- Join
   M.map('n', 'J', '<cmd>TSJToggle<cr>', 'Join Toggle')
+  -- Fold
+  M.map('n', 'zR', require('ufo').openAllFolds)
+  M.map('n', 'zM', require('ufo').closeAllFolds)
+  M.map('n', 'zr', require('ufo').openFoldsExceptKinds)
+  M.map('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
   -- Search
   M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
+  -- Search visually selected text (slightly better than builtins in Neovim>=0.8)
+  M.map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
+  M.map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
   -- Clear search with <esc>
   M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', 'Escape And Clear hlsearch')
+  -- hlslens
+  local function nN(char)
+    local ok, winid = require('hlslens').nNPeekWithUFO(char)
+    if ok and winid then
+      -- Safe to override buffer scope keymaps remapped by ufo,
+      -- ufo will restore previous buffer keymaps before closing preview window
+      -- Type <cr> will switch to preview window and fire `trace` action
+      M.map('n', '<cr>', function()
+        local keyCodes = vim.api.nvim_replace_termcodes('<tab><cr>', true, false, true)
+        vim.api.nvim_feedkeys(keyCodes, 'im', false)
+      end, { buffer = true })
+    end
+  end
+  M.map({ 'n', 'x' }, 'n', function() nN('n') end)
+  M.map({ 'n', 'x' }, 'N', function() nN('N') end)
+  -- M.map('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
+  -- M.map('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
   -- Scroll
   -- stylua: ignore start
   M.map({ 'i', 'n', 's' }, '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, { expr = true, desc = 'Scroll forward' })

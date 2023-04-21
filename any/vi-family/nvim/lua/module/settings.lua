@@ -492,6 +492,14 @@ run['Builtin UI Improved'] = {
       require('notifier').setup(opts)
     end,
   },
+  ['kevinhwang91/nvim-bqf'] = {
+    event = { 'BufReadPost' },
+    dependencies = { 'junegunn/fzf' },
+    config = function()
+      local opts = {}
+      require('bqf').setup(opts)
+    end,
+  },
 }
 
 run['Sudo'] = {
@@ -717,6 +725,9 @@ run['Fuzzy Finder'] = {
   },
   ['romgrk/fzy-lua-native'] = {
     build = 'make',
+  },
+  ['junegunn/fzf'] = {
+    -- build = function() vim.fn['fzf#install']() end,
   },
 }
 
@@ -1040,6 +1051,56 @@ run['Formatting'] = {
     config = function()
       local opts = { delay = 200 }
       require('illuminate').configure(opts)
+    end,
+  },
+  ['kevinhwang91/nvim-ufo'] = {
+    event = { 'BufReadPost' },
+    dependencies = { 'kevinhwang91/promise-async' },
+    config = function()
+      vim.o.foldcolumn = '1'
+      local handler = function(virtText, lnum, endLnum, width, truncate)
+        local new_virt_text = {}
+        local suffix = ('  %d '):format(endLnum - lnum)
+        local suf_width = vim.fn.strdisplaywidth(suffix)
+        local target_width = width - suf_width
+        local cur_width = 0
+        for _, chunk in ipairs(virtText) do
+          local chunk_text = chunk[1]
+          local chunk_width = vim.fn.strdisplaywidth(chunk_text)
+          if target_width > cur_width + chunk_width then
+            table.insert(new_virt_text, chunk)
+          else
+            chunk_text = truncate(chunk_text, target_width - cur_width)
+            local hl_group = chunk[2]
+            table.insert(new_virt_text, { chunk_text, hl_group })
+            chunk_width = vim.fn.strdisplaywidth(chunk_text)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if cur_width + chunk_width < target_width then
+              suffix = suffix .. (' '):rep(target_width - cur_width - chunk_width)
+            end
+            break
+          end
+          cur_width = cur_width + chunk_width
+        end
+        table.insert(new_virt_text, { suffix, 'MoreMsg' })
+        return new_virt_text
+      end
+      local opts = {
+        fold_virt_text_handler = handler,
+        open_fold_hl_timeout = 100,
+        -- provider_selector = function(bufnr, filetype, buftype)
+        --   return {'treesitter', 'indent'}
+        -- end,
+        preview = {
+          win_config = {
+            border = 'rounded',
+            winblend = 2,
+            winhighlight = 'Normal:Normal',
+            maxheight = 20,
+          },
+        },
+      }
+      require('ufo').setup(opts)
     end,
   },
 }

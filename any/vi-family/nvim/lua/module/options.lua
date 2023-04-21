@@ -128,7 +128,7 @@ function M.before()
     shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
     showmode = false, -- Dont show mode since we have a statusline
     laststatus = 3, -- Status line style
-    cmdheight = 0, -- Command-line
+    cmdheight = 0, -- Command-line.
     showtabline = 2, -- Always display tabline
     signcolumn = 'yes', -- Always show the signcolumn, otherwise it would shift the text each time
     scrolloff = 4, -- Minimal number of screen lines to keep above and below the cursor.

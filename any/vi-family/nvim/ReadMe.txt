@@ -257,3 +257,7 @@ cmake-tools doesn't find correct path? find the .git root insteadof CMakeLists.t
 wilder lua rrequire ?? bug?
 
 hydra.nvim as a tips window? no key only text show?
+
+nvim-hlslens-uof <TAB> quit preview will unfold folded lines
+
+Bug: cmdheight = 0 will flash statusbar when <TAB>
