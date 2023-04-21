@@ -9,6 +9,7 @@ cpp test
 cpp run
 cpp cmake
 cpp project
+alignment
 
 Modes
 -----
@@ -235,7 +236,7 @@ PATH
 ----
 %LOCALAPPDATA%\nvim-data
 
-TODO
+BUG
 ----
 confusion root?
   LSP(lsp-file, no lsp-file)

@@ -99,6 +99,7 @@
   "true-zen.nvim": { "branch": "main", "commit": "98740c76254c65576ec294551028b65081053588" },
   "twilight.nvim": { "branch": "main", "commit": "2e13bd1886562b737f38c418ed542677b41ef5cb" },
   "vfiler.vim": { "branch": "main", "commit": "603dc86c35eb671f6d184eb42478beee9008ec7d" },
+  "vim-asterisk": { "branch": "master", "commit": "77e97061d6691637a034258cc415d98670698459" },
   "vim-atom-dark": { "branch": "master", "commit": "44feadcbeb2a8b2a21e373261a6293679f79da94" },
   "vim-bbye": { "branch": "master", "commit": "25ef93ac5a87526111f43e5110675032dbcacf56" },
   "vim-ccls": { "branch": "master", "commit": "b8e3afaca0578ce96f8d7eefd2093e7594a19424" },

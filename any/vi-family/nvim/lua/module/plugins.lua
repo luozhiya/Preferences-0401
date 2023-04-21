@@ -100,6 +100,8 @@ local list = {
   { 'ggandor/flit.nvim' },
   { 'echasnovski/mini.surround' },
   { 'Wansmer/treesj' },
+  { 'haya14busa/vim-asterisk' },
+  { 'mg979/vim-visual-multi' },
   -- Yank
   { 'gbprod/yanky.nvim' },
   -- Search

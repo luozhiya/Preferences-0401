@@ -931,6 +931,12 @@ run['Editing Motion Support'] = {
       require('treesj').setup(opts)
     end,
   },
+  ['haya14busa/vim-asterisk'] = {
+    event = { 'BufReadPost' },
+  },
+  ['mg979/vim-visual-multi'] = {
+    event = { 'BufReadPost' },
+  }
 }
 
 run['Yank'] = {

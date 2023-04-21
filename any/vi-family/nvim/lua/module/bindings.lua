@@ -771,13 +771,14 @@ M.setup_code = function()
   M.map('n', 'zr', require('ufo').openFoldsExceptKinds)
   M.map('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
   -- Search
-  M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
-  -- Search visually selected text (slightly better than builtins in Neovim>=0.8)
-  M.map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
-  M.map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
   -- Clear search with <esc>
   M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', 'Escape And Clear hlsearch')
-  -- hlslens
+  -- Search word under cursor
+  M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
+  -- Search visually selected text (slightly better than builtins in Neovim>=0.8)
+  -- M.map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]])
+  -- M.map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]])
+  -- *-Improved by hlslens
   local function nN(char)
     local ok, winid = require('hlslens').nNPeekWithUFO(char)
     if ok and winid then
@@ -794,10 +795,19 @@ M.setup_code = function()
   M.map({ 'n', 'x' }, 'N', function() nN('N') end)
   -- M.map('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
   -- M.map('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]])
-  M.map('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
-  M.map('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
-  M.map('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
-  M.map('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
+  -- M.map('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
+  -- M.map('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
+  -- M.map('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
+  -- M.map('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
+  -- *-Improved by hlslens with asterisk
+  M.map('n', '*', [[<Plug>(asterisk-z*)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', '#', [[<Plug>(asterisk-z#)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', 'g*', [[<Plug>(asterisk-gz*)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('n', 'g#', [[<Plug>(asterisk-gz#)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('x', '*', [[<Plug>(asterisk-z*)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('x', '#', [[<Plug>(asterisk-z#)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('x', 'g*', [[<Plug>(asterisk-gz*)<Cmd>lua require('hlslens').start()<CR>]])
+  M.map('x', 'g#', [[<Plug>(asterisk-gz#)<Cmd>lua require('hlslens').start()<CR>]])
   -- Scroll
   -- stylua: ignore start
   M.map({ 'i', 'n', 's' }, '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, { expr = true, desc = 'Scroll forward' })
