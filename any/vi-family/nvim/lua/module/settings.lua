@@ -355,6 +355,82 @@ run['Bars And Lines'] = {
       require('nvim-navic').setup(opts)
     end,
   },
+  ['ziontee113/neo-minimap'] = {
+    event = { 'BufReadPost' },
+    config = function()
+      local nm = require('neo-minimap')
+      nm.setup_defaults({
+        -- height_toggle = { 12, 25 },
+        height_toggle = { 20, 25 },
+        hl_group = 'DiagnosticWarn',
+      })
+      -- Lua
+      nm.set({ 'zi', 'zo', 'zu' }, '*.lua', {
+        events = { 'BufEnter' },
+        query = {
+          [[
+            ;; query
+            ;; ((function_declaration name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ;; ((function_call name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ;; ((dot_index_expression field: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ]],
+          1,
+          [[
+            ;; query
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ((field (identifier) @cap) (#eq? @cap "keymaps"))
+            ]],
+          [[
+            ;; query
+            ((for_statement) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+
+            ((function_call (identifier)) @cap (#vim-match? @cap "^__*" ))
+            ((function_call (dot_index_expression) @field (#eq? @field "vim.keymap.set")) @cap)
+            ]],
+          [[
+            ;; query
+            ((for_statement) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ]],
+        },
+        regex = {
+          {},
+          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+          {},
+        },
+        search_patterns = {
+          { 'function', '<C-j>', true },
+          { 'function', '<C-k>', false },
+          { 'keymap', '<A-j>', true },
+          { 'keymap', '<A-k>', false },
+        },
+        -- auto_jump = false,
+        -- open_win_opts = { border = "double" },
+        win_opts = { scrolloff = 1 },
+        disable_indentaion = true,
+      })
+    end,
+  },
+  ['yaocccc/nvim-foldsign'] = {
+    config = function()
+      local opts = {
+        offset = -2,
+        foldsigns = {
+          open = '-', -- mark the beginning of a fold
+          close = '+', -- show a closed fold
+          seps = { '│', '┃' }, -- open fold middle marker
+        },
+      }
+      require('nvim-foldsign').setup(opts)
+    end,
+  },
 }
 
 run['Colorschemes'] = {
@@ -729,6 +805,9 @@ run['Fuzzy Finder'] = {
   ['junegunn/fzf'] = {
     -- build = function() vim.fn['fzf#install']() end,
   },
+  ['junegunn/fzf.vim'] = {
+    event = { 'BufReadPost' },
+  },
 }
 
 run['Key Management'] = {
@@ -936,7 +1015,7 @@ run['Editing Motion Support'] = {
   },
   ['mg979/vim-visual-multi'] = {
     event = { 'BufReadPost' },
-  }
+  },
 }
 
 run['Yank'] = {
@@ -1134,6 +1213,24 @@ run['Editing Piece'] = {
   ['ThePrimeagen/refactoring.nvim'] = {
     keys = {},
     config = function() require('refactoring').setup() end,
+  },
+}
+
+run['Editing Action'] = {
+  ['chrishrb/gx.nvim'] = {
+    event = { 'BufEnter' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local opts = {
+        open_browser_app = 'xdg-open', -- specify your browser app; default for macos is "open" and for linux "xdg-open"
+        handlers = {
+          plugin = true, -- open plugin links in lua (e.g. packer, lazy, ..)
+          github = true, -- open github issues
+          package_json = true, -- open dependencies from package.json
+        },
+      }
+      require('gx').setup(opts)
+    end,
   },
 }
 

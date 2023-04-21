@@ -25,6 +25,8 @@ local list = {
   { 'archibate/lualine-time' },
   { 'nanozuki/tabby.nvim' },
   { 'akinsho/bufferline.nvim' },
+  { 'ziontee113/neo-minimap' },
+  { 'yaocccc/nvim-foldsign' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
@@ -74,6 +76,7 @@ local list = {
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
   { 'junegunn/fzf' },
+  { 'junegunn/fzf.vim' },
   -- Key Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
@@ -123,6 +126,8 @@ local list = {
   { 'ziontee113/color-picker.nvim' },
   { 'uga-rosa/ccc.nvim' },
   { 'ThePrimeagen/refactoring.nvim' },
+  -- Editing Action
+  { 'chrishrb/gx.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
