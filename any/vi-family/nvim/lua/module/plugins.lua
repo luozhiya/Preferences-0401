@@ -72,7 +72,6 @@ local list = {
   { 'nvim-telescope/telescope-fzf-native.nvim' },
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
-  { 'romgrk/fzy-lua-native' },
   -- Key Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
@@ -169,6 +168,8 @@ local kernel = {
   { 'Weissle/persistent-breakpoints.nvim' },
   -- C++
   { 'Civitasv/cmake-tools.nvim' },
+  -- Fuzzy Finder
+  { 'romgrk/fzy-lua-native' },
 }
 
 local cached = {}

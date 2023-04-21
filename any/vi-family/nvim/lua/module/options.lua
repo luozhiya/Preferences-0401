@@ -178,6 +178,8 @@ function M.before()
     sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
     confirm = true, -- Confirm to save changes before exiting modified buffer
     conceallevel = 3, -- Hide * markup for bold and italic
+    mouse = 'a', -- Enable mouse for all available modes
+    virtualedit = 'block', -- Allow going past the end of line in visual block mode
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v

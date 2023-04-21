@@ -4,7 +4,8 @@ local M = {}
 M.map = function(mode, lhs, rhs, opts)
   opts = opts or {}
   if type(opts) == 'string' then opts = { desc = opts } end
-  opts.silent = opts.silent ~= false
+  if opts.silent == nil then opts.silent = true end
+  -- By default, all mappings are nonrecursive by default
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
@@ -19,7 +20,7 @@ M.setup_leader = function()
   vim.g.maplocalleader = ','
 end
 
-M.semicolon_to_colon = function() M.map('n', ';', ':', { silent = false }) end
+M.semicolon_to_colon = function() M.map('n', ';', ':') end
 
 local _dap_continue = function()
   local dap = require('dap')
@@ -54,7 +55,7 @@ local _dap_continue = function()
 end
 
 M.lsp = function(client, buffer)
-  local _opts = function(desc) return { noremap = true, silent = true, buffer = buffer, desc = desc } end
+  local _opts = function(desc) return { buffer = buffer, desc = desc } end
   M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
   M.map('n', 'K', vim.lsp.buf.hover, _opts('Hover'))
   M.map('n', 'gh', vim.lsp.buf.hover, _opts('Hover'))
@@ -261,9 +262,7 @@ M.nvim_tree = function()
     if node.name == '..' and TreeExplorer ~= nil then basedir = TreeExplorer.cwd end
     return basedir
   end
-  local _opts = function(desc, bufnr)
-    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-  end
+  local _opts = function(desc, bufnr) return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, nowait = true } end
   local telescope = require('telescope.builtin')
   local fs = require('nvim-tree.actions.node.open-file')
   local _find = function()
@@ -341,7 +340,7 @@ M.wk = function(wk)
       float_opts = { border = 'double' },
       on_open = function(term)
         vim.cmd('startinsert!')
-        M.map('n', 'q', '<cmd>close<cr>', { noremap = true, silent = true, buffer = term.bufnr })
+        M.map('n', 'q', '<cmd>close<cr>', { buffer = term.bufnr })
       end,
       on_close = function(term) vim.cmd('startinsert!') end,
     })
@@ -648,11 +647,11 @@ M.setup_code = function()
   -- Core
   M.semicolon_to_colon()
   -- Better up/down
-  M.map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, noremap = true })
-  M.map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, noremap = true })
+  M.map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true })
+  M.map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true })
   -- Better move cursor
-  M.map('n', '<c-j>', '15gj', { noremap = true, desc = 'Move Down 15 Lines' })
-  M.map('n', '<c-k>', '15gk', { noremap = true, desc = 'Move Up 15 Lines' })
+  M.map('n', '<c-j>', '15gj', 'Move Down 15 Lines')
+  M.map('n', '<c-k>', '15gk', 'Move Up 15 Lines')
   -- Move to window using the <ctrl> hjkl keys
   M.map('n', '<c-h>', '<c-w>h', 'Jump Left')
   -- M.map('n', '<c-j>', '<c-w>j', 'Jump Down')
@@ -670,8 +669,8 @@ M.setup_code = function()
   M.map('n', '<C-Right>', '<cmd>vertical resize +2<cr>', 'Increase window width')
   M.map('n', '<a-q>', '<cmd>ToggleWrap<cr>', 'Toggle Wrap')
   -- Better indenting
-  M.map('v', '<', '<gv', { noremap = true, desc = 'deIndent Continuously' })
-  M.map('v', '>', '>gv', { noremap = true, desc = 'Indent Continuously' })
+  M.map('v', '<', '<gv', 'deIndent Continuously')
+  M.map('v', '>', '>gv', 'Indent Continuously')
   -- Add undo break-points
   M.map('i', ' ', ' <c-g>u')
   M.map('i', ',', ',<c-g>u')
@@ -696,14 +695,14 @@ M.setup_code = function()
   M.map('n', '<leader>cb', '<cmd>CommentBlock<cr>', 'Comment Block (Comment.nvim)')
   M.map('x', '<leader>cb', '<cmd>CommentBlock<cr>', 'Comment Block (Comment.nvim)')
   -- Selection/ Move Lines
-  M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', { noremap = true, desc = 'Line: Move Up (move.nvim)' })
-  M.map('n', '<a-k>', '<cmd>MoveLine(-1)<cr>', { noremap = true, desc = 'Line: Move Down (move.nvim)' })
-  M.map('n', '<a-h>', '<cmd>MoveHChar(-1)<cr>', { noremap = true, desc = 'Line: Move Left (move.nvim)' })
-  M.map('n', '<a-l>', '<cmd>MoveHChar(1)<cr>', { noremap = true, desc = 'Line: Move Right (move.nvim)' })
-  M.map('v', '<a-j>', '<cmd>MoveBlock(1)<cr>', { noremap = true, desc = 'Block: Move Up (move.nvim)' })
-  M.map('v', '<a-k>', '<cmd>MoveBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Down (move.nvim)' })
-  M.map('v', '<a-h>', '<cmd>MoveHBlock(-1)<cr>', { noremap = true, desc = 'Block: Move Left (move.nvim)' })
-  M.map('v', '<a-l>', '<cmd>MoveHBlock(1)<cr>', { noremap = true, desc = 'Block: Move Right (move.nvim)' })
+  M.map('n', '<a-j>', '<cmd>MoveLine(1)<cr>', 'Line: Move Up (move.nvim)')
+  M.map('n', '<a-k>', '<cmd>MoveLine(-1)<cr>', 'Line: Move Down (move.nvim)')
+  M.map('n', '<a-h>', '<cmd>MoveHChar(-1)<cr>', 'Line: Move Left (move.nvim)')
+  M.map('n', '<a-l>', '<cmd>MoveHChar(1)<cr>', 'Line: Move Right (move.nvim)')
+  M.map('v', '<a-j>', '<cmd>MoveBlock(1)<cr>', 'Block: Move Up (move.nvim)')
+  M.map('v', '<a-k>', '<cmd>MoveBlock(-1)<cr>', 'Block: Move Down (move.nvim)')
+  M.map('v', '<a-h>', '<cmd>MoveHBlock(-1)<cr>', 'Block: Move Left (move.nvim)')
+  M.map('v', '<a-l>', '<cmd>MoveHBlock(1)<cr>', 'Block: Move Right (move.nvim)')
   -- [ ] Move
   M.map('n', ']d', _diagnostic_goto(true), 'Next Diagnostic')
   M.map('n', '[d', _diagnostic_goto(false), 'Prev Diagnostic')
@@ -752,15 +751,15 @@ M.setup_code = function()
   -- Search
   M.map({ 'n', 'x' }, 'gw', '*N', 'Search word under cursor')
   -- Clear search with <esc>
-  M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { noremap = true, desc = 'Escape And Clear hlsearch' })
+  M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', 'Escape And Clear hlsearch')
   -- Scroll
   -- stylua: ignore start
-  M.map({ 'i', 'n', 's' }, '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, { silent = true, expr = true, desc = 'Scroll forward' })
-  M.map({ 'i', 'n', 's' }, '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, { silent = true, expr = true, desc = 'Scroll backward' })
+  M.map({ 'i', 'n', 's' }, '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, { expr = true, desc = 'Scroll forward' })
+  M.map({ 'i', 'n', 's' }, '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, { expr = true, desc = 'Scroll backward' })
   -- stylua: ignore end
   -- View
-  M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
-  M.map('n', [[\]], '<cmd>Telescope commands<cr>', { noremap = true, desc = 'Command Palette... (telescope.nvim)' })
+  M.map('n', '<c-s-p>', '<cmd>Telescope commands<cr>', 'Command Palette... (telescope.nvim)')
+  M.map('n', [[\]], '<cmd>Telescope commands<cr>', 'Command Palette... (telescope.nvim)')
   -- Tabs
   M.map('n', '<leader><tab>l', '<cmd>tablast<cr>', 'Last Tab')
   M.map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', 'First Tab')
@@ -780,7 +779,7 @@ M.setup_code = function()
     'n',
     '<c-p>',
     '<cmd>Telescope buffers show_all_buffers=true theme=get_dropdown previewer=false<cr>',
-    { noremap = true, desc = 'Go To File... (telescope.nvim)' }
+    'Go To File... (telescope.nvim)'
   )
   M.map('c', '<s-enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, 'Redirect Cmdline')
   -- Run
@@ -1047,7 +1046,7 @@ M.setup_autocmd = function()
     },
     callback = function(event)
       vim.bo[event.buf].buflisted = false
-      vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+      M.map('n', 'q', '<cmd>close<cr>', { buffer = event.buf })
     end,
   })
   -- Auto create dir when saving a file, in case some intermediate directory does not exist
