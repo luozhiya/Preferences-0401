@@ -860,6 +860,7 @@ run['Syntax'] = {
     },
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'chrisgrieser/nvim-various-textobjs',
     },
     config = function()
       local opts = {
@@ -893,12 +894,41 @@ run['Syntax'] = {
         incremental_selection = {
           enable = true,
         },
+        textobjects = {
+          swap = {
+            enable = true,
+            swap_next = {
+              ['<leader>a'] = '@parameter.inner',
+            },
+            swap_previous = {
+              ['<leader>A'] = '@parameter.inner',
+            },
+          },
+        },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.ts())
       require('nvim-treesitter.configs').setup(opts)
     end,
   },
-  ['nvim-treesitter/nvim-treesitter-textobjects'] = {},
+  ['nvim-treesitter/nvim-treesitter-textobjects'] = {
+    --
+  },
+  ['chrisgrieser/nvim-various-textobjs'] = {
+    config = function()
+      local opts = {
+        -- lines to seek forwards for "small" textobjs (most characterwise)
+        -- set to 0 to only look in the current line
+        lookForwardSmall = 5,
+        -- lines to seek forwards for "big" textobjs
+        -- (linewise textobjs & url textobj)
+        lookForwardBig = 15,
+        -- use suggested keymaps (see README)
+        useDefaultKeymaps = false,
+      }
+      require('various-textobjs').setup(opts)
+      vim.keymap.set({ 'o', 'x' }, '?', '<cmd>lua require("various-textobjs").diagnostic()<CR>')
+    end,
+  },
 }
 
 run['Editing Motion Support'] = {
@@ -1057,7 +1087,7 @@ run['Search'] = {
   },
 }
 
-run['Formatting'] = {
+run['Editing Visual Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
     config = function()
@@ -1188,9 +1218,12 @@ run['Formatting'] = {
       require('ufo').setup(opts)
     end,
   },
+  ['charkuils/nvim-hemingway'] = {
+    --
+  },
 }
 
-run['Editing Piece'] = {
+run['Editing Action'] = {
   ['AntonVanAssche/date-time-inserter.nvim'] = {
     enabled = false,
   },
@@ -1214,9 +1247,18 @@ run['Editing Piece'] = {
     keys = {},
     config = function() require('refactoring').setup() end,
   },
-}
-
-run['Editing Action'] = {
+  ['charkuils/nvim-soil'] = {
+    -- Java and sxiv are required to be installed in order to use this plugin.
+    -- plantuml is optional to be installed or used in jar format.
+    config = function()
+      require('soil').setup({
+        image = {
+          darkmode = false, -- Enable or disable darkmode
+          format = 'png', -- Choose between png or svg
+        },
+      })
+    end,
+  },
   ['chrishrb/gx.nvim'] = {
     event = { 'BufEnter' },
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -1231,6 +1273,10 @@ run['Editing Action'] = {
       }
       require('gx').setup(opts)
     end,
+  },
+  ['axieax/urlview.nvim'] = {
+    cmd = { 'UrlView' },
+    config = function() require('urlview').setup() end,
   },
 }
 
@@ -1603,6 +1649,38 @@ run['Performance'] = {
   ['dstein64/vim-startuptime'] = {
     cmd = 'StartupTime',
     config = function() vim.g.startuptime_tries = 10 end,
+  },
+}
+
+run['Job'] = {
+  ['charkuils/nvim-spinetta'] = {
+    --
+  },
+}
+
+run['Network'] = {
+  ['charkuils/nvim-ship'] = {
+    cmd = { 'Ship' },
+    dependencies = { 'charkuils/nvim-spinetta' },
+    config = function()
+      require('ship').setup({
+        request = {
+          timeout = 30,
+          autosave = true,
+        },
+        response = {
+          show_headers = 'all',
+          horizontal = true,
+          size = 20,
+          redraw = true,
+        },
+        output = {
+          save = false,
+          override = true,
+          folder = 'output',
+        },
+      })
+    end,
   },
 }
 
