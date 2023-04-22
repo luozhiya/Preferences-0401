@@ -91,6 +91,9 @@ local list = {
   { 'nvim-treesitter/nvim-treesitter' },
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
   { 'chrisgrieser/nvim-various-textobjs' },
+  { 'RRethy/nvim-treesitter-textsubjects' },
+  { 'RRethy/nvim-treesitter-endwise' },
+  { 'nvim-treesitter/playground' },
   -- Editing Motion Support
   { 'fedepujol/move.nvim' },
   { 'andymass/vim-matchup' },

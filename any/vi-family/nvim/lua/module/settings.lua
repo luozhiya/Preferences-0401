@@ -277,9 +277,10 @@ run['Bars And Lines'] = {
     end,
   },
   ['b0o/incline.nvim'] = {
+    enabled = false,
     event = { 'BufReadPost' },
     config = function()
-      local colors = require('tokyonight.colors').setup()
+      -- local colors = require('tokyonight.colors').setup()
       local opts = {
         -- highlight = {
         --   groups = {
@@ -287,12 +288,12 @@ run['Bars And Lines'] = {
         --     InclineNormalNC = { guifg = '#FC56B1', guibg = colors.black },
         --   },
         -- },
-        window = { margin = { vertical = 0, horizontal = 1 } },
-        render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-          local icon, color = require('nvim-web-devicons').get_icon_color(filename)
-          return { { icon }, { ' ' }, { filename } }
-        end,
+        -- window = { margin = { vertical = 0, horizontal = 1 } },
+        -- render = function(props)
+        --   local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+        --   local icon, color = require('nvim-web-devicons').get_icon_color(filename)
+        --   return { { icon }, { ' ' }, { filename } }
+        -- end,
       }
       require('incline').setup(opts)
     end,
@@ -861,6 +862,8 @@ run['Syntax'] = {
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
       'chrisgrieser/nvim-various-textobjs',
+      'RRethy/nvim-treesitter-textsubjects',
+      'nvim-treesitter/playground',
     },
     config = function()
       local opts = {
@@ -878,6 +881,7 @@ run['Syntax'] = {
           'markdown',
           'markdown_inline',
           'python',
+          'query', -- Neovim Treesitter Playground
           'regex',
           'typescript',
           'vim',
@@ -894,6 +898,12 @@ run['Syntax'] = {
         incremental_selection = {
           enable = true,
         },
+        playground = {
+          enable = true,
+        },
+        endwise = {
+          enable = true,
+        },
         textobjects = {
           swap = {
             enable = true,
@@ -903,6 +913,15 @@ run['Syntax'] = {
             swap_previous = {
               ['<leader>A'] = '@parameter.inner',
             },
+          },
+        },
+        textsubjects = {
+          enable = true,
+          prev_selection = ' ', -- (Optional) keymap to select the previous selection
+          keymaps = {
+            ['<cr>'] = 'textsubjects-smart',
+            [','] = 'textsubjects-container-outer',
+            ['i.'] = 'textsubjects-container-inner',
           },
         },
       }
@@ -928,6 +947,15 @@ run['Syntax'] = {
       require('various-textobjs').setup(opts)
       vim.keymap.set({ 'o', 'x' }, '?', '<cmd>lua require("various-textobjs").diagnostic()<CR>')
     end,
+  },
+  ['RRethy/nvim-treesitter-textsubjects'] = {
+    --
+  },
+  ['RRethy/nvim-treesitter-endwise'] = {
+    --
+  },
+  ['nvim-treesitter/playground'] = {
+    --
   },
 }
 
