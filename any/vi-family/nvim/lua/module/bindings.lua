@@ -454,6 +454,7 @@ M.wk = function(wk)
     b = {
       name = '+Buffer',
       b = { '<cmd>Bdelete<cr>', 'Buffer Bye' },
+      e = { ':ene <bar> startinsert <cr>', 'New Buffer' },
       n = { ':ene <bar> startinsert <cr>', 'New Buffer' },
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
       p = { '<Cmd>BufferLineTogglePin<CR>', 'Toggle pin' },
@@ -692,7 +693,7 @@ M.setup_code = function()
   -- File
   -- M.map('n', '<c-q>', '<cmd>CloseView<cr>', 'Close')
   -- M.map('n', '<c-w>', '<cmd>BDelete this<cr>', 'Delete current buffer')
-  M.map('n', '<c-n>', '<cmd>ene<cr>', 'New Text File')
+  -- M.map('n', '<c-n>', '<cmd>ene<cr>', 'New Text File')
   -- Alternative way to save and exit in Normal mode.
   -- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
   M.map('n', '<c-s>', '<cmd>silent! update | redraw<cr>', { desc = 'Save' })
@@ -743,8 +744,8 @@ M.setup_code = function()
   M.map({ 'n', 'x' }, 'P', '<Plug>(YankyPutBefore)')
   M.map({ 'n', 'x' }, 'gp', '<Plug>(YankyGPutAfter)')
   M.map({ 'n', 'x' }, 'gP', '<Plug>(YankyGPutBefore)')
-  M.map('n', '<c-n>', '<Plug>(YankyCycleForward)')
-  M.map('n', '<c-p>', '<Plug>(YankyCycleBackward)')
+  -- M.map('n', '<c-n>', '<Plug>(YankyCycleForward)')
+  -- M.map('n', '<c-p>', '<Plug>(YankyCycleBackward)')
   M.map('n', ']p', '<Plug>(YankyPutIndentAfterLinewise)')
   M.map('n', '[p', '<Plug>(YankyPutIndentBeforeLinewise)')
   M.map('n', ']P', '<Plug>(YankyPutIndentAfterLinewise)')
