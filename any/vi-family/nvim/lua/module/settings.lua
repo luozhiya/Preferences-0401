@@ -112,7 +112,8 @@ run['Start Screen'] = {
     config = function()
       local dashboard = require('alpha.themes.dashboard')
       dashboard.section.header.val = {
-        [[                   Paper Tiger                   ]],
+        [[                    Why or Why not                    ]],
+        -- [[                   Paper Tiger                   ]],
         -- [[           good good study, day day up           ]],
       }
       dashboard.section.buttons.val = bindings.alpha()
@@ -1258,6 +1259,10 @@ run['Editing Action'] = {
   ['ziontee113/color-picker.nvim'] = {
     cmd = { 'PickColor', 'PickColorInsert' },
     config = function() require('color-picker').setup() end,
+  },
+  ['nvim-colortils/colortils.nvim'] = {
+    cmd = 'Colortils',
+    config = function() require('colortils').setup() end,
   },
   ['uga-rosa/ccc.nvim'] = {
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterToggle' },

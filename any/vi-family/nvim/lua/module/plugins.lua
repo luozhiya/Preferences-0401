@@ -130,6 +130,7 @@ local list = {
   -- Editing Action
   { 'AntonVanAssche/date-time-inserter.nvim' },
   { 'ziontee113/color-picker.nvim' },
+  { 'nvim-colortils/colortils.nvim' },
   { 'uga-rosa/ccc.nvim' },
   { 'ThePrimeagen/refactoring.nvim' },
   { 'charkuils/nvim-soil' },
