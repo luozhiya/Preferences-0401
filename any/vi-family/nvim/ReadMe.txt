@@ -248,6 +248,7 @@ C++ accesstor indent
   nvim-cmp, tree-sitter(indent), neovim(builtin-cindoption)
 
 symbol-outline padding too many space
+https://github.com/simrat39/symbols-outline.nvim/issues/165
 
 scrolloff for bufferline?
 
