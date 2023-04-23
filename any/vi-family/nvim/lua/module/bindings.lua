@@ -20,7 +20,15 @@ M.setup_leader = function()
   vim.g.maplocalleader = ','
 end
 
-M.semicolon_to_colon = function() M.map('n', ';', ':') end
+M.semicolon_to_colon = function()
+  -- M.map('n', ';', ':') -- BUG: don't show ':' sometimes
+  vim.cmd([[
+    nnoremap ; :
+    nnoremap : ;
+    vnoremap ; :
+    vnoremap : ;
+  ]])
+end
 
 local _dap_continue = function()
   local dap = require('dap')

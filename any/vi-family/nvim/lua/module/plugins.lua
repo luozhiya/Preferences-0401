@@ -25,6 +25,8 @@ local list = {
   { 'archibate/lualine-time' },
   { 'nanozuki/tabby.nvim' },
   { 'akinsho/bufferline.nvim' },
+  { 'ziontee113/neo-minimap' },
+  { 'yaocccc/nvim-foldsign' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
@@ -32,6 +34,7 @@ local list = {
   { 'ellisonleao/gruvbox.nvim' },
   -- { "catppuccin/nvim" },
   { 'p00f/alabaster.nvim' },
+  { 'charkuils/nvim-whisky' },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
@@ -74,6 +77,7 @@ local list = {
   { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
   { 'junegunn/fzf' },
+  { 'junegunn/fzf.vim' },
   -- Key Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
@@ -86,14 +90,15 @@ local list = {
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  { 'chrisgrieser/nvim-various-textobjs' },
+  { 'RRethy/nvim-treesitter-textsubjects' },
+  { 'RRethy/nvim-treesitter-endwise' },
+  { 'nvim-treesitter/playground' },
   -- Editing Motion Support
   { 'fedepujol/move.nvim' },
   { 'andymass/vim-matchup' },
   { 'windwp/nvim-autopairs' },
   { 'echasnovski/mini.pairs' },
-  { 'numToStr/Comment.nvim' },
-  { 'JoosepAlviste/nvim-ts-context-commentstring' },
-  { 'echasnovski/mini.comment' },
   { 'm4xshen/autoclose.nvim' },
   { 'nacro90/numb.nvim' },
   { 'ggandor/leap.nvim' },
@@ -102,13 +107,17 @@ local list = {
   { 'Wansmer/treesj' },
   { 'haya14busa/vim-asterisk' },
   { 'mg979/vim-visual-multi' },
+  { 'charkuils/nvim-hemingway' },
+  { 'numToStr/Comment.nvim' },
+  { 'JoosepAlviste/nvim-ts-context-commentstring' },
+  { 'echasnovski/mini.comment' },
   -- Yank
   { 'gbprod/yanky.nvim' },
   -- Search
   { 'kevinhwang91/nvim-hlslens' },
   { 'windwp/nvim-spectre' },
   { 'cshuaimin/ssr.nvim' },
-  -- Formatting
+  -- Editing Visual Formatting
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
   { 'HiPhish/nvim-ts-rainbow2' },
@@ -118,11 +127,14 @@ local list = {
   { 'RRethy/vim-illuminate' },
   { 'kevinhwang91/promise-async' },
   { 'kevinhwang91/nvim-ufo' },
-  -- Editing Piece
+  -- Editing Action
   { 'AntonVanAssche/date-time-inserter.nvim' },
   { 'ziontee113/color-picker.nvim' },
   { 'uga-rosa/ccc.nvim' },
   { 'ThePrimeagen/refactoring.nvim' },
+  { 'charkuils/nvim-soil' },
+  { 'chrishrb/gx.nvim' },
+  { 'axieax/urlview.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
@@ -164,6 +176,10 @@ local list = {
   { 'ray-x/navigator.lua' },
   -- Performance
   { 'dstein64/vim-startuptime' },
+  -- Job
+  { 'charkuils/nvim-spinetta' },
+  -- Network
+  { 'charkuils/nvim-ship' },
 }
 
 local kernel = {

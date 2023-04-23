@@ -277,9 +277,10 @@ run['Bars And Lines'] = {
     end,
   },
   ['b0o/incline.nvim'] = {
+    enabled = false,
     event = { 'BufReadPost' },
     config = function()
-      local colors = require('tokyonight.colors').setup()
+      -- local colors = require('tokyonight.colors').setup()
       local opts = {
         -- highlight = {
         --   groups = {
@@ -287,12 +288,12 @@ run['Bars And Lines'] = {
         --     InclineNormalNC = { guifg = '#FC56B1', guibg = colors.black },
         --   },
         -- },
-        window = { margin = { vertical = 0, horizontal = 1 } },
-        render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-          local icon, color = require('nvim-web-devicons').get_icon_color(filename)
-          return { { icon }, { ' ' }, { filename } }
-        end,
+        -- window = { margin = { vertical = 0, horizontal = 1 } },
+        -- render = function(props)
+        --   local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+        --   local icon, color = require('nvim-web-devicons').get_icon_color(filename)
+        --   return { { icon }, { ' ' }, { filename } }
+        -- end,
       }
       require('incline').setup(opts)
     end,
@@ -353,6 +354,82 @@ run['Bars And Lines'] = {
         icons = require('module.options').icons.kinds,
       }
       require('nvim-navic').setup(opts)
+    end,
+  },
+  ['ziontee113/neo-minimap'] = {
+    event = { 'BufReadPost' },
+    config = function()
+      local nm = require('neo-minimap')
+      nm.setup_defaults({
+        -- height_toggle = { 12, 25 },
+        height_toggle = { 20, 25 },
+        hl_group = 'DiagnosticWarn',
+      })
+      -- Lua
+      nm.set({ 'zi', 'zo', 'zu' }, '*.lua', {
+        events = { 'BufEnter' },
+        query = {
+          [[
+            ;; query
+            ;; ((function_declaration name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ;; ((function_call name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ;; ((dot_index_expression field: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ]],
+          1,
+          [[
+            ;; query
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ((field (identifier) @cap) (#eq? @cap "keymaps"))
+            ]],
+          [[
+            ;; query
+            ((for_statement) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+
+            ((function_call (identifier)) @cap (#vim-match? @cap "^__*" ))
+            ((function_call (dot_index_expression) @field (#eq? @field "vim.keymap.set")) @cap)
+            ]],
+          [[
+            ;; query
+            ((for_statement) @cap)
+            ((function_declaration) @cap)
+            ((assignment_statement(expression_list((function_definition) @cap))))
+            ]],
+        },
+        regex = {
+          {},
+          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+          {},
+        },
+        search_patterns = {
+          { 'function', '<C-j>', true },
+          { 'function', '<C-k>', false },
+          { 'keymap', '<A-j>', true },
+          { 'keymap', '<A-k>', false },
+        },
+        -- auto_jump = false,
+        -- open_win_opts = { border = "double" },
+        win_opts = { scrolloff = 1 },
+        disable_indentaion = true,
+      })
+    end,
+  },
+  ['yaocccc/nvim-foldsign'] = {
+    config = function()
+      local opts = {
+        offset = -2,
+        foldsigns = {
+          open = '-', -- mark the beginning of a fold
+          close = '+', -- show a closed fold
+          seps = { '│', '┃' }, -- open fold middle marker
+        },
+      }
+      require('nvim-foldsign').setup(opts)
     end,
   },
 }
@@ -729,6 +806,9 @@ run['Fuzzy Finder'] = {
   ['junegunn/fzf'] = {
     -- build = function() vim.fn['fzf#install']() end,
   },
+  ['junegunn/fzf.vim'] = {
+    event = { 'BufReadPost' },
+  },
 }
 
 run['Key Management'] = {
@@ -781,6 +861,9 @@ run['Syntax'] = {
     },
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'chrisgrieser/nvim-various-textobjs',
+      'RRethy/nvim-treesitter-textsubjects',
+      'nvim-treesitter/playground',
     },
     config = function()
       local opts = {
@@ -798,6 +881,7 @@ run['Syntax'] = {
           'markdown',
           'markdown_inline',
           'python',
+          'query', -- Neovim Treesitter Playground
           'regex',
           'typescript',
           'vim',
@@ -814,12 +898,65 @@ run['Syntax'] = {
         incremental_selection = {
           enable = true,
         },
+        playground = {
+          enable = true,
+        },
+        endwise = {
+          enable = true,
+        },
+        textobjects = {
+          swap = {
+            enable = true,
+            swap_next = {
+              ['<leader>a'] = '@parameter.inner',
+            },
+            swap_previous = {
+              ['<leader>A'] = '@parameter.inner',
+            },
+          },
+        },
+        textsubjects = {
+          enable = true,
+          prev_selection = ' ', -- (Optional) keymap to select the previous selection
+          keymaps = {
+            ['<cr>'] = 'textsubjects-smart',
+            [','] = 'textsubjects-container-outer',
+            ['i.'] = 'textsubjects-container-inner',
+          },
+        },
       }
       opts = vim.tbl_deep_extend('error', opts, bindings.ts())
       require('nvim-treesitter.configs').setup(opts)
     end,
   },
-  ['nvim-treesitter/nvim-treesitter-textobjects'] = {},
+  ['nvim-treesitter/nvim-treesitter-textobjects'] = {
+    --
+  },
+  ['chrisgrieser/nvim-various-textobjs'] = {
+    config = function()
+      local opts = {
+        -- lines to seek forwards for "small" textobjs (most characterwise)
+        -- set to 0 to only look in the current line
+        lookForwardSmall = 5,
+        -- lines to seek forwards for "big" textobjs
+        -- (linewise textobjs & url textobj)
+        lookForwardBig = 15,
+        -- use suggested keymaps (see README)
+        useDefaultKeymaps = false,
+      }
+      require('various-textobjs').setup(opts)
+      vim.keymap.set({ 'o', 'x' }, '?', '<cmd>lua require("various-textobjs").diagnostic()<CR>')
+    end,
+  },
+  ['RRethy/nvim-treesitter-textsubjects'] = {
+    --
+  },
+  ['RRethy/nvim-treesitter-endwise'] = {
+    --
+  },
+  ['nvim-treesitter/playground'] = {
+    --
+  },
 }
 
 run['Editing Motion Support'] = {
@@ -936,7 +1073,7 @@ run['Editing Motion Support'] = {
   },
   ['mg979/vim-visual-multi'] = {
     event = { 'BufReadPost' },
-  }
+  },
 }
 
 run['Yank'] = {
@@ -978,7 +1115,7 @@ run['Search'] = {
   },
 }
 
-run['Formatting'] = {
+run['Editing Visual Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
     config = function()
@@ -1109,9 +1246,12 @@ run['Formatting'] = {
       require('ufo').setup(opts)
     end,
   },
+  ['charkuils/nvim-hemingway'] = {
+    --
+  },
 }
 
-run['Editing Piece'] = {
+run['Editing Action'] = {
   ['AntonVanAssche/date-time-inserter.nvim'] = {
     enabled = false,
   },
@@ -1134,6 +1274,37 @@ run['Editing Piece'] = {
   ['ThePrimeagen/refactoring.nvim'] = {
     keys = {},
     config = function() require('refactoring').setup() end,
+  },
+  ['charkuils/nvim-soil'] = {
+    -- Java and sxiv are required to be installed in order to use this plugin.
+    -- plantuml is optional to be installed or used in jar format.
+    config = function()
+      require('soil').setup({
+        image = {
+          darkmode = false, -- Enable or disable darkmode
+          format = 'png', -- Choose between png or svg
+        },
+      })
+    end,
+  },
+  ['chrishrb/gx.nvim'] = {
+    event = { 'BufEnter' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local opts = {
+        open_browser_app = 'xdg-open', -- specify your browser app; default for macos is "open" and for linux "xdg-open"
+        handlers = {
+          plugin = true, -- open plugin links in lua (e.g. packer, lazy, ..)
+          github = true, -- open github issues
+          package_json = true, -- open dependencies from package.json
+        },
+      }
+      require('gx').setup(opts)
+    end,
+  },
+  ['axieax/urlview.nvim'] = {
+    cmd = { 'UrlView' },
+    config = function() require('urlview').setup() end,
   },
 }
 
@@ -1506,6 +1677,38 @@ run['Performance'] = {
   ['dstein64/vim-startuptime'] = {
     cmd = 'StartupTime',
     config = function() vim.g.startuptime_tries = 10 end,
+  },
+}
+
+run['Job'] = {
+  ['charkuils/nvim-spinetta'] = {
+    --
+  },
+}
+
+run['Network'] = {
+  ['charkuils/nvim-ship'] = {
+    cmd = { 'Ship' },
+    dependencies = { 'charkuils/nvim-spinetta' },
+    config = function()
+      require('ship').setup({
+        request = {
+          timeout = 30,
+          autosave = true,
+        },
+        response = {
+          show_headers = 'all',
+          horizontal = true,
+          size = 20,
+          redraw = true,
+        },
+        output = {
+          save = false,
+          override = true,
+          folder = 'output',
+        },
+      })
+    end,
   },
 }
 

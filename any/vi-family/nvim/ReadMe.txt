@@ -262,3 +262,5 @@ hydra.nvim as a tips window? no key only text show?
 nvim-hlslens-uof <TAB> quit preview will unfold folded lines
 
 Bug: cmdheight = 0 will flash statusbar when <TAB>
+
+Bug: incline will make cursor move <0> left-right-around
