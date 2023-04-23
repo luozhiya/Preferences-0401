@@ -11,6 +11,10 @@ cpp cmake
 cpp project
 alignment
 
+Minimal Test
+------------
+nvim -u minimal.lua
+
 Modes
 -----
   normal_mode = "n",
