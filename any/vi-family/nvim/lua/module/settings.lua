@@ -204,6 +204,7 @@ run['Bars And Lines'] = {
           return hl and hl.foreground and { fg = string.format('#%06x', hl.foreground) }
         end
       end
+      local function _osv() return require('osv').is_running() and 'OSV Running' or '' end
       local fileformat = { 'fileformat', icons_enabled = false }
       local opts = {
         options = {
@@ -255,6 +256,7 @@ run['Bars And Lines'] = {
             'cdate',
             'ctime',
             _lsp_active,
+            'osv',
             'encoding',
             fileformat,
             'filetype',
@@ -1673,8 +1675,11 @@ run['LSP VIF'] = {
 
 run['DAP VIF'] = {
   ['mfussenegger/nvim-dap'] = {
-    ft = { 'c', 'cpp' },
+    ft = { 'c', 'cpp', 'lua' },
     config = require('module.lsp').dap,
+    dependencies = {
+      'jbyuki/one-small-step-for-vimkind',
+    },
   },
 }
 
@@ -1717,13 +1722,27 @@ run['Network'] = {
   },
 }
 
+run['Dev'] = {
+  ['~/Code/me/lualine-osv'] = {
+    name = 'lualine-osv',
+    -- lazy = false,
+  },
+}
+
 local cached = {}
-M.spec = function(url)
+M.spec = function(url, dev)
   if vim.tbl_isempty(cached) then
     for _, v in pairs(run) do
       cached = vim.tbl_deep_extend('error', cached, v)
     end
   end
-  return vim.tbl_deep_extend('error', { url }, cached[url] or {})
+  local key = url
+  local pack = url
+  if dev then
+    key = url['dir']
+  else
+    pack = { url }
+  end
+  return vim.tbl_deep_extend('error', pack, cached[key] or {})
 end
 return M

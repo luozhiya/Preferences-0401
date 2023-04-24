@@ -189,18 +189,26 @@ local kernel = {
   { 'theHamsta/nvim-dap-virtual-text' },
   { 'rcarriga/nvim-dap-ui' },
   { 'Weissle/persistent-breakpoints.nvim' },
+  { 'jbyuki/one-small-step-for-vimkind' },
   -- C++
   { 'Civitasv/cmake-tools.nvim' },
   -- Fuzzy Finder
   { 'romgrk/fzy-lua-native' },
 }
 
+local dev = {
+  { dir = '~/Code/me/lualine-osv' },
+}
+
 local cached = {}
 M.computed = function()
   if vim.tbl_isempty(cached) then
     if require('base').is_kernel() then vim.list_extend(list, kernel) end
-    for i, v in pairs(list) do
-      cached[i] = require('module.settings').spec(v[1])
+    for i, v in ipairs(list) do
+      cached[i] = require('module.settings').spec(v[1], false)
+    end
+    for i, v in pairs(dev) do
+      cached[#cached + i] = require('module.settings').spec(v, true)
     end
   end
   return cached

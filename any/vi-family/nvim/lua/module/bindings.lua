@@ -30,8 +30,7 @@ M.semicolon_to_colon = function()
   ]])
 end
 
-local _dap_continue = function()
-  local dap = require('dap')
+local _dap_continue_cpp = function(dap)
   if dap.session() then
     dap.continue()
   else
@@ -59,6 +58,15 @@ local _dap_continue = function()
       dap.configurations.c = dap.configurations.cpp
       dap.continue()
     end)
+  end
+end
+
+local _dap_continue = function()
+  local dap = require('dap')
+  if vim.bo.filetype == 'c' or vim.bo.filetype == 'cpp' then
+    _dap_continue_cpp(dap)
+  else
+    dap.continue()
   end
 end
 
@@ -521,10 +529,14 @@ M.wk = function(wk)
       o = { function() require('dap').step_over() end, 'Step Over' },
       i = { function() require('dap').step_into() end, 'Step Into' },
       f = { function() require('dap').step_out() end, 'Step Out' },
-      r = { function() require('dap').run_last() end, 'Run last' },
-      l = { function() require('dap').run_to_cursor() end, 'Run To Cursor' },
+      r = { function() require('dap').run_last() end, 'Run Last' },
+      l = { function() require('dap').run_to_cursor() end, 'Run To Cursor Line' },
       x = { function() require('dap').terminate() end, 'Terminate' },
+      e = { function() require('dap').repl.open() end, 'Repl Eval' },
       u = { function() require('dapui').toggle({}) end, 'Dap UI' },
+      h = { function() require('dap.ui.widgets').hover() end, 'Hover' },
+      s = { function() require('osv').launch({ port = 8086 }) end, 'Launch Lua Debugger Server' },
+      d = { function() require('osv').run_this() end, 'Launch Lua Debugger' },
     },
     x = {
       name = '+Diagnostics/Quickfix',
@@ -775,10 +787,10 @@ M.setup_code = function()
   -- Join
   M.map('n', 'J', '<cmd>TSJToggle<cr>', 'Join Toggle')
   -- Fold
-  M.map('n', 'zR', require('ufo').openAllFolds)
-  M.map('n', 'zM', require('ufo').closeAllFolds)
-  M.map('n', 'zr', require('ufo').openFoldsExceptKinds)
-  M.map('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
+  M.map('n', 'zR', function() require('ufo').openAllFolds() end)
+  M.map('n', 'zM', function() require('ufo').closeAllFolds() end)
+  M.map('n', 'zr', function() require('ufo').openFoldsExceptKinds() end)
+  M.map('n', 'zm', function() require('ufo').closeFoldsWith() end) -- closeAllFolds == closeFoldsWith(0)
   -- Search
   -- Clear search with <esc>
   M.map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', 'Escape And Clear hlsearch')
@@ -892,7 +904,8 @@ M._dap_varg = function(...)
   elseif action == 'terminate' then
     require('dap').terminate()
   elseif action == 'toggle_bp' then
-    vim.cmd([[PBToggleBreakpoint]])
+    -- vim.cmd([[PBToggleBreakpoint]])
+    require('persistent-breakpoints.api').toggle_breakpoint()
   elseif action == 'toggle_ui' then
     require('dapui').toggle({})
   else
