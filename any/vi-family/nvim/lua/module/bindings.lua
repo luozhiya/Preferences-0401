@@ -536,6 +536,7 @@ M.wk = function(wk)
       u = { function() require('dapui').toggle({}) end, 'Dap UI' },
       h = { function() require('dap.ui.widgets').hover() end, 'Hover' },
       s = { function() require('osv').launch({ port = 8086 }) end, 'Launch Lua Debugger Server' },
+      X = { function() require('osv').stop() end, 'Stop Lua Debugger Server' },
       d = { function() require('osv').run_this() end, 'Launch Lua Debugger' },
     },
     x = {

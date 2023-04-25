@@ -467,6 +467,10 @@ run['Builtin UI Improved'] = {
       })
     end,
   },
+  ['CosmicNvim/cosmic-ui'] = {
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+    config = function() require('cosmic-ui').setup() end,
+  },
   ['rcarriga/nvim-notify'] = {
     -- enabled = false,
     config = function()
@@ -675,6 +679,10 @@ run['Terminal Integration'] = {
       opts = vim.tbl_deep_extend('error', opts, bindings.toggleterm())
       require('toggleterm').setup(opts)
     end,
+  },
+  ['nikvdp/neomux'] = {
+    cmd = { 'Neomux' },
+    -- (Optional, for speed) install neovim-remote.
   },
 }
 

@@ -39,6 +39,7 @@ local list = {
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
   { 'stevearc/dressing.nvim' },
+  { 'CosmicNvim/cosmic-ui' },
   { 'rcarriga/nvim-notify' },
   { 'folke/noice.nvim' },
   { 'vigoux/notifier.nvim' },
@@ -53,6 +54,7 @@ local list = {
   { 'lmburns/lf.nvim' },
   -- Terminal Integration
   { 'akinsho/toggleterm.nvim' },
+  { 'nikvdp/neomux' },
   -- Window Management
   { 'spolu/dwm.vim' },
   -- Project
