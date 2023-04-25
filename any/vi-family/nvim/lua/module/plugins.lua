@@ -80,10 +80,11 @@ local list = {
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
   { 'junegunn/fzf' },
   { 'junegunn/fzf.vim' },
-  -- Key Management
+  -- Bindings Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
   { 'mrjones2014/legendary.nvim' },
+  { 'b0o/mapx.nvim' },
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
@@ -165,6 +166,7 @@ local list = {
   { 'theHamsta/nvim-semantic-tokens' },
   { 'smjonas/inc-rename.nvim' },
   { 'jose-elias-alvarez/null-ls.nvim' },
+  { 'b0o/SchemaStore.nvim' },
   -- LSP Visualization/Interactive
   { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },
@@ -177,6 +179,8 @@ local list = {
   { 'simrat39/symbols-outline.nvim' },
   { 'rmagatti/goto-preview' },
   { 'ray-x/navigator.lua' },
+  { 'lewis6991/hover.nvim' },
+  { 'Fildo7525/pretty_hover' },
   -- Performance
   { 'dstein64/vim-startuptime' },
   -- Job
@@ -199,7 +203,7 @@ local kernel = {
 }
 
 local dev = {
-  { dir = '~/Code/me/lualine-osv' },
+  { dir = '~/Code/me/lualine-osv', name = 'lualine-osv' },
 }
 
 local cached = {}

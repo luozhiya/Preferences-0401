@@ -217,6 +217,9 @@ local _mason = function()
       'asm_lsp',
       'pylsp',
       'vimls',
+      'jsonls',
+      'pyright',
+      'clojure_lsp',
     },
   }
   require('mason-lspconfig').setup(lsp)
@@ -248,6 +251,14 @@ local _lsp = function()
   _lsp_cpp(on_attach, capabilities)
   lsp.lua_ls.setup({ on_attach = on_attach, capabilities = capabilities })
   lsp.cmake.setup({ on_attach = on_attach, capabilities = capabilities })
+  lsp.jsonls.setup({
+    settings = {
+      json = {
+        schemas = require('schemastore').json.schemas(),
+        validate = { enable = true },
+      },
+    },
+  })
 end
 
 M.lsp = function()
