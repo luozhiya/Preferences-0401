@@ -73,6 +73,7 @@ M.icons = {
 function M.before()
   bindings.setup_leader()
 
+  vim.g.debug_mode = false
   vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
   vim.g.loaded_python3_provider = 0
   vim.g.loaded_pythonx_provider = 0

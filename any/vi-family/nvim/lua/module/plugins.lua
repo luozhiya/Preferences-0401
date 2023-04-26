@@ -210,8 +210,18 @@ local dev = {
   { dir = '~/Code/me/lualine-osv', name = 'lualine-osv' },
 }
 
+-- Debug Mode Docker
+local docker = function()
+  return {
+    { 'nvim-lua/plenary.nvim', lazy = false },
+    { 'lewis6991/satellite.nvim', lazy = false, config = true },
+    { 'nvim-telescope/telescope.nvim', lazy = false },
+  }
+end
+
 local cached = {}
 M.computed = function()
+  if vim.g.debug_mode == true then return docker() end
   if vim.tbl_isempty(cached) then
     if require('base').is_kernel() then vim.list_extend(list, kernel) end
     for i, v in ipairs(list) do

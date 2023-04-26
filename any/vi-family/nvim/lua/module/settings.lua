@@ -163,7 +163,7 @@ run['Bars And Lines'] = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
-    -- enabled = false,
+    enabled = false,
     event = { 'User NeXT' },
     config = function()
       local scrollbar = require('scrollbar')
@@ -180,6 +180,16 @@ run['Bars And Lines'] = {
           Misc = { color = colors.purple },
         },
       })
+    end,
+  },
+  ['lewis6991/satellite.nvim'] = {
+    -- enabled = false,
+    event = 'User NeXT', -- BufReadPost -- No Lazy
+    config = function()
+      local opts = {
+        winblend = 0,
+      }
+      require('satellite').setup(opts)
     end,
   },
   ['nvim-lualine/lualine.nvim'] = {
@@ -433,16 +443,6 @@ run['Bars And Lines'] = {
         },
       }
       require('nvim-foldsign').setup(opts)
-    end,
-  },
-  ['lewis6991/satellite.nvim'] = {
-    enabled = false,
-    event = 'BufReadPost',
-    config = function()
-      local opts = {
-        winblend = 0,
-      }
-      require('satellite').setup(opts)
     end,
   },
 }
@@ -740,6 +740,7 @@ run['Session'] = {
     config = function() require('persistence').setup() end,
   },
   ['vladdoster/remember.nvim'] = {
+    -- enabled = false,
     event = 'BufReadPost',
     config = function() require('remember') end,
   },
