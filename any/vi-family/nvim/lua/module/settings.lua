@@ -826,7 +826,7 @@ run['Fuzzy Finder'] = {
   },
 }
 
-run['Key Management'] = {
+run['Bindings Management'] = {
   ['folke/which-key.nvim'] = {
     -- keys = { { ',' }, { 'g' } },
     event = { 'VeryLazy' },
@@ -846,6 +846,9 @@ run['Key Management'] = {
       local opts = { which_key = { auto_register = true } }
       require('legendary').setup(opts)
     end,
+  },
+  ['b0o/mapx.nvim'] = {
+    --
   },
 }
 
@@ -1686,6 +1689,10 @@ run['LSP VIF'] = {
     },
     config = function() require('navigator').setup() end,
   },
+  ['lewis6991/hover.nvim'] = {},
+  ['Fildo7525/pretty_hover'] = {
+    config = function() require('pretty_hover').setup() end,
+  },
 }
 
 run['DAP VIF'] = {
@@ -1738,8 +1745,8 @@ run['Network'] = {
 }
 
 run['Dev'] = {
-  ['~/Code/me/lualine-osv'] = {
-    name = 'lualine-osv',
+  ['lualine-osv'] = {
+    -- name = 'lualine-osv',
     -- lazy = false,
   },
 }
@@ -1754,7 +1761,7 @@ M.spec = function(url, dev)
   local key = url
   local pack = url
   if dev then
-    key = url['dir']
+    key = url['name']
   else
     pack = { url }
   end

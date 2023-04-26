@@ -177,7 +177,7 @@ function M.before()
     fileformats = 'unix,dos,mac', -- Detect formats
     sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
     confirm = true, -- Confirm to save changes before exiting modified buffer
-    conceallevel = 3, -- Hide * markup for bold and italic
+    -- conceallevel = 3, -- Hide * markup for bold and italic, also make json hide '"'
     mouse = 'a', -- Enable mouse for all available modes
     virtualedit = 'block', -- Allow going past the end of line in visual block mode
   }
