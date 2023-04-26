@@ -163,8 +163,8 @@ run['Bars And Lines'] = {
     end,
   },
   ['petertriho/nvim-scrollbar'] = {
+    -- enabled = false,
     event = { 'User NeXT' },
-    -- enable = false,
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
@@ -435,13 +435,23 @@ run['Bars And Lines'] = {
       require('nvim-foldsign').setup(opts)
     end,
   },
+  ['lewis6991/satellite.nvim'] = {
+    enabled = false,
+    event = 'BufReadPost',
+    config = function()
+      local opts = {
+        winblend = 0,
+      }
+      require('satellite').setup(opts)
+    end,
+  },
 }
 
 run['Colorschemes'] = {
   ['folke/tokyonight.nvim'] = {
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd([[colorscheme tokyonight]]) end,
+    config = function() vim.cmd([[colorscheme tokyonight-moon]]) end,
   },
 }
 
@@ -1330,6 +1340,10 @@ run['Editing Action'] = {
   ['axieax/urlview.nvim'] = {
     cmd = { 'UrlView' },
     config = function() require('urlview').setup() end,
+  },
+  ['ellisonleao/carbon-now.nvim'] = {
+    cmd = { 'CarbonNow' },
+    config = function() require('carbon-now').setup() end,
   },
 }
 

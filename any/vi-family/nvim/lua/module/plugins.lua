@@ -27,6 +27,7 @@ local list = {
   { 'akinsho/bufferline.nvim' },
   { 'ziontee113/neo-minimap' },
   { 'yaocccc/nvim-foldsign' },
+  { 'lewis6991/satellite.nvim' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
@@ -141,6 +142,7 @@ local list = {
   { 'charkuils/nvim-soil' },
   { 'chrishrb/gx.nvim' },
   { 'axieax/urlview.nvim' },
+  { 'ellisonleao/carbon-now.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
