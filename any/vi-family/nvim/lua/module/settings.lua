@@ -280,7 +280,7 @@ run['Bars And Lines'] = {
     end,
   },
   ['b0o/incline.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = { 'BufReadPost' },
     config = function()
       -- local colors = require('tokyonight.colors').setup()
@@ -729,6 +729,10 @@ run['Session'] = {
     event = 'BufReadPre',
     config = function() require('persistence').setup() end,
   },
+  ['vladdoster/remember.nvim'] = {
+    event = 'BufReadPost',
+    config = function() require('remember') end,
+  },
 }
 
 run['View'] = {
@@ -975,32 +979,6 @@ run['Editing Motion Support'] = {
     event = 'BufReadPost',
     config = function() vim.g.matchup_matchparen_offscreen = { method = 'status_manual' } end,
   },
-  ['numToStr/Comment.nvim'] = {
-    config = function()
-      local opts = {
-        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-        mappings = {
-          ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-          basic = false,
-          ---Extra mapping; `gco`, `gcO`, `gcA`
-          extra = false,
-        },
-      }
-      require('Comment').setup(opts)
-    end,
-  },
-  ['JoosepAlviste/nvim-ts-context-commentstring'] = {},
-  ['echasnovski/mini.comment'] = {
-    event = 'BufReadPost',
-    config = function()
-      local opts = {
-        hooks = {
-          pre = function() require('ts_context_commentstring.internal').update_commentstring() end,
-        },
-      }
-      require('mini.comment').setup(opts)
-    end,
-  },
   ['echasnovski/mini.pairs'] = {
     -- event = "VeryLazy",
     config = function(_, opts) require('mini.pairs').setup(opts) end,
@@ -1084,6 +1062,38 @@ run['Editing Motion Support'] = {
   },
   ['mg979/vim-visual-multi'] = {
     event = { 'BufReadPost' },
+  },
+}
+
+run['Comment'] = {
+  ['numToStr/Comment.nvim'] = {
+    config = function()
+      local opts = {
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+        mappings = {
+          ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+          basic = false,
+          ---Extra mapping; `gco`, `gcO`, `gcA`
+          extra = false,
+        },
+      }
+      require('Comment').setup(opts)
+    end,
+  },
+  ['JoosepAlviste/nvim-ts-context-commentstring'] = {},
+  ['echasnovski/mini.comment'] = {
+    event = 'BufReadPost',
+    config = function()
+      local opts = {
+        hooks = {
+          pre = function() require('ts_context_commentstring.internal').update_commentstring() end,
+        },
+      }
+      require('mini.comment').setup(opts)
+    end,
+  },
+  ['charkuils/nvim-hemingway'] = {
+    --
   },
 }
 
@@ -1256,9 +1266,6 @@ run['Editing Visual Formatting'] = {
       }
       require('ufo').setup(opts)
     end,
-  },
-  ['charkuils/nvim-hemingway'] = {
-    --
   },
 }
 

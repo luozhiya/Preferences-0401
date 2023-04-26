@@ -66,6 +66,7 @@ local list = {
   { 'tpope/vim-obsession' },
   { 'Shatur/neovim-session-manager' },
   { 'folke/persistence.nvim' },
+  { 'vladdoster/remember.nvim' },
   -- View
   { 'folke/zen-mode.nvim' },
   { 'Pocco81/true-zen.nvim' },
@@ -109,6 +110,7 @@ local list = {
   { 'Wansmer/treesj' },
   { 'haya14busa/vim-asterisk' },
   { 'mg979/vim-visual-multi' },
+  -- Comment
   { 'charkuils/nvim-hemingway' },
   { 'numToStr/Comment.nvim' },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },

@@ -11,9 +11,48 @@ cpp cmake
 cpp project
 alignment
 
+TODO
+----
+reload buffer
+
+BUG
+----
+confusion root?
+  LSP(lsp-file, no lsp-file)
+  nvim-tree(change root, even in same dir)
+  project
+
+C++ accesstor indent
+  public/private/protected
+  nvim-cmp, tree-sitter(indent), neovim(builtin-cindoption)
+
+symbol-outline padding too many space
+https://github.com/simrat39/symbols-outline.nvim/issues/165
+
+scrolloff for bufferline?
+
+cmp will flash statusbar?
+
+cmake-tools doesn't find correct path? find the .git root insteadof CMakeLists.txt root?
+
+wilder lua rrequire ?? bug?
+
+hydra.nvim as a tips window? no key only text show?
+
+nvim-hlslens-uof <TAB> quit preview will unfold folded lines
+
+Bug: cmdheight = 0 will flash statusbar when <TAB>
+
+Bug: incline will make cursor move <0> left-right-around
+
+Bug: external modify file will cause syntax highlight error?
+  LSP?
+  TS?
+
 Minimal Test
 ------------
 nvim -u minimal.lua
+neovide -- -u minimal.lua
 
 Modes
 -----
@@ -239,33 +278,3 @@ https://microsoft.github.io/vscode-codicons/dist/codicon.html
 PATH
 ----
 %LOCALAPPDATA%\nvim-data
-
-BUG
-----
-confusion root?
-  LSP(lsp-file, no lsp-file)
-  nvim-tree(change root, even in same dir)
-  project
-
-C++ accesstor indent
-  public/private/protected
-  nvim-cmp, tree-sitter(indent), neovim(builtin-cindoption)
-
-symbol-outline padding too many space
-https://github.com/simrat39/symbols-outline.nvim/issues/165
-
-scrolloff for bufferline?
-
-cmp will flash statusbar?
-
-cmake-tools doesn't find correct path? find the .git root insteadof CMakeLists.txt root?
-
-wilder lua rrequire ?? bug?
-
-hydra.nvim as a tips window? no key only text show?
-
-nvim-hlslens-uof <TAB> quit preview will unfold folded lines
-
-Bug: cmdheight = 0 will flash statusbar when <TAB>
-
-Bug: incline will make cursor move <0> left-right-around
