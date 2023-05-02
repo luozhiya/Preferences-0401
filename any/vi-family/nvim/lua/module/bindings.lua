@@ -15,6 +15,8 @@ M.command = function(name, func, opts)
   vim.api.nvim_create_user_command(name, func, opts)
 end
 
+M.cmd = function(command) return table.concat({ '<cmd>', command, '<cr>' }) end
+
 M.setup_leader = function()
   vim.g.mapleader = ','
   vim.g.maplocalleader = ','
@@ -624,6 +626,7 @@ M.wk = function(wk)
     local draw_hydra = Hydra(opts)
     draw_hydra:activate()
   end
+  -- Pink hydra
   local _git_hydra = function()
     local Hydra = require('hydra')
     local gitsigns = require('gitsigns')
@@ -697,6 +700,114 @@ M.wk = function(wk)
     local git_hydra = Hydra(opts)
     git_hydra:activate()
   end
+  local _word_hydra = function()
+    local Hydra = require('hydra')
+    local word_hydra = Hydra({
+      name = 'Quick words',
+      config = {
+        color = 'pink',
+        hint = {
+          type = 'window', -- statusline window
+        },
+      },
+      -- mode = { 'n', 'x', 'o' },
+      -- body = ',',
+      heads = {
+        { 'w', '<Plug>(smartword-w)' },
+        { 'b', '<Plug>(smartword-b)' },
+        { 'e', '<Plug>(smartword-e)' },
+        { 'ge', '<Plug>(smartword-ge)' },
+        { '<Esc>', nil, { exit = true, mode = 'n' } },
+      },
+    })
+    word_hydra:activate()
+  end
+  local _buffer_win_hydra = function()
+    local Hydra = require('hydra')
+    local splits = require('smart-splits')
+    local cmd = require('hydra.keymap-util').cmd
+    local pcmd = require('hydra.keymap-util').pcmd
+    local buffer_hydra = Hydra({
+      name = 'Barbar',
+      config = {
+        on_key = function()
+          -- Preserve animation
+          vim.wait(200, function() vim.cmd('redraw') end, 30, false)
+        end,
+      },
+      heads = {
+        { 'h', function() vim.cmd('BufferPrevious') end, { on_key = false } },
+        { 'l', function() vim.cmd('BufferNext') end, { desc = 'choose', on_key = false } },
+        { 'H', function() vim.cmd('BufferMovePrevious') end },
+        { 'L', function() vim.cmd('BufferMoveNext') end, { desc = 'move' } },
+        { 'p', function() vim.cmd('BufferPin') end, { desc = 'pin' } },
+        { 'd', function() vim.cmd('BufferClose') end, { desc = 'close' } },
+        { 'c', function() vim.cmd('BufferClose') end, { desc = false } },
+        { 'q', function() vim.cmd('BufferClose') end, { desc = false } },
+        { 'od', function() vim.cmd('BufferOrderByDirectory') end, { desc = 'by directory' } },
+        { 'ol', function() vim.cmd('BufferOrderByLanguage') end, { desc = 'by language' } },
+        { '<Esc>', nil, { exit = true } },
+      },
+    })
+    local function choose_buffer()
+      if #vim.fn.getbufinfo({ buflisted = true }) > 1 then buffer_hydra:activate() end
+    end
+    local window_hint = [[
+     ^^^^^^^^^^^^     Move      ^^    Size   ^^   ^^     Split
+     ^^^^^^^^^^^^-------------  ^^-----------^^   ^^---------------
+     ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally 
+     _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<C-h>_ _<C-l>_   _v_: vertically
+     ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^   _<C-j>_   ^   _q_, _c_: close
+     focus^^^^^^  window^^^^^^  ^_=_: equalize^   _z_: maximize
+     ^ ^ ^ ^ ^ ^  ^ ^ ^ ^ ^ ^   ^^ ^          ^   _o_: remain only
+     _b_: choose buffer
+    ]]
+    local buffer_win_hydra = Hydra({
+      name = 'Windows',
+      hint = window_hint,
+      config = {
+        invoke_on_body = true,
+        hint = {
+          border = 'rounded',
+          offset = -1,
+        },
+      },
+      --  mode = 'n',
+      --  body = '<C-w>',
+      heads = {
+        { 'h', '<C-w>h' },
+        { 'j', '<C-w>j' },
+        { 'k', pcmd('wincmd k', 'E11', 'close') },
+        { 'l', '<C-w>l' },
+        { 'H', cmd('WinShift left') },
+        { 'J', cmd('WinShift down') },
+        { 'K', cmd('WinShift up') },
+        { 'L', cmd('WinShift right') },
+        { '<C-h>', function() splits.resize_left(2) end },
+        { '<C-j>', function() splits.resize_down(2) end },
+        { '<C-k>', function() splits.resize_up(2) end },
+        { '<C-l>', function() splits.resize_right(2) end },
+        { '=', '<C-w>=', { desc = 'equalize' } },
+        { 's', pcmd('split', 'E36') },
+        { '<C-s>', pcmd('split', 'E36'), { desc = false } },
+        { 'v', pcmd('vsplit', 'E36') },
+        { '<C-v>', pcmd('vsplit', 'E36'), { desc = false } },
+        { 'w', '<C-w>w', { exit = true, desc = false } },
+        { '<C-w>', '<C-w>w', { exit = true, desc = false } },
+        { 'z', cmd('WindowsMaximaze'), { exit = true, desc = 'maximize' } },
+        { '<C-z>', cmd('WindowsMaximaze'), { exit = true, desc = false } },
+        { 'o', '<C-w>o', { exit = true, desc = 'remain only' } },
+        { '<C-o>', '<C-w>o', { exit = true, desc = false } },
+        { 'b', choose_buffer, { exit = true, desc = 'choose buffer' } },
+        { 'c', pcmd('close', 'E444') },
+        { 'q', pcmd('close', 'E444'), { desc = 'close window' } },
+        { '<C-c>', pcmd('close', 'E444'), { desc = false } },
+        { '<C-q>', pcmd('close', 'E444'), { desc = false } },
+        { '<Esc>', nil, { exit = true, desc = false } },
+      },
+    })
+    buffer_win_hydra:activate()
+  end
   -- stylua: ignore start
   local wk_ve = {
       name = '+Edit Config',
@@ -742,6 +853,12 @@ M.wk = function(wk)
     },
     w = {
       name = '+Windows',
+      w = { '<cmd>WinShift<cr>', 'Win-Move mode' },
+      b = {
+        name = '+Blank New File In A Split',
+        h = { '<cmd>new<cr>', 'New Horizontal' },
+        v = { '<cmd>vnew<cr>', 'New Vertically' },
+      },
       h = { '<c-w>h', 'Jump Left' },
       j = { '<c-w>j', 'Jump Down' },
       k = { '<c-w>k', 'Jump Up' },
@@ -752,10 +869,18 @@ M.wk = function(wk)
       r = { '<cmd>vsplit<cr><c-w>l<esc>', 'Split Right' },
       o = { '<cmd>only<cr>', 'Only' },
       c = { '<cmd>close<cr>', 'Close' },
+      s = {
+        name = '+Swapping Buffers Between Windows',
+        h = { function() require('smart-splits').swap_buf_left() end, 'Left' },
+        l = { function() require('smart-splits').swap_buf_right() end, 'Right' },
+        j = { function() require('smart-splits').swap_buf_down() end, 'Down' },
+        k = { function() require('smart-splits').swap_buf_up() end, 'Up' },
+      },
     },
     b = {
       name = '+Buffer',
-      b = { '<cmd>Bdelete<cr>', 'Buffer Bye' },
+      b = { _buffer_win_hydra, 'Buffer Hydra' },
+      c = { '<cmd>Bdelete<cr>', 'Buffer Close' },
       e = { ':ene <bar> startinsert <cr>', 'New Buffer' },
       n = { ':ene <bar> startinsert <cr>', 'New Buffer' },
       f = { '<cmd>FlyBuf<cr>', 'Fly Buffer' },
@@ -911,6 +1036,7 @@ M.wk = function(wk)
         m = { '<cmd>set ff=mac<cr>', 'Mac Ending' },
       },
       d = { _draw_diagram_hydra, 'Draw Diagram' },
+      w = { _word_hydra, 'Word Hydra' },
     },
     f = {
       name = '+Fuzzy/File/Explorer',
@@ -983,15 +1109,34 @@ M.setup_code = function()
   -- M.map('n', '<c-k>', '<c-w>k', 'Jump Up')
   M.map('n', '<c-l>', '<c-w>l', 'Jump Right')
   -- Move to window using the movement keys
-  M.map('n', '<left>', '<c-w>h', 'Jump Left')
-  M.map('n', '<down>', '<c-w>j', 'Jump Down')
-  M.map('n', '<up>', '<c-w>k', 'Jump Up')
-  M.map('n', '<right>', '<c-w>l', 'Jump Right')
+  -- M.map('n', '<left>', '<c-w>h', 'Jump Left')
+  -- M.map('n', '<down>', '<c-w>j', 'Jump Down')
+  -- M.map('n', '<up>', '<c-w>k', 'Jump Up')
+  -- M.map('n', '<right>', '<c-w>l', 'Jump Right')
+  M.map('n', '<left>', function() require('smart-splits').move_cursor_left() end, 'Jump Left')
+  M.map('n', '<down>', function() require('smart-splits').move_cursor_down() end, 'Jump Down')
+  M.map('n', '<up>', function() require('smart-splits').move_cursor_up() end, 'Jump Up')
+  M.map('n', '<right>', function() require('smart-splits').move_cursor_right() end, 'Jump Right')
+  -- Automatically expand width of the current window.
+  M.map('n', '<c-w>z', M.cmd('WindowsMaximize'))
+  M.map('n', '<c-w>_', M.cmd('WindowsMaximizeVertically'))
+  M.map('n', '<c-w>|', M.cmd('WindowsMaximizeHorizontally'))
+  M.map('n', '<c-w>=', M.cmd('WindowsEqualize'))
   -- Resize window using <ctrl> arrow keys
-  M.map('n', '<C-Up>', '<cmd>resize +2<cr>', 'Increase window height')
-  M.map('n', '<C-Down>', '<cmd>resize -2<cr>', 'Decrease window height')
-  M.map('n', '<C-Left>', '<cmd>vertical resize -2<cr>', 'Decrease window width')
-  M.map('n', '<C-Right>', '<cmd>vertical resize +2<cr>', 'Increase window width')
+  -- M.map('n', '<c-up>', '<cmd>resize +2<cr>', 'Increase window height')
+  -- M.map('n', '<c-down>', '<cmd>resize -2<cr>', 'Decrease window height')
+  -- M.map('n', '<c-left>', '<cmd>vertical resize -2<cr>', 'Decrease window width')
+  -- M.map('n', '<c-right>', '<cmd>vertical resize +2<cr>', 'Increase window width')
+  M.map('n', '<c-left>', require('smart-splits').resize_left, 'Increase window width')
+  M.map('n', '<c-right>', require('smart-splits').resize_right, 'Decrease window width')
+  M.map('n', '<c-down>', require('smart-splits').resize_down, 'Increase window height')
+  M.map('n', '<c-up>', require('smart-splits').resize_up, 'Decrease window height')
+  -- Window Move
+  M.map('n', '<s-left>', M.cmd('WinShift left'), 'Move Window To Left ')
+  M.map('n', '<s-right>', M.cmd('WinShift right'), 'Move Window To Right')
+  M.map('n', '<s-down>', M.cmd('WinShift down'), 'Move Window To Down')
+  M.map('n', '<s-up>', M.cmd('WinShift up'), 'Move Window To Up')
+  -- Wrap
   M.map('n', '<a-q>', '<cmd>ToggleWrap<cr>', 'Toggle Wrap')
   -- Better indenting
   M.map('v', '<', '<gv', 'deIndent Continuously')
@@ -1507,6 +1652,7 @@ M.setup_autocmd = function()
   -- auto show hydra on nvimtree focus
   local function _show_hydra_on_nvimtree_focus()
     local function change_root_to_global_cwd()
+      local api = require('nvim-tree.api')
       local global_cwd = vim.fn.getcwd()
       -- local global_cwd = vim.fn.getcwd(-1, -1)
       api.tree.change_root(global_cwd)

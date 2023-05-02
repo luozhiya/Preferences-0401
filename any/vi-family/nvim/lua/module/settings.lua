@@ -2,6 +2,10 @@ local bindings = require('module.bindings')
 local M = {}
 local run = {}
 
+run['Neovim Lua Library'] = {
+  ['anuvyklack/middleclass'] = {},
+}
+
 run['Storage'] = {
   ['kkharji/sqlite.lua'] = {
     config = function()
@@ -24,6 +28,9 @@ run['Storage'] = {
 run['UI Library'] = {
   ['ray-x/guihua.lua'] = {
     build = 'cd lua/fzy && make',
+  },
+  ['anuvyklack/animation.nvim'] = {
+    dependencies = { 'anuvyklack/middleclass' },
   },
 }
 
@@ -411,6 +418,7 @@ run['Bars And Lines'] = {
       require('bufferline').setup(opts)
     end,
   },
+  ['romgrk/barbar.nvim'] = {},
   ['SmiteshP/nvim-navic'] = {
     config = function()
       vim.g.navic_silence = true
@@ -786,6 +794,26 @@ run['Window Management'] = {
     enabled = false,
     event = { 'VeryLazy' },
   },
+  ['sindrets/winshift.nvim'] = {
+    cmd = { 'WinShift' },
+    config = function() require('winshift').setup() end,
+  },
+  ['mrjones2014/smart-splits.nvim'] = {
+    config = function() require('smart-splits').setup({}) end,
+  },
+  ['anuvyklack/windows.nvim'] = {
+    cmd = { 'WindowsMaximize', 'WindowsMaximizeVertically', 'WindowsMaximizeHorizontally', 'WindowsEqualize' },
+    dependencies = {
+      'anuvyklack/middleclass',
+      'anuvyklack/animation.nvim',
+    },
+    config = function()
+      vim.o.winwidth = 10
+      vim.o.winminwidth = 10
+      vim.o.equalalways = false
+      require('windows').setup()
+    end,
+  },
 }
 
 run['Project'] = {
@@ -804,7 +832,23 @@ run['Project'] = {
   ['gnikdroy/projections.nvim'] = {
     event = 'VeryLazy',
     config = function()
-      local opts = {}
+      local opts = {
+        workspaces = { -- Default workspaces to search for
+          -- { "~/Documents/dev", { ".git" } },        Documents/dev is a workspace. patterns = { ".git" }
+          { '~/Code', {} }, -- An empty pattern list indicates that all subdirectories are considered projects
+          { '~/Code/me', {} }, -- An empty pattern list indicates that all subdirectories are considered projects
+          -- "~/dev",                                  dev is a workspace. default patterns is used (specified below)
+        },
+        store_hooks = {
+          pre = function()
+              -- nvim-tree
+              local nvim_tree_present, api = pcall(require, "nvim-tree.api")
+              if nvim_tree_present then api.tree.close() end
+              -- neo-tree
+              if pcall(require, "neo-tree") then vim.cmd [[Neotree action=close]] end
+          end
+      }        
+      }
       require('projections').setup(opts)
 
       -- Bind <leader>fp to Telescope projections
@@ -1039,6 +1083,8 @@ run['Bindings Management'] = {
   ['b0o/mapx.nvim'] = {
     --
   },
+  ['anuvyklack/keymap-layer.nvim'] = {},
+  ['anuvyklack/keymap-amend.nvim'] = {},
 }
 
 run['Buffer'] = {
@@ -1055,6 +1101,14 @@ run['Buffer'] = {
   ['echasnovski/mini.bufremove'] = {
     keys = { { '<leader>bd' }, { '<leader>bD' } },
     -- config = true, -- Bug: no mini module
+  },
+  ['jlanzarotta/bufexplorer'] = {
+    cmd = { 'BufExplorer', 'ToggleBufExplorer', 'BufExplorerHorizontalSplit', 'BufExplorerVerticalSplit' },
+    init = function() vim.g.bufExplorerDisableDefaultKeyMapping = true end,
+    config = function() end,
+  },
+  ['kwkarlwang/bufresize.nvim'] = {
+    config = function() require('bufresize').setup() end,
   },
 }
 
@@ -1255,6 +1309,9 @@ run['Editing Motion Support'] = {
   ['mg979/vim-visual-multi'] = {
     event = { 'BufReadPost' },
   },
+  ['anuvyklack/vim-smartword'] = {
+    event = { 'BufReadPost' },
+  },
 }
 
 run['Comment'] = {
@@ -1378,6 +1435,116 @@ run['Marks'] = {
   },
 }
 
+run['Folding'] = {
+  ['kevinhwang91/nvim-ufo'] = {
+    event = { 'BufReadPost' },
+    dependencies = { 'kevinhwang91/promise-async' },
+    config = function()
+      vim.o.foldcolumn = '1'
+      local handler = function(virtText, lnum, endLnum, width, truncate)
+        local new_virt_text = {}
+        local suffix = ('  %d '):format(endLnum - lnum)
+        local suf_width = vim.fn.strdisplaywidth(suffix)
+        local target_width = width - suf_width
+        local cur_width = 0
+        for _, chunk in ipairs(virtText) do
+          local chunk_text = chunk[1]
+          local chunk_width = vim.fn.strdisplaywidth(chunk_text)
+          if target_width > cur_width + chunk_width then
+            table.insert(new_virt_text, chunk)
+          else
+            chunk_text = truncate(chunk_text, target_width - cur_width)
+            local hl_group = chunk[2]
+            table.insert(new_virt_text, { chunk_text, hl_group })
+            chunk_width = vim.fn.strdisplaywidth(chunk_text)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if cur_width + chunk_width < target_width then
+              suffix = suffix .. (' '):rep(target_width - cur_width - chunk_width)
+            end
+            break
+          end
+          cur_width = cur_width + chunk_width
+        end
+        table.insert(new_virt_text, { suffix, 'MoreMsg' })
+        return new_virt_text
+      end
+      local opts = {
+        fold_virt_text_handler = handler,
+        open_fold_hl_timeout = 100,
+        -- provider_selector = function(bufnr, filetype, buftype)
+        --   return {'treesitter', 'indent'}
+        -- end,
+        preview = {
+          win_config = {
+            border = 'rounded',
+            winblend = 2,
+            winhighlight = 'Normal:Normal',
+            maxheight = 20,
+          },
+        },
+      }
+      require('ufo').setup(opts)
+    end,
+  },
+  ['anuvyklack/pretty-fold.nvim'] = {
+    config = function()
+      local opts = {
+        sections = {
+          left = {
+            'content',
+          },
+          right = {
+            ' ',
+            'number_of_folded_lines',
+            ': ',
+            'percentage',
+            ' ',
+            function(config) return config.fill_char:rep(3) end,
+          },
+        },
+        fill_char = '•',
+
+        remove_fold_markers = true,
+
+        -- Keep the indentation of the content of the fold string.
+        keep_indentation = true,
+
+        -- Possible values:
+        -- "delete" : Delete all comment signs from the fold string.
+        -- "spaces" : Replace all comment signs with equal number of spaces.
+        -- false    : Do nothing with comment signs.
+        process_comment_signs = 'spaces',
+
+        -- Comment signs additional to the value of `&commentstring` option.
+        comment_signs = {},
+
+        -- List of patterns that will be removed from content foldtext section.
+        stop_words = {
+          '@brief%s*', -- (for C++) Remove '@brief' and all spaces after.
+        },
+
+        add_close_pattern = true, -- true, 'last_line' or false
+
+        matchup_patterns = {
+          { '{', '}' },
+          { '%(', ')' }, -- % to escape lua pattern char
+          { '%[', ']' }, -- % to escape lua pattern char
+        },
+
+        ft_ignore = { 'neorg' },
+      }
+      require('pretty-fold').setup()
+    end,
+  },
+  ['anuvyklack/fold-preview.nvim'] = {
+    config = function()
+      require('fold-preview').setup({
+        -- Your configuration goes here.
+      })
+    end,
+  },
+}
+
 run['Editing Visual Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
@@ -1457,56 +1624,6 @@ run['Editing Visual Formatting'] = {
     config = function()
       local opts = { delay = 200 }
       require('illuminate').configure(opts)
-    end,
-  },
-  ['kevinhwang91/nvim-ufo'] = {
-    event = { 'BufReadPost' },
-    dependencies = { 'kevinhwang91/promise-async' },
-    config = function()
-      vim.o.foldcolumn = '1'
-      local handler = function(virtText, lnum, endLnum, width, truncate)
-        local new_virt_text = {}
-        local suffix = ('  %d '):format(endLnum - lnum)
-        local suf_width = vim.fn.strdisplaywidth(suffix)
-        local target_width = width - suf_width
-        local cur_width = 0
-        for _, chunk in ipairs(virtText) do
-          local chunk_text = chunk[1]
-          local chunk_width = vim.fn.strdisplaywidth(chunk_text)
-          if target_width > cur_width + chunk_width then
-            table.insert(new_virt_text, chunk)
-          else
-            chunk_text = truncate(chunk_text, target_width - cur_width)
-            local hl_group = chunk[2]
-            table.insert(new_virt_text, { chunk_text, hl_group })
-            chunk_width = vim.fn.strdisplaywidth(chunk_text)
-            -- str width returned from truncate() may less than 2nd argument, need padding
-            if cur_width + chunk_width < target_width then
-              suffix = suffix .. (' '):rep(target_width - cur_width - chunk_width)
-            end
-            break
-          end
-          cur_width = cur_width + chunk_width
-        end
-        table.insert(new_virt_text, { suffix, 'MoreMsg' })
-        return new_virt_text
-      end
-      local opts = {
-        fold_virt_text_handler = handler,
-        open_fold_hl_timeout = 100,
-        -- provider_selector = function(bufnr, filetype, buftype)
-        --   return {'treesitter', 'indent'}
-        -- end,
-        preview = {
-          win_config = {
-            border = 'rounded',
-            winblend = 2,
-            winhighlight = 'Normal:Normal',
-            maxheight = 20,
-          },
-        },
-      }
-      require('ufo').setup(opts)
     end,
   },
 }

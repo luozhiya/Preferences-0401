@@ -3,6 +3,7 @@ local M = {}
 local list = {
   -- Neovim Lua Library
   { 'nvim-lua/plenary.nvim' },
+  { 'anuvyklack/middleclass' },
   -- Storage
   { 'kkharji/sqlite.lua' },
   { 'tpope/vim-dadbod' },
@@ -11,6 +12,7 @@ local list = {
   { 'MunifTanjim/nui.nvim' },
   { 'ray-x/guihua.lua' },
   { 'anuvyklack/hydra.nvim' },
+  { 'anuvyklack/animation.nvim' },
   -- Start Screen
   { 'nvimdev/dashboard-nvim' },
   { 'echasnovski/mini.starter' },
@@ -27,6 +29,7 @@ local list = {
   { 'archibate/lualine-time' },
   { 'nanozuki/tabby.nvim' },
   { 'akinsho/bufferline.nvim' },
+  { 'romgrk/barbar.nvim' },
   { 'ziontee113/neo-minimap' },
   { 'yaocccc/nvim-foldsign' },
   -- Colorschemes
@@ -60,6 +63,9 @@ local list = {
   { 'nikvdp/neomux' },
   -- Window Management
   { 'spolu/dwm.vim' },
+  { 'sindrets/winshift.nvim' },
+  { 'mrjones2014/smart-splits.nvim' },
+  { 'anuvyklack/windows.nvim' },
   -- Project
   { 'ahmedkhalf/project.nvim' },
   { 'pluffie/neoproj' },
@@ -96,11 +102,15 @@ local list = {
   { 'linty-org/key-menu.nvim' },
   { 'mrjones2014/legendary.nvim' },
   { 'b0o/mapx.nvim' },
+  { 'anuvyklack/keymap-layer.nvim' },
+  { 'anuvyklack/keymap-amend.nvim' },
   -- Buffer
   { 'kazhala/close-buffers.nvim' },
   { 'glepnir/flybuf.nvim' },
   { 'moll/vim-bbye' },
   { 'echasnovski/mini.bufremove' },
+  { 'jlanzarotta/bufexplorer' },
+  { 'kwkarlwang/bufresize.nvim' },
   -- Syntax
   { 'nvim-treesitter/nvim-treesitter' },
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
@@ -121,6 +131,7 @@ local list = {
   { 'Wansmer/treesj' },
   { 'haya14busa/vim-asterisk' },
   { 'mg979/vim-visual-multi' },
+  { 'anuvyklack/vim-smartword' },
   -- Comment
   { 'charkuils/nvim-hemingway' },
   { 'numToStr/Comment.nvim' },
@@ -137,6 +148,10 @@ local list = {
   { 'debugloop/telescope-undo.nvim' },
   -- Marks
   { 'chentoast/marks.nvim' },
+  -- Folding
+  { 'anuvyklack/pretty-fold.nvim' },
+  { 'anuvyklack/fold-preview.nvim' },
+  { 'kevinhwang91/nvim-ufo' },
   -- Editing Visual Formatting
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
@@ -146,7 +161,6 @@ local list = {
   { 'NvChad/nvim-colorizer.lua' },
   { 'RRethy/vim-illuminate' },
   { 'kevinhwang91/promise-async' },
-  { 'kevinhwang91/nvim-ufo' },
   -- Editing Action
   { 'AntonVanAssche/date-time-inserter.nvim' },
   { 'ziontee113/color-picker.nvim' },
