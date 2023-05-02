@@ -24,6 +24,9 @@ local _lsp_clangd = function(on_attach, capabilities)
     capabilities = vim.tbl_deep_extend('error', capabilities, {
       offsetEncoding = { 'utf-32' },
     }),
+    init_options = {
+      clangdFileStatus = true,
+    },
   }
   -- require('lspconfig').clangd.setup(opts)
   require('clangd_extensions').setup({ server = opts })
@@ -66,10 +69,15 @@ local _lsp_handlers = function()
       spacing = 4,
       prefix = '●',
     },
+    virtual_lines = { only_current_line = true },
     signs = true,
+    float = {
+      source = 'always',
+    },
     update_in_insert = false,
     underline = true,
     severity_sort = true,
+    right_align = true,
   }
   -- Use Noice hover, fix rainbow pairs in hover window
   -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
@@ -82,6 +90,7 @@ local _lsp_client_preferences = function()
   local on_attach = function(client, buffer)
     bindings.lsp(client, buffer)
     -- require('lsp_signature').on_attach()
+    -- require('lsp-status').on_attach(client)
   end
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
   capabilities.textDocument.foldingRange = {
@@ -91,6 +100,7 @@ local _lsp_client_preferences = function()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.textDocument.completion.completionItem.resolveSupport =
     { properties = { 'documentation', 'detail', 'additionalTextEdits' } }
+  -- capabilities = vim.tbl_extend('keep', capabilities or {}, require('lsp-status').capabilities)
   return on_attach, capabilities
 end
 
@@ -149,7 +159,7 @@ local _lsp_lightbulb = function()
       callback = function(opt)
         local buf = opt.buf
         local group = vim.api.nvim_create_augroup(_hl_group() .. tostring(buf), {})
-        vim.api.nvim_create_autocmd('CursorHold', {
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
           group = group,
           buffer = buf,
           callback = function() _render_bulb(buf) end,

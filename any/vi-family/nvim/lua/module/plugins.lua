@@ -17,6 +17,8 @@ local list = {
   { 'goolord/alpha-nvim' },
   -- Bars And Lines
   { 'petertriho/nvim-scrollbar' },
+  { 'dstein64/nvim-scrollview' },
+  { 'lewis6991/satellite.nvim' },
   { 'nvim-lualine/lualine.nvim' },
   { 'luukvbaal/statuscol.nvim' },
   { 'utilyre/barbecue.nvim' },
@@ -27,15 +29,15 @@ local list = {
   { 'akinsho/bufferline.nvim' },
   { 'ziontee113/neo-minimap' },
   { 'yaocccc/nvim-foldsign' },
-  { 'lewis6991/satellite.nvim' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
   { 'shaunsingh/oxocarbon.nvim' },
   { 'ellisonleao/gruvbox.nvim' },
-  -- { "catppuccin/nvim" },
+  { 'catppuccin/nvim', name = 'catppuccin' },
   { 'p00f/alabaster.nvim' },
   { 'charkuils/nvim-whisky' },
+  { 'Yazeed1s/minimal.nvim' },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
   -- Builtin UI Improved
@@ -60,14 +62,17 @@ local list = {
   { 'spolu/dwm.vim' },
   -- Project
   { 'ahmedkhalf/project.nvim' },
-  { 'cljoly/telescope-repo.nvim' },
+  { 'pluffie/neoproj' },
+  { 'gnikdroy/projections.nvim' },
   -- Todo
   { 'folke/todo-comments.nvim' },
   -- Session
   { 'tpope/vim-obsession' },
   { 'Shatur/neovim-session-manager' },
+  { 'rmagatti/auto-session' },
   { 'folke/persistence.nvim' },
   { 'vladdoster/remember.nvim' },
+  { 'ethanholz/nvim-lastplace' },
   -- View
   { 'folke/zen-mode.nvim' },
   { 'Pocco81/true-zen.nvim' },
@@ -75,11 +80,15 @@ local list = {
   { 'lewis6991/gitsigns.nvim' },
   { 'sindrets/diffview.nvim' },
   { 'f-person/git-blame.nvim' },
+  { 'TimUntersberger/neogit' },
   -- Fuzzy Finder
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-telescope/telescope-fzf-native.nvim' },
-  { 'debugloop/telescope-undo.nvim' },
   { 'nvim-telescope/telescope-live-grep-args.nvim' },
+  { 'nvim-telescope/telescope-ui-select.nvim' },
+  { 'nvim-telescope/telescope-file-browser.nvim' },
+  { 'nvim-telescope/telescope-dap.nvim' },
+  { 'cljoly/telescope-repo.nvim' },
   { 'junegunn/fzf' },
   { 'junegunn/fzf.vim' },
   -- Bindings Management
@@ -123,6 +132,11 @@ local list = {
   { 'kevinhwang91/nvim-hlslens' },
   { 'windwp/nvim-spectre' },
   { 'cshuaimin/ssr.nvim' },
+  -- Undo
+  { 'mbbill/undotree' },
+  { 'debugloop/telescope-undo.nvim' },
+  -- Marks
+  { 'chentoast/marks.nvim' },
   -- Editing Visual Formatting
   { 'mhartington/formatter.nvim' },
   { 'lukas-reineke/indent-blankline.nvim' },
@@ -143,12 +157,14 @@ local list = {
   { 'chrishrb/gx.nvim' },
   { 'axieax/urlview.nvim' },
   { 'ellisonleao/carbon-now.nvim' },
+  { 'jbyuki/venn.nvim' },
   -- Completion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
+  { 'hrsh7th/cmp-emoji' },
   { 'saadparwaiz1/cmp_luasnip' },
   { 'onsails/lspkind.nvim' },
   { 'gelguy/wilder.nvim' },
@@ -175,7 +191,7 @@ local list = {
   { 'ray-x/lsp_signature.nvim' },
   { 'jackguo380/vim-lsp-cxx-highlight' },
   { 'lvimuser/lsp-inlayhints.nvim' },
-  { 'glepnir/lspsaga.nvim' },
+  { 'nvimdev/lspsaga.nvim' },
   { 'DNLHC/glance.nvim' },
   { 'j-hui/fidget.nvim' },
   { 'stevearc/aerial.nvim' },
@@ -185,12 +201,17 @@ local list = {
   { 'ray-x/navigator.lua' },
   { 'lewis6991/hover.nvim' },
   { 'Fildo7525/pretty_hover' },
+  { name = 'lsp_lines.nvim', url = 'https://git.sr.ht/~whynothugo/lsp_lines.nvim' },
+  { 'nvim-lua/lsp-status.nvim' },
+  { 'kosayoda/nvim-lightbulb' },
   -- Performance
   { 'dstein64/vim-startuptime' },
   -- Job
   { 'charkuils/nvim-spinetta' },
   -- Network
   { 'charkuils/nvim-ship' },
+  -- Dev
+  { name = 'lualine-osv', dir = '~/Code/me/lualine-osv' },
 }
 
 local kernel = {
@@ -206,16 +227,14 @@ local kernel = {
   { 'romgrk/fzy-lua-native' },
 }
 
-local dev = {
-  { dir = '~/Code/me/lualine-osv', name = 'lualine-osv' },
-}
-
 -- Debug Mode Docker
 local docker = function()
   return {
     { 'nvim-lua/plenary.nvim', lazy = false },
-    { 'lewis6991/satellite.nvim', lazy = false, config = true },
-    { 'nvim-telescope/telescope.nvim', lazy = false },
+    -- { 'lewis6991/satellite.nvim', lazy = false, config = true },
+    -- { 'nvim-telescope/telescope.nvim', lazy = false },
+    -- { 'nvim-lualine/lualine.nvim', lazy = false, config = true },
+    { 'nvim-tree/nvim-tree.lua', lazy = false, config = true },
   }
 end
 
@@ -223,12 +242,14 @@ local cached = {}
 M.computed = function()
   if vim.g.debug_mode == true then return docker() end
   if vim.tbl_isempty(cached) then
+    local spec = require('module.settings').spec
     if require('base').is_kernel() then vim.list_extend(list, kernel) end
     for i, v in ipairs(list) do
-      cached[i] = require('module.settings').spec(v[1], false)
-    end
-    for i, v in pairs(dev) do
-      cached[#cached + i] = require('module.settings').spec(v, true)
+      if v[1] then
+        cached[i] = spec(v[1], false)
+      else
+        cached[i] = spec(v, true)
+      end
     end
   end
   return cached

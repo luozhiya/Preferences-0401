@@ -73,7 +73,7 @@ M.icons = {
 function M.before()
   bindings.setup_leader()
 
-  vim.g.debug_mode = false
+  vim.g.debug_mode = false -- true false
   vim.g.lsp_cpp_provider = 'clangd' -- ccls clangd
   vim.g.loaded_python3_provider = 0
   vim.g.loaded_pythonx_provider = 0
@@ -168,8 +168,8 @@ function M.before()
     -- Edit
     incsearch = false,
     autoread = true, -- When a file has been detected to have been changed outside of Vim and it has not been changed inside of Vim, automatically read it again.
-    undofile = false,
-    -- undolevels = 10000,
+    undofile = true,
+    undolevels = 10000,
     swapfile = false, -- Bug: Crashed Neovide
     -- Misc
     timeout = true, -- Limit the time searching for suggestions to {millisec} milli seconds.
@@ -178,9 +178,10 @@ function M.before()
     fileformats = 'unix,dos,mac', -- Detect formats
     sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
     confirm = true, -- Confirm to save changes before exiting modified buffer
-    -- conceallevel = 3, -- Hide * markup for bold and italic, also make json hide '"'
+    conceallevel = 3, -- Hide * markup for bold and italic, also make json hide '"'
     mouse = 'a', -- Enable mouse for all available modes
-    virtualedit = 'block', -- Allow going past the end of line in visual block mode
+    -- virtualedit = 'block', -- Allow going past the end of line in visual block mode
+    virtualedit = 'all', -- This will allow you to freely move the cursor in the buffer. (see help virtualedit).
   }
   for k, v in pairs(opts) do
     vim.opt[k] = v

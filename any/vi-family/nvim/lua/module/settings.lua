@@ -192,6 +192,13 @@ run['Bars And Lines'] = {
       require('satellite').setup(opts)
     end,
   },
+  ['dstein64/nvim-scrollview'] = {
+    config = function()
+      require('scrollview').setup({
+        current_only = true,
+      })
+    end,
+  },
   ['nvim-lualine/lualine.nvim'] = {
     event = { 'User NeXT' },
     config = function()
@@ -216,13 +223,60 @@ run['Bars And Lines'] = {
       end
       local function _osv() return require('osv').is_running() and 'OSV Running' or '' end
       local fileformat = { 'fileformat', icons_enabled = false }
+      local function _diff_source()
+        local gitsigns = vim.b.gitsigns_status_dict
+        if gitsigns then
+          return {
+            added = gitsigns.added,
+            modified = gitsigns.changed,
+            removed = gitsigns.removed,
+          }
+        end
+      end
+      local function _trunc(trunc_width, trunc_len, hide_width, no_ellipsis)
+        return function(str)
+          local win_width = vim.fn.winwidth(0)
+          if hide_width and win_width < hide_width then
+            return ''
+          elseif trunc_width and trunc_len and win_width < trunc_width and #str > trunc_len then
+            return str:sub(1, trunc_len) .. (no_ellipsis and '' or '...')
+          end
+          return str
+        end
+      end
+      --function for optimizing the search count
+      local function _search_count()
+        if vim.api.nvim_get_vvar('hlsearch') == 1 then
+          local res = vim.fn.searchcount({ maxcount = 999, timeout = 500 })
+          if res.total > 0 then return string.format(icons.collects.Search .. '%d/%d', res.current, res.total) end
+        end
+        return ''
+      end
+      local function _macro_reg() return vim.fn.reg_recording() end
+      local git_blame = require('gitblame')
       local opts = {
         options = {
-          theme = 'auto',
+          section_separators = '',
+          component_separators = '',
+          theme = 'tokyonight', -- catppuccin auto tokyonight
           globalstatus = true,
           disabled_filetypes = { statusline = { 'dashboard', 'alpha' } },
         },
         sections = {
+          lualine_a = { 'mode', { _macro_reg, type = 'lua_expr', color = 'WarningMsg' } },
+          lualine_b = {
+            'branch',
+            {
+              'diff',
+              source = _diff_source,
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+            },
+            { _search_count, type = 'lua_expr' },
+          },
           lualine_c = {
             {
               'diagnostics',
@@ -240,6 +294,7 @@ run['Bars And Lines'] = {
               function() return require("nvim-navic").get_location() end,
               cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
             },
+            { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available },
           },
           lualine_x = {
             -- stylua: ignore
@@ -255,20 +310,22 @@ run['Bars And Lines'] = {
               color = _fg("Constant") ,
             },
             { require('lazy.status').updates, cond = require('lazy.status').has_updates, color = _fg('Special') },
-            {
-              'diff',
-              symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
-              },
-            },
             'cdate',
             'ctime',
             _lsp_active,
+            -- { function() return require('lsp-status').status() end, fmt = _trunc(120, 20, 60) },
             'osv',
             'encoding',
-            fileformat,
+            -- fileformat,
+            {
+              'fileformat',
+              icons_enabled = true,
+              symbols = {
+                unix = 'LF',
+                dos = 'CRLF',
+                mac = 'CR',
+              },
+            },
             'filetype',
           },
           lualine_z = { _location },
@@ -314,12 +371,12 @@ run['Bars And Lines'] = {
   ['nanozuki/tabby.nvim'] = {
     enabled = false,
     event = { 'VeryLazy' },
-    config = true,
+    config = function() require('tabby.tabline').use_preset('tab_only') end,
   },
   ['akinsho/bufferline.nvim'] = {
     -- enabled = false,
     -- event = { 'VeryLazy' },
-    event = { 'User AlphaClosed' },
+    event = { 'User AlphaClosed', 'BufNewFile', 'BufReadPre', 'User HijackDirectories' },
     config = function()
       local opts = {
         options = {
@@ -452,6 +509,27 @@ run['Colorschemes'] = {
     lazy = false,
     priority = 1000,
     config = function() vim.cmd([[colorscheme tokyonight-moon]]) end,
+  },
+  ['catppuccin'] = {
+    config = function()
+      local opts = {
+        flavour = 'mocha', -- mocha, macchiato, frappe, latte
+        term_colors = true,
+        integrations = {
+          nvimtree = true,
+          cmp = true,
+          gitsigns = true,
+          telescope = true,
+          treesitter = true,
+        },
+        transparent_background = false,
+      }
+      require('catppuccin').setup(opts)
+      vim.cmd.colorscheme('catppuccin')
+      local colors = require('catppuccin.palettes.mocha')
+      vim.api.nvim_set_hl(0, 'Tabline', { fg = colors.green, bg = colors.mantle })
+      vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
+    end,
   },
 }
 
@@ -604,13 +682,18 @@ run['Sudo'] = {
 
 run['File Explorer'] = {
   ['nvim-tree/nvim-tree.lua'] = {
-    cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
+    lazy = false,
+    dependencies = { 'anuvyklack/hydra.nvim' },
+    -- event = 'VeryLazy',
+    -- cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
+    -- config = true,
     config = function()
       local opts = {
         sort_by = 'case_sensitive',
         sync_root_with_cwd = false,
         respect_buf_cwd = false,
-        hijack_directories = { enable = false },
+        disable_netrw = true,
+        hijack_directories = { enable = true, auto_open = true },
         update_focused_file = { enable = true, update_root = false },
         actions = { open_file = { resize_window = false } },
         view = { adaptive_size = false, preserve_window_proportions = true, width = 35 },
@@ -637,6 +720,7 @@ run['File Explorer'] = {
     end,
   },
   ['nvim-neo-tree/neo-tree.nvim'] = {
+    -- event = 'VeryLazy',
     cmd = { 'Neotree' },
     config = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -655,6 +739,7 @@ run['File Explorer'] = {
         filesystem = {
           bind_to_cwd = false,
           follow_current_file = true,
+          -- hijack_netrw_behavior = "open_default", -- "open_current",  -- "disabled",
         },
         default_component_configs = {
           indent = {
@@ -713,6 +798,33 @@ run['Project'] = {
       })
     end,
   },
+  ['pluffie/neoproj'] = {
+    cmd = { 'ProjectOpen', 'ProjectNew' },
+  },
+  ['gnikdroy/projections.nvim'] = {
+    event = 'VeryLazy',
+    config = function()
+      local opts = {}
+      require('projections').setup(opts)
+
+      -- Bind <leader>fp to Telescope projections
+      require('telescope').load_extension('projections')
+
+      -- Autostore session on VimExit
+      local Session = require('projections.session')
+      vim.api.nvim_create_autocmd({ 'VimLeavePre' }, {
+        callback = function() Session.store(vim.loop.cwd()) end,
+      })
+
+      -- Switch to project if vim was started in a project dir
+      local switcher = require('projections.switcher')
+      vim.api.nvim_create_autocmd({ 'VimEnter' }, {
+        callback = function()
+          if vim.fn.argc() == 0 then switcher.switch(vim.loop.cwd()) end
+        end,
+      })
+    end,
+  },
 }
 
 run['Todo'] = {
@@ -735,6 +847,14 @@ run['Session'] = {
       })
     end,
   },
+  ['rmagatti/auto-session'] = {
+    config = function()
+      require('auto-session').setup({
+        -- log_level = "error",
+        auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      })
+    end,
+  },
   ['folke/persistence.nvim'] = {
     event = 'BufReadPre',
     config = function() require('persistence').setup() end,
@@ -743,6 +863,9 @@ run['Session'] = {
     -- enabled = false,
     event = 'BufReadPost',
     config = function() require('remember') end,
+  },
+  ['ethanholz/nvim-lastplace'] = {
+    config = function() require('nvim-lastplace').setup({}) end,
   },
 }
 
@@ -788,8 +911,19 @@ run['Git'] = {
     cmd = { 'DiffviewOpen' },
   },
   ['f-person/git-blame.nvim'] = {
-    enabled = false,
+    -- enabled = false,
     event = 'BufReadPost',
+    config = function()
+      vim.g.gitblame_display_virtual_text = 0
+      vim.o.shortmess = vim.o.shortmess .. 'S' -- this is for the search_count function so lua can know this is `lua expression`
+    end,
+  },
+  ['TimUntersberger/neogit'] = {
+    cmd = { 'Neogit' },
+    config = function()
+      local neogit = require('neogit')
+      neogit.setup({})
+    end,
   },
 }
 
@@ -798,16 +932,56 @@ run['Fuzzy Finder'] = {
     cmd = { 'Telescope' },
     config = function()
       local telescope = require('telescope')
+      local actions = require('telescope.actions')
+      local previewers = require('telescope.previewers')
+      local _new_maker = function(filepath, bufnr, opts)
+        opts = opts or {}
+        filepath = vim.fn.expand(filepath)
+        vim.loop.fs_stat(filepath, function(_, stat)
+          if not stat then return end
+          if stat.size > 100000 then
+            return
+          else
+            previewers.buffer_previewer_maker(filepath, bufnr, opts)
+          end
+        end)
+      end
       local opts = {
         defaults = {
           prompt_prefix = ' ',
           selection_caret = ' ',
+          buffer_previewer_maker = _new_maker,
+          file_ignore_patterns = { 'node_modules', '%_files/*.html', '%_cache', '.git/', 'site_libs', '.venv' },
+          layout_strategy = 'flex',
+          sorting_strategy = 'ascending',
+          layout_config = {
+            prompt_position = 'top',
+          },
         },
         pickers = {
           buffers = {
             ignore_current_buffer = false,
             sort_lastused = true,
             sort_mru = true,
+          },
+          find_files = {
+            hidden = true,
+            find_command = {
+              'rg',
+              '--no-ignore',
+              '--files',
+              '--hidden',
+              '--glob',
+              '!.git/*',
+              '--glob',
+              '!**/.Rproj.user/*',
+              '-L',
+            },
+          },
+        },
+        extensions = {
+          ['ui-select'] = {
+            require('telescope.themes').get_dropdown(),
           },
         },
       }
@@ -820,6 +994,10 @@ run['Fuzzy Finder'] = {
       telescope.load_extension('repo')
       telescope.load_extension('refactoring')
       telescope.load_extension('notify')
+      telescope.load_extension('ui-select')
+      telescope.load_extension('file_browser')
+      telescope.load_extension('dap')
+      telescope.load_extension('projections')
       vim.cmd([[autocmd User TelescopePreviewerLoaded setlocal wrap]])
     end,
   },
@@ -1150,6 +1328,56 @@ run['Search'] = {
   },
 }
 
+run['Undo'] = {
+  ['mbbill/undotree'] = {
+    cmd = { 'UndotreeToggle' },
+  },
+}
+
+run['Marks'] = {
+  ['chentoast/marks.nvim'] = {
+    -- lazy = false,
+    event = { 'VeryLazy' },
+    config = function()
+      local opts = {
+        -- whether to map keybinds or not. default true
+        default_mappings = true,
+        -- which builtin marks to show. default {}
+        builtin_marks = { '.', '<', '>', '^' },
+        -- whether movements cycle back to the beginning/end of buffer. default true
+        cyclic = true,
+        -- whether the shada file is updated after modifying uppercase marks. default false
+        force_write_shada = false,
+        -- how often (in ms) to redraw signs/recompute mark positions.
+        -- higher values will have better performance but may cause visual lag,
+        -- while lower values may cause performance penalties. default 150.
+        refresh_interval = 250,
+        -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+        -- marks, and bookmarks.
+        -- can be either a table with all/none of the keys, or a single number, in which case
+        -- the priority applies to all marks.
+        -- default 10.
+        sign_priority = { lower = 10, upper = 15, builtin = 8, bookmark = 20 },
+        -- disables mark tracking for specific filetypes. default {}
+        excluded_filetypes = {},
+        -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+        -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+        -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+        -- default virt_text is "".
+        bookmark_0 = {
+          sign = '⚑',
+          virt_text = 'hello world',
+          -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+          -- defaults to false.
+          annotate = false,
+        },
+        mappings = {},
+      }
+      require('marks').setup(opts)
+    end,
+  },
+}
+
 run['Editing Visual Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
@@ -1346,6 +1574,11 @@ run['Editing Action'] = {
     cmd = { 'CarbonNow' },
     config = function() require('carbon-now').setup() end,
   },
+  ['jbyuki/venn.nvim'] = {
+    -- cmd = { 'VBox' },
+    event = { 'BufReadPost' },
+    config = function() end,
+  },
 }
 
 run['Completion'] = {
@@ -1358,6 +1591,7 @@ run['Completion'] = {
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-emoji',
       'saadparwaiz1/cmp_luasnip',
     },
     config = function()
@@ -1433,6 +1667,7 @@ run['Completion'] = {
           { name = 'luasnip' },
           { name = 'buffer' },
           { name = 'path' },
+          { name = 'emoji' },
         },
         snippet = { expand = function(args) require('luasnip').lsp_expand(args.body) end },
         formatting = fmt_presets.vscode,
@@ -1631,8 +1866,8 @@ run['LSP VIF'] = {
       require('lsp_signature').setup(opts)
     end,
   },
-  ['glepnir/lspsaga.nvim'] = {
-    enabled = false,
+  ['nvimdev/lspsaga.nvim'] = {
+    -- enabled = false,
     cmd = { 'Lspsaga' },
     config = function()
       local opts = {
@@ -1708,6 +1943,93 @@ run['LSP VIF'] = {
   ['Fildo7525/pretty_hover'] = {
     config = function() require('pretty_hover').setup() end,
   },
+  ['lsp_lines.nvim'] = {
+    -- enabled = false,
+    event = { 'LspAttach' },
+    config = function() require('lsp_lines').setup() end,
+  },
+  ['nvim-lua/lsp-status.nvim'] = {
+    enabled = false,
+    event = { 'LspAttach' },
+    config = function()
+      local icons = require('module.options').icons
+      require('lsp-status').status()
+      require('lsp-status').register_progress()
+      require('lsp-status').config({
+        indicator_errors = '✗',
+        indicator_warnings = '⚠',
+        indicator_info = '',
+        indicator_hint = '',
+        indicator_ok = '✔',
+        current_function = true,
+        diagnostics = false,
+        select_symbol = nil,
+        update_interval = 100,
+        status_symbol = icons.collects.Tomatoes,
+      })
+    end,
+  },
+  ['kosayoda/nvim-lightbulb'] = {
+    enabled = false,
+    event = { 'LspAttach' },
+    config = function()
+      local icons = require('module.options').icons
+      local opts = {
+        -- LSP client names to ignore
+        -- Example: {"sumneko_lua", "null-ls"}
+        ignore = {},
+        sign = {
+          enabled = true,
+          -- Priority of the gutter sign
+          priority = 10,
+          text = icons.diagnostics.Hint, -- '💡',
+        },
+        float = {
+          enabled = false,
+          -- Text to show in the popup float
+          text = icons.diagnostics.Hint, -- '💡',
+          -- Available keys for window options:
+          -- - height     of floating window
+          -- - width      of floating window
+          -- - wrap_at    character to wrap at for computing height
+          -- - max_width  maximal width of floating window
+          -- - max_height maximal height of floating window
+          -- - pad_left   number of columns to pad contents at left
+          -- - pad_right  number of columns to pad contents at right
+          -- - pad_top    number of lines to pad contents at top
+          -- - pad_bottom number of lines to pad contents at bottom
+          -- - offset_x   x-axis offset of the floating window
+          -- - offset_y   y-axis offset of the floating window
+          -- - anchor     corner of float to place at the cursor (NW, NE, SW, SE)
+          -- - winblend   transparency of the window (0-100)
+          win_opts = {},
+        },
+        virtual_text = {
+          enabled = false,
+          -- Text to show at virtual text
+          text = icons.diagnostics.Hint, -- '💡',
+          -- highlight mode to use for virtual text (replace, combine, blend), see :help nvim_buf_set_extmark() for reference
+          hl_mode = 'replace',
+        },
+        status_text = {
+          enabled = false,
+          -- Text to provide when code actions are available
+          text = icons.diagnostics.Hint, -- '💡',
+          -- Text to provide when no actions are available
+          text_unavailable = '',
+        },
+        autocmd = {
+          enabled = true,
+          -- see :help autocmd-pattern
+          pattern = { '*' },
+          -- see :help autocmd-events
+          events = { 'CursorHold', 'CursorHoldI' },
+        },
+      }
+      -- Showing defaults
+      require('nvim-lightbulb').setup(opts)
+    end,
+  },
 }
 
 run['DAP VIF'] = {
@@ -1767,7 +2089,7 @@ run['Dev'] = {
 }
 
 local cached = {}
-M.spec = function(url, dev)
+M.spec = function(url, named)
   if vim.tbl_isempty(cached) then
     for _, v in pairs(run) do
       cached = vim.tbl_deep_extend('error', cached, v)
@@ -1775,7 +2097,7 @@ M.spec = function(url, dev)
   end
   local key = url
   local pack = url
-  if dev then
+  if named then
     key = url['name']
   else
     pack = { url }

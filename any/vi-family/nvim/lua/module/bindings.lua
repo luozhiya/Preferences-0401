@@ -77,6 +77,7 @@ M.lsp = function(client, buffer)
   end
   local _opts = function(desc) return { buffer = buffer, desc = desc } end
   M.map('n', 'gl', vim.diagnostic.open_float, _opts('Line Diagnostics'))
+  M.map('n', 'gL', '<cmd>Lspsaga show_line_diagnostics<cr>', _opts('Line Diagnostics'))
   M.map('n', 'K', _hover, _opts('Hover'))
   M.map('n', 'gh', _hover, _opts('Hover'))
   M.map('n', 'gK', vim.lsp.buf.signature_help, _opts('Signature Help'))
@@ -215,6 +216,24 @@ M.telescope = function()
   }
 end
 
+local _ts_opts = function(path, callback, any)
+  return {
+    cwd = path,
+    search_dirs = { path },
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require('telescope.actions')
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = require('telescope.actions.state').get_selected_entry()
+        local filename = selection.filename
+        if filename == nil then filename = selection[1] end
+        callback(filename, any)
+      end)
+      return true
+    end,
+  }
+end
+
 M.neotree = function()
   local telescope = require('telescope.builtin')
   local fs = require('neo-tree.sources.filesystem')
@@ -241,15 +260,11 @@ M.neotree = function()
         end,
         telescope_find = function(state)
           local path = state.tree:get_node():get_id()
-          telescope.find_files(
-            get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state)
-          )
+          telescope.find_files(_ts_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state))
         end,
         telescope_grep = function(state)
           local path = state.tree:get_node():get_id()
-          telescope.live_grep(
-            get_telescope_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state)
-          )
+          telescope.live_grep(_ts_opts(path, function(name, state) fs.navigate(state, state.path, name) end, state))
         end,
       },
     },
@@ -257,23 +272,6 @@ M.neotree = function()
 end
 
 M.nvim_tree = function()
-  local _ts_opts = function(path, callback, any)
-    return {
-      cwd = path,
-      search_dirs = { path },
-      attach_mappings = function(prompt_bufnr, map)
-        local actions = require('telescope.actions')
-        actions.select_default:replace(function()
-          actions.close(prompt_bufnr)
-          local selection = require('telescope.actions.state').get_selected_entry()
-          local filename = selection.filename
-          if filename == nil then filename = selection[1] end
-          callback(filename, any)
-        end)
-        return true
-      end,
-    }
-  end
   local _path = function()
     local node = require('nvim-tree.lib').get_node_at_cursor()
     if node == nil then return end
@@ -352,7 +350,7 @@ M.ts = function()
 end
 
 M.wk = function(wk)
-  function _any_toggle(cmd)
+  local function _any_toggle(cmd)
     local run = require('toggleterm.terminal').Terminal:new({
       cmd = cmd,
       dir = 'git_dir',
@@ -410,6 +408,294 @@ M.wk = function(wk)
       if require('hlslens').exportLastSearchToQuickfix() then vim.cmd('cw') end
     end)
     return vim.cmd([[noh]])
+  end
+  local _options_hydra = function()
+    local Hydra = require('hydra')
+    local hint = [[
+  ^ ^        Options
+  ^
+  _v_ %{ve} virtual edit
+  _i_ %{list} invisible characters  
+  _s_ %{spell} spell
+  _w_ %{wrap} wrap
+  _c_ %{cul} cursor line
+  _n_ %{nu} number
+  _r_ %{rnu} relative number
+  ^
+      ^^^^                _<Esc>_
+    ]]
+    local opts_hydra = Hydra({
+      name = 'Options',
+      hint = hint,
+      config = {
+        color = 'amaranth',
+        invoke_on_body = true,
+        hint = {
+          border = 'rounded',
+          position = 'middle',
+        },
+      },
+      -- mode = { 'n', 'x' },
+      -- body = '<leader>o',
+      heads = {
+        {
+          'n',
+          function()
+            if vim.o.number == true then
+              vim.o.number = false
+            else
+              vim.o.number = true
+            end
+          end,
+          { desc = 'number' },
+        },
+        {
+          'r',
+          function()
+            if vim.o.relativenumber == true then
+              vim.o.relativenumber = false
+            else
+              vim.o.number = true
+              vim.o.relativenumber = true
+            end
+          end,
+          { desc = 'relativenumber' },
+        },
+        {
+          'v',
+          function()
+            if vim.o.virtualedit == 'all' then
+              vim.o.virtualedit = 'block'
+            else
+              vim.o.virtualedit = 'all'
+            end
+          end,
+          { desc = 'virtualedit' },
+        },
+        {
+          'i',
+          function()
+            if vim.o.list == true then
+              vim.o.list = false
+            else
+              vim.o.list = true
+            end
+          end,
+          { desc = 'show invisible' },
+        },
+        {
+          's',
+          function()
+            if vim.o.spell == true then
+              vim.o.spell = false
+            else
+              vim.o.spell = true
+            end
+          end,
+          { exit = true, desc = 'spell' },
+        },
+        {
+          'w',
+          function()
+            if vim.o.wrap ~= true then
+              vim.o.wrap = true
+              -- Dealing with word wrap:
+              -- If cursor is inside very long line in the file than wraps
+              -- around several rows on the screen, then 'j' key moves you to
+              -- the next line in the file, but not to the next row on the
+              -- screen under your previous position as in other editors. These
+              -- bindings fixes this.
+              vim.keymap.set(
+                'n',
+                'k',
+                function() return vim.v.count > 0 and 'k' or 'gk' end,
+                { expr = true, desc = 'k or gk' }
+              )
+              vim.keymap.set(
+                'n',
+                'j',
+                function() return vim.v.count > 0 and 'j' or 'gj' end,
+                { expr = true, desc = 'j or gj' }
+              )
+            else
+              vim.o.wrap = false
+              vim.keymap.del('n', 'k')
+              vim.keymap.del('n', 'j')
+            end
+          end,
+          { desc = 'wrap' },
+        },
+        {
+          'c',
+          function()
+            if vim.o.cursorline == true then
+              vim.o.cursorline = false
+            else
+              vim.o.cursorline = true
+            end
+          end,
+          { desc = 'cursor line' },
+        },
+        { '<Esc>', nil, { exit = true } },
+      },
+    })
+    opts_hydra:activate()
+  end
+  local _fuzzy_hydra = function()
+    local Hydra = require('hydra')
+    local cmd = require('hydra.keymap-util').cmd
+    local hint = [[
+                     _f_: files       _m_: marks
+       🭇🬭🬭🬭🬭🬭🬭🬭🬭🬼    _o_: old files   _g_: live grep
+      🭉🭁🭠🭘    🭣🭕🭌🬾   _p_: projects    _/_: search in file
+      🭅█ ▁     █🭐
+      ██🬿      🭊██   _r_: resume      _u_: undotree
+     🭋█🬝🮄🮄🮄🮄🮄🮄🮄🮄🬆█🭀  _h_: vim help    _c_: execute command
+     🭤🭒🬺🬹🬱🬭🬭🬭🬭🬵🬹🬹🭝🭙  _k_: keymaps     _;_: commands history 
+                     _O_: options     _?_: search history
+     ^
+                     _<Enter>_: Telescope           _<Esc>_
+    ]]
+    local opts = {
+      name = 'Telescope',
+      hint = hint,
+      config = {
+        color = 'teal',
+        invoke_on_body = true,
+        hint = {
+          position = 'middle',
+          border = 'rounded',
+        },
+      },
+      -- mode = 'n',
+      -- body = '<Leader>f',
+      heads = {
+        { 'f', cmd('Telescope find_files') },
+        { 'g', cmd('Telescope live_grep') },
+        { 'o', cmd('Telescope oldfiles'), { desc = 'recently opened files' } },
+        { 'h', cmd('Telescope help_tags'), { desc = 'vim help' } },
+        { 'm', cmd('MarksListBuf'), { desc = 'marks' } },
+        { 'k', cmd('Telescope keymaps') },
+        { 'O', cmd('Telescope vim_options') },
+        { 'r', cmd('Telescope resume') },
+        { 'p', cmd('Telescope projects'), { desc = 'projects' } },
+        { '/', cmd('Telescope current_buffer_fuzzy_find'), { desc = 'search in file' } },
+        { '?', cmd('Telescope search_history'), { desc = 'search history' } },
+        { ';', cmd('Telescope command_history'), { desc = 'command-line history' } },
+        { 'c', cmd('Telescope commands'), { desc = 'execute command' } },
+        { 'u', cmd('silent! %foldopen! | UndotreeToggle'), { desc = 'undotree' } },
+        { '<Enter>', cmd('Telescope'), { exit = true, desc = 'list all pickers' } },
+        { '<Esc>', nil, { exit = true, nowait = true } },
+      },
+    }
+    local fuzzy_hydra = Hydra(opts)
+    fuzzy_hydra:activate()
+  end
+  local _draw_diagram_hydra = function()
+    local Hydra = require('hydra')
+    local hint = [[
+  Arrow^^^^^^   Select region with <C-v> 
+  ^ ^ _K_ ^ ^   _f_: surround it with box
+  _H_ ^ ^ _L_
+  ^ ^ _J_ ^ ^                      _<Esc>_
+    ]]
+    local opts = {
+      name = 'Draw Diagram',
+      hint = hint,
+      config = {
+        color = 'pink',
+        invoke_on_body = true,
+        hint = {
+          border = 'rounded',
+        },
+        on_enter = function() vim.o.virtualedit = 'all' end,
+      },
+      -- mode = 'n',
+      -- body = '<leader>ed',
+      heads = {
+        { 'H', '<C-v>h:VBox<CR>' },
+        { 'J', '<C-v>j:VBox<CR>' },
+        { 'K', '<C-v>k:VBox<CR>' },
+        { 'L', '<C-v>l:VBox<CR>' },
+        { 'f', ':VBox<CR>', { mode = 'v' } },
+        { '<Esc>', nil, { exit = true } },
+      },
+    }
+    local draw_hydra = Hydra(opts)
+    draw_hydra:activate()
+  end
+  local _git_hydra = function()
+    local Hydra = require('hydra')
+    local gitsigns = require('gitsigns')
+    local hint = [[
+  _J_: next hunk   _s_: stage hunk        _d_: show deleted   _b_: blame line
+  _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full 
+  ^ ^              _S_: stage buffer      ^ ^                 _/_: show base file
+  ^
+  ^ ^              _<Enter>_: Neogit              _q_: exit
+    ]]
+    local opts = {
+      name = 'Git',
+      hint = hint,
+      config = {
+        buffer = bufnr,
+        color = 'pink',
+        invoke_on_body = true,
+        hint = {
+          border = 'rounded',
+        },
+        on_enter = function()
+          vim.cmd('mkview')
+          vim.cmd('silent! %foldopen!')
+          vim.bo.modifiable = false
+          gitsigns.toggle_signs(true)
+          gitsigns.toggle_linehl(true)
+        end,
+        on_exit = function()
+          local cursor_pos = vim.api.nvim_win_get_cursor(0)
+          vim.cmd('loadview')
+          vim.api.nvim_win_set_cursor(0, cursor_pos)
+          vim.cmd('normal zv')
+          gitsigns.toggle_signs(false)
+          gitsigns.toggle_linehl(false)
+          gitsigns.toggle_deleted(false)
+        end,
+      },
+      -- mode = {'n','x'},
+      -- body = '<leader>g',
+      heads = {
+        {
+          'J',
+          function()
+            if vim.wo.diff then return ']c' end
+            vim.schedule(function() gitsigns.next_hunk() end)
+            return '<Ignore>'
+          end,
+          { expr = true, desc = 'next hunk' },
+        },
+        {
+          'K',
+          function()
+            if vim.wo.diff then return '[c' end
+            vim.schedule(function() gitsigns.prev_hunk() end)
+            return '<Ignore>'
+          end,
+          { expr = true, desc = 'prev hunk' },
+        },
+        { 's', ':Gitsigns stage_hunk<CR>', { silent = true, desc = 'stage hunk' } },
+        { 'u', gitsigns.undo_stage_hunk, { desc = 'undo last stage' } },
+        { 'S', gitsigns.stage_buffer, { desc = 'stage buffer' } },
+        { 'p', gitsigns.preview_hunk, { desc = 'preview hunk' } },
+        { 'd', gitsigns.toggle_deleted, { nowait = true, desc = 'toggle deleted' } },
+        { 'b', gitsigns.blame_line, { desc = 'blame' } },
+        { 'B', function() gitsigns.blame_line({ full = true }) end, { desc = 'blame show full' } },
+        { '/', gitsigns.show, { exit = true, desc = 'show base file' } }, -- show the base of the file
+        { '<Enter>', '<Cmd>Neogit<CR>', { exit = true, desc = 'Neogit' } },
+        { 'q', nil, { exit = true, nowait = true, desc = 'exit' } },
+      },
+    }
+    local git_hydra = Hydra(opts)
+    git_hydra:activate()
   end
   -- stylua: ignore start
   local wk_ve = {
@@ -491,6 +777,7 @@ M.wk = function(wk)
       u = { '<cmd>Lazy update<cr>', 'Lazy Update' },
       c = { '<cmd>Lazy clean<cr>', 'Lazy Clean' },
       s = { vim.show_pos, 'Inspect Pos' },
+      o = { _options_hydra, 'Options' },
     },
     h = {
       name = '+History/Notifications',
@@ -507,6 +794,7 @@ M.wk = function(wk)
       i = { '<cmd>LspInfo<cr>', 'Info' },
       -- l = { '<cmd>Lspsaga show_line_diagnostics<cr>', 'Lspsaga Show Line Diagnostics' },
       l = { vim.diagnostic.open_float, 'Line Diagnostics' },
+      L = { function() require('lsp_lines').toggle() end, 'Toggle lsp_lines' },
       -- f = { '<cmd>FormatCode<cr>', 'Format Code' },
       f = { '<cmd>FormatDocument<cr>', 'Format Document' },
       a = { '<cmd>AerialToggle<cr>', 'Aerial OutlineToggle (aerial.nvim)' },
@@ -570,6 +858,7 @@ M.wk = function(wk)
         name = '+Hunk',
       },
       m = { '<cmd>SublimeMerge<cr>', 'Sublime Merge' },
+      g = { _git_hydra, 'Git Hydra' },
     },
     t = {
       name = '+Terminal',
@@ -621,9 +910,10 @@ M.wk = function(wk)
         w = { '<cmd>set ff=dos<cr>', 'Windows Ending' },
         m = { '<cmd>set ff=mac<cr>', 'Mac Ending' },
       },
+      d = { _draw_diagram_hydra, 'Draw Diagram' },
     },
     f = {
-      name = '+File/Explorer',
+      name = '+Fuzzy/File/Explorer',
       s = { '<cmd>confirm wa<cr>', 'Save All' },
       n = { function() vim.cmd('NnnPicker ' .. require('base').get_contain_directory()) end, 'nnn Explorer' },
       e = { _NvimTree_find, 'NvimTree Explorer' },
@@ -634,11 +924,13 @@ M.wk = function(wk)
       l = { '<cmd>Telescope live_grep_args<cr>', 'Find Text Args' },
       -- p = { '<cmd>Telescope projects<cr>', 'Projects' },
       p = { '<cmd>Projects<cr>', 'Projects' },
+      w = { '<cmd>Telescope projections<cr>', 'Workspaces' },
       o = { '<cmd>Telescope oldfiles<cr>', 'Frecency Files' },
       u = { '<cmd>Telescope undo bufnr=0<cr>', 'Undo Tree' },
       r = { '<cmd>Telescope repo list<cr>', 'Repo list' },
       a = { _open_with_default_app, 'Open With Default APP' },
       x = { _reveal_file_in_file_explorer, 'Reveal In File Explorer' },
+      z = { _fuzzy_hydra, 'Fuzzy Hydra' },
     },
   }
   wk.register(n, { mode = { 'n', 'v', 'x' }, prefix = '<leader>' })
@@ -705,7 +997,10 @@ M.setup_code = function()
   M.map('v', '<', '<gv', 'deIndent Continuously')
   M.map('v', '>', '>gv', 'Indent Continuously')
   -- Add undo break-points
+  -- M.map('i', '<tab>', ' <c-g>u')
+  M.map('i', '<cr>', '<cr><c-g>u')
   M.map('i', ' ', ' <c-g>u')
+  M.map('i', ':', ':<c-g>u')
   M.map('i', ',', ',<c-g>u')
   M.map('i', '.', '.<c-g>u')
   M.map('i', ';', ';<c-g>u')
@@ -1191,6 +1486,87 @@ M.setup_autocmd = function()
       end
     end,
   })
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'HijackDirectories',
+    once = true,
+    callback = function() end,
+  })
+  -- vim.api.nvim_create_autocmd('BufEnter', {
+  --   group = augroup('hijack_directories'),
+  --   pattern = '*',
+  --   callback = function(args)
+  --     local info = vim.loop.fs_stat(args.file)
+  --     if info and info.type == 'directory' then
+  --       -- require('module.settings').config('nvim-neo-tree/neo-tree.nvim')()
+  --       vim.cmd('Neotree position=current ' .. args.file)
+  --       vim.api.nvim_exec_autocmds('User', { pattern = 'HijackDirectories', modeline = false })
+  --     end
+  --   end,
+  --   desc = 'Hijack Directories',
+  -- })
+  -- auto show hydra on nvimtree focus
+  local function _show_hydra_on_nvimtree_focus()
+    local function change_root_to_global_cwd()
+      local global_cwd = vim.fn.getcwd()
+      -- local global_cwd = vim.fn.getcwd(-1, -1)
+      api.tree.change_root(global_cwd)
+    end
+    local hint = [[
+   _w_: cd CWD  _c_: Path yank  _/_: Filter 
+   _y_: Copy    _x_: Cut        _p_: Paste 
+   _r_: Rename  _d_: Remove     _n_: New 
+   _h_: Hidden  _?_: Help
+   ^
+    ]]
+    -- ^ ^           _q_: exit
+    local nvim_tree_hydra = nil
+    local Hydra = require('hydra')
+    local function spawn_nvim_tree_hydra()
+      local api = require('nvim-tree.api')
+      nvim_tree_hydra = Hydra({
+        name = 'NvimTree',
+        hint = hint,
+        config = {
+          color = 'pink',
+          invoke_on_body = true,
+          buffer = 0, -- only for active buffer
+          hint = {
+            position = 'bottom',
+            border = 'rounded',
+          },
+        },
+        mode = 'n',
+        body = 'H',
+        heads = {
+          { 'w', change_root_to_global_cwd, { silent = true } },
+          { 'c', api.fs.copy.absolute_path, { silent = true } },
+          { '/', api.live_filter.start, { silent = true } },
+          { 'y', api.fs.copy.node, { silent = true } },
+          { 'x', api.fs.cut, { exit = true, silent = true } },
+          { 'p', api.fs.paste, { exit = true, silent = true } },
+          { 'r', api.fs.rename, { silent = true } },
+          { 'd', api.fs.remove, { silent = true } },
+          { 'n', api.fs.create, { silent = true } },
+          { 'h', api.tree.toggle_hidden_filter, { silent = true } },
+          { '?', api.tree.toggle_help, { silent = true } },
+          -- { "q", nil, { exit = true, nowait = true } },
+        },
+      })
+      nvim_tree_hydra:activate()
+    end
+    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+      pattern = '*',
+      callback = function(opts)
+        if vim.bo[opts.buf].filetype == 'NvimTree' then
+          spawn_nvim_tree_hydra()
+        else
+          if nvim_tree_hydra then nvim_tree_hydra:exit() end
+        end
+      end,
+      group = augroup('NvimTreeHydraAu'),
+    })
+  end
+  _show_hydra_on_nvimtree_focus()
 end
 
 return M
