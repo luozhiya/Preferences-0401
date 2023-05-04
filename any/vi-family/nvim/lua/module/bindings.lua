@@ -1,4 +1,5 @@
 local base = require('base')
+
 local M = {}
 
 M.map = function(mode, lhs, rhs, opts)
@@ -1577,9 +1578,9 @@ M.setup_comands = function()
   local _format_document = function()
     _format()
     -- vim.cmd([[confirm! set ff=unix]])
-    vim.cmd([[set modifiable]])
-    vim.cmd([[set ff=unix]])
-    vim.cmd([[wa]])
+    -- vim.cmd([[set modifiable]])
+    -- vim.cmd([[set ff=unix]])
+    -- vim.cmd([[wa]])
   end
   local _toggle_autoformat = function()
     base.g_toggle('autoformat', { 'Auto format before saved', 'Dont auto format', 'Auto Format' })
