@@ -378,7 +378,7 @@ end
 
 M.neo_minimap = function(nm)
   -- Lua
-  nm.set({ 'zi', 'zo', 'zu' }, '*.lua', {
+  local lua = {
     events = { 'BufEnter' },
     query = {
       [[
@@ -401,7 +401,7 @@ M.neo_minimap = function(nm)
               ((for_statement) @cap)
               ((function_declaration) @cap)
               ((assignment_statement(expression_list((function_definition) @cap))))
-  
+
               ((function_call (identifier)) @cap (#vim-match? @cap "^__*" ))
               ((function_call (dot_index_expression) @field (#eq? @field "vim.keymap.set")) @cap)
               ]],
@@ -428,9 +428,10 @@ M.neo_minimap = function(nm)
     -- open_win_opts = { border = "double" },
     win_opts = { scrolloff = 1 },
     disable_indentaion = true,
-  })
+  }
+  nm.set({ 'zi', 'zo', 'zu' }, '*.lua', lua)
   -- C++
-  nm.set({ 'zi', 'zo', 'zu' }, { '*.cpp', '*.h', '*.c' }, {
+  local cpp = {
     events = { 'BufEnter' },
     query = {
       [[
@@ -450,9 +451,10 @@ M.neo_minimap = function(nm)
     },
     win_opts = { scrolloff = 1 },
     disable_indentaion = true,
-  })
+  }
+  nm.set({ 'zi', 'zo', 'zu' }, { '*.cpp', '*.h', '*.c' }, cpp)
   -- Rust
-  nm.set({ 'zi', 'zo' }, '*.rs', {
+  local rust = {
     events = { 'BufEnter' },
     query = {
       [[
@@ -470,12 +472,13 @@ M.neo_minimap = function(nm)
     },
     regex = {},
     search_patterns = {
-      { 'impl', '<C-j>', true },
-      { 'impl', '<C-k>', false },
-      { 'mod', '<C-l>', false },
+      { 'impl', '<c-j>', true },
+      { 'impl', '<c-k>', false },
+      { 'mod', '<c-l>', false },
     },
     height_toggle = { 20, 25 },
-  })
+  }
+  nm.set({ 'zi', 'zo' }, '*.rs', rust)
 end
 
 M.wk = function(wk)
@@ -544,7 +547,7 @@ M.wk = function(wk)
   ^ ^        Options
   ^
   _v_ %{ve} virtual edit
-  _i_ %{list} invisible characters  
+  _i_ %{list} invisible characters
   _s_ %{spell} spell
   _w_ %{wrap} wrap
   _c_ %{cul} cursor line
@@ -680,7 +683,7 @@ M.wk = function(wk)
       🭅█ ▁     █🭐
       ██🬿      🭊██   _r_: resume      _u_: undotree
      🭋█🬝🮄🮄🮄🮄🮄🮄🮄🮄🬆█🭀  _h_: vim help    _c_: execute command
-     🭤🭒🬺🬹🬱🬭🬭🬭🬭🬵🬹🬹🭝🭙  _k_: keymaps     _;_: commands history 
+     🭤🭒🬺🬹🬱🬭🬭🬭🬭🬵🬹🬹🭝🭙  _k_: keymaps     _;_: commands history
                      _O_: options     _?_: search history
      ^
                      _<Enter>_: Telescope           _<Esc>_
@@ -723,7 +726,7 @@ M.wk = function(wk)
   local _draw_diagram_hydra = function()
     local Hydra = require('hydra')
     local hint = [[
-  Arrow^^^^^^   Select region with <C-v> 
+  Arrow^^^^^^   Select region with <C-v>
   ^ ^ _K_ ^ ^   _f_: surround it with box
   _H_ ^ ^ _L_
   ^ ^ _J_ ^ ^                      _<Esc>_
@@ -759,7 +762,7 @@ M.wk = function(wk)
     local gitsigns = require('gitsigns')
     local hint = [[
   _J_: next hunk   _s_: stage hunk        _d_: show deleted   _b_: blame line
-  _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full 
+  _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full
   ^ ^              _S_: stage buffer      ^ ^                 _/_: show base file
   ^
   ^ ^              _<Enter>_: Neogit              _q_: exit
@@ -882,7 +885,7 @@ M.wk = function(wk)
     local window_hint = [[
      ^^^^^^^^^^^^     Move      ^^    Size   ^^   ^^     Split
      ^^^^^^^^^^^^-------------  ^^-----------^^   ^^---------------
-     ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally 
+     ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally
      _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<C-h>_ _<C-l>_   _v_: vertically
      ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^   _<C-j>_   ^   _q_, _c_: close
      focus^^^^^^  window^^^^^^  ^_=_: equalize^   _z_: maximize
@@ -1518,7 +1521,7 @@ M.setup_comands = function()
     end
   end
   local _remove_exclusive_orm = function()
-    -- vim.cmd([[:%s/\r//g]])
+    vim.cmd([[:%s/\r//g]])
     vim.cmd([[set ff=unix]])
   end
   local _insert_date = function()
@@ -1574,6 +1577,7 @@ M.setup_comands = function()
   local _format_document = function()
     _format()
     -- vim.cmd([[confirm! set ff=unix]])
+    vim.cmd([[set modifiable]])
     vim.cmd([[set ff=unix]])
     vim.cmd([[wa]])
   end
@@ -1609,10 +1613,10 @@ M.setup_comands = function()
 end
 
 M.setup_autocmd = function()
-  local function augroup(name) return vim.api.nvim_create_augroup('bindings_' .. name, { clear = true }) end
+  local _augroup = function(name) return vim.api.nvim_create_augroup('bindings_' .. name, { clear = true }) end
   -- Unfold all level on open file
   vim.api.nvim_create_autocmd('BufRead', {
-    group = augroup('unfold_open'),
+    group = _augroup('unfold_open'),
     pattern = { '*.c', '*.cpp', '*.cc', '*.hpp', '*.h', '*.lua' },
     callback = function()
       vim.api.nvim_create_autocmd('BufWinEnter', {
@@ -1623,12 +1627,12 @@ M.setup_autocmd = function()
   })
   local _nofold = function() vim.cmd('set nofoldenable') end
   vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
-    group = augroup('nofoldenable'),
+    group = _augroup('nofoldenable'),
     callback = function() _nofold() end,
   })
   -- Close Neovim when all buffer closed
   vim.api.nvim_create_autocmd('BufEnter', {
-    group = augroup('NvimTreeClose'),
+    group = _augroup('NvimTreeClose'),
     pattern = 'NvimTree_*',
     callback = function()
       local layout = vim.api.nvim_call_function('winlayout', {})
@@ -1670,14 +1674,14 @@ M.setup_autocmd = function()
   -- local chengd_event = { 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI', 'TermClose', 'TermLeave' }
   -- Bug: neo-minimap conficts 'BufEnter' checktime
   vim.api.nvim_create_autocmd(chengd_event, {
-    group = augroup('checktime'),
+    group = _augroup('checktime'),
     pattern = '*',
     command = 'checktime',
   })
   -- Disable syntax for loog file
   local _disable_syntax = function() vim.cmd('if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif') end
   vim.api.nvim_create_autocmd('Filetype', {
-    group = augroup('disable_syntax'),
+    group = _augroup('disable_syntax'),
     pattern = 'log',
     callback = function() _disable_syntax() end,
   })
@@ -1685,7 +1689,7 @@ M.setup_autocmd = function()
   vim.cmd([[:autocmd TermClose * execute 'bdelete! ' . expand('<abuf>')]])
   -- Close some filetypes with <q>
   vim.api.nvim_create_autocmd('FileType', {
-    group = augroup('close_with_q'),
+    group = _augroup('close_with_q'),
     pattern = {
       'PlenaryTestPopup',
       'help',
@@ -1704,7 +1708,7 @@ M.setup_autocmd = function()
   })
   -- Auto create dir when saving a file, in case some intermediate directory does not exist
   vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-    group = augroup('auto_create_dir'),
+    group = _augroup('auto_create_dir'),
     callback = function(event)
       local file = vim.loop.fs_realpath(event.match) or event.match
       vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
@@ -1712,13 +1716,13 @@ M.setup_autocmd = function()
   })
   -- Highlight on yank
   vim.api.nvim_create_autocmd('TextYankPost', {
-    group = augroup('highlight_yank'),
+    group = _augroup('highlight_yank'),
     callback = function() vim.highlight.on_yank() end,
   })
   -- Auto toggle status and tablines for alpha
   -- vim.cmd([[autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2]])
   vim.api.nvim_create_autocmd('User', {
-    group = augroup('showtabline'),
+    group = _augroup('showtabline'),
     pattern = 'AlphaReady',
     callback = function()
       local prev_showtabline = vim.opt.showtabline
@@ -1737,7 +1741,7 @@ M.setup_autocmd = function()
   })
   -- Auto format before write
   vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-    group = augroup('autoformat'),
+    group = _augroup('autoformat'),
     callback = function(event)
       if vim.g.autoformat == true then vim.cmd([[FormatCode]]) end
     end,
@@ -1767,7 +1771,7 @@ M.setup_autocmd = function()
     callback = function() end,
   })
   vim.api.nvim_create_autocmd('BufEnter', {
-    group = augroup('hijack_directories'),
+    group = _augroup('hijack_directories'),
     pattern = '*',
     callback = function(args)
       local info = vim.loop.fs_stat(args.file)
@@ -1781,24 +1785,24 @@ M.setup_autocmd = function()
     desc = 'Hijack Directories',
   })
   -- auto show hydra on nvimtree focus
-  local function _show_hydra_on_nvimtree_focus()
-    local function change_root_to_global_cwd()
+  local _show_hydra_on_nvimtree_focus = function()
+    local _change_root_to_global_cwd = function()
       local api = require('nvim-tree.api')
       local global_cwd = vim.fn.getcwd()
       -- local global_cwd = vim.fn.getcwd(-1, -1)
       api.tree.change_root(global_cwd)
     end
     local hint = [[
-   _w_: cd CWD  _c_: Path yank  _/_: Filter 
-   _y_: Copy    _x_: Cut        _p_: Paste 
-   _r_: Rename  _d_: Remove     _n_: New 
+   _w_: cd CWD  _c_: Path yank  _/_: Filter
+   _y_: Copy    _x_: Cut        _p_: Paste
+   _r_: Rename  _d_: Remove     _n_: New
    _h_: Hidden  _?_: Help
    ^
     ]]
     -- ^ ^           _q_: exit
     local nvim_tree_hydra = nil
     local Hydra = require('hydra')
-    local function spawn_nvim_tree_hydra()
+    local _spawn_nvim_tree_hydra = function()
       local api = require('nvim-tree.api')
       nvim_tree_hydra = Hydra({
         name = 'NvimTree',
@@ -1815,7 +1819,7 @@ M.setup_autocmd = function()
         mode = 'n',
         body = 'H',
         heads = {
-          { 'w', change_root_to_global_cwd, { silent = true } },
+          { 'w', _change_root_to_global_cwd, { silent = true } },
           { 'c', api.fs.copy.absolute_path, { silent = true } },
           { '/', api.live_filter.start, { silent = true } },
           { 'y', api.fs.copy.node, { silent = true } },
@@ -1835,12 +1839,12 @@ M.setup_autocmd = function()
       pattern = '*',
       callback = function(opts)
         if vim.bo[opts.buf].filetype == 'NvimTree' then
-          spawn_nvim_tree_hydra()
+          _spawn_nvim_tree_hydra()
         else
           if nvim_tree_hydra then nvim_tree_hydra:exit() end
         end
       end,
-      group = augroup('NvimTreeHydraAu'),
+      group = _augroup('NvimTreeHydraAu'),
     })
   end
   _show_hydra_on_nvimtree_focus()

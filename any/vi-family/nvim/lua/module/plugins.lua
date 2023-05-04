@@ -18,11 +18,11 @@ local list = {
   { 'echasnovski/mini.starter' },
   { 'goolord/alpha-nvim' },
   -- Columns And Lines
+  { 'luukvbaal/statuscol.nvim' },
+  { 'yaocccc/nvim-foldsign' },  
   { 'petertriho/nvim-scrollbar' },
   { 'dstein64/nvim-scrollview' },
   { 'lewis6991/satellite.nvim' },
-  { 'luukvbaal/statuscol.nvim' },
-  { 'yaocccc/nvim-foldsign' },
   { 'utilyre/barbecue.nvim' },
   { 'b0o/incline.nvim' },
   { 'nvim-lualine/lualine.nvim' },

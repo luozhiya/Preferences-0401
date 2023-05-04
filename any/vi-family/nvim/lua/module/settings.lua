@@ -62,7 +62,7 @@ run['Start Screen'] = {
         '╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝',
       }, '\n')
       local pad = string.rep(' ', 22)
-      local new_section = function(name, action, section)
+      local _new_section = function(name, action, section)
         return { name = name, action = action, section = pad .. section }
       end
 
@@ -72,14 +72,14 @@ run['Start Screen'] = {
         evaluate_single = true,
         header = logo,
         items = {
-          new_section("Find file",    "Telescope find_files", "Telescope"),
-          new_section("Recent files", "Telescope oldfiles",   "Telescope"),
-          new_section("Grep text",    "Telescope live_grep",  "Telescope"),
-          new_section("init.lua",     "e $MYVIMRC",           "Config"),
-          new_section("Lazy",         "Lazy",                 "Config"),
-          new_section("New file",     "ene | startinsert",    "Built-in"),
-          new_section("Quit",         "qa",                   "Built-in"),
-          new_section("Session restore", [[lua require("persistence").load()]], "Session"),
+          _new_section("Find file",    "Telescope find_files", "Telescope"),
+          _new_section("Recent files", "Telescope oldfiles",   "Telescope"),
+          _new_section("Grep text",    "Telescope live_grep",  "Telescope"),
+          _new_section("init.lua",     "e $MYVIMRC",           "Config"),
+          _new_section("Lazy",         "Lazy",                 "Config"),
+          _new_section("New file",     "ene | startinsert",    "Built-in"),
+          _new_section("Quit",         "qa",                   "Built-in"),
+          _new_section("Session restore", [[lua require("persistence").load()]], "Session"),
         },
         content_hooks = {
           starter.gen_hook.adding_bullet(pad .. "░ ", false),
@@ -150,6 +150,7 @@ run['Start Screen'] = {
 }
 
 run['Columns And Lines'] = {
+  -- Status column plugin that provides a configurable 'statuscolumn' and click handlers.
   ['luukvbaal/statuscol.nvim'] = {
     event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
@@ -183,7 +184,7 @@ run['Columns And Lines'] = {
       }
       require('nvim-foldsign').setup(opts)
     end,
-  },  
+  },
   ['petertriho/nvim-scrollbar'] = {
     enabled = false,
     event = { 'User NeXT' },
@@ -227,7 +228,7 @@ run['Columns And Lines'] = {
     event = { 'User AlphaClosed', 'BufNewFile', 'BufReadPost', 'BufNew', 'User HijackDirectories' },
     config = function()
       local icons = require('module.options').icons
-      local function _lsp_active()
+      local _lsp_active = function()
         local names = {}
         local bufnr = vim.api.nvim_get_current_buf()
         for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
@@ -236,18 +237,18 @@ run['Columns And Lines'] = {
         return vim.tbl_isempty(names) and '' or icons.collects.Tomatoes .. table.concat(names, ' ')
         -- return 'LSP<' .. table.concat(names, ', ') .. '>'
       end
-      local function _location()
+      local _location = function()
         return string.format('%3d:%-2d ', vim.fn.line('.'), vim.fn.virtcol('.')) .. icons.collects.Pagelines
       end
-      local function _fg(name)
+      local _fg = function(name)
         return function()
           local hl = vim.api.nvim_get_hl_by_name(name, true)
           return hl and hl.foreground and { fg = string.format('#%06x', hl.foreground) }
         end
       end
-      local function _osv() return require('osv').is_running() and 'OSV Running' or '' end
+      local _osv = function() return require('osv').is_running() and 'OSV Running' or '' end
       local fileformat = { 'fileformat', icons_enabled = false }
-      local function _diff_source()
+      local _diff_source = function()
         local gitsigns = vim.b.gitsigns_status_dict
         if gitsigns then
           return {
@@ -257,7 +258,7 @@ run['Columns And Lines'] = {
           }
         end
       end
-      local function _trunc(trunc_width, trunc_len, hide_width, no_ellipsis)
+      local _trunc = function(trunc_width, trunc_len, hide_width, no_ellipsis)
         return function(str)
           local win_width = vim.fn.winwidth(0)
           if hide_width and win_width < hide_width then
@@ -269,14 +270,14 @@ run['Columns And Lines'] = {
         end
       end
       --function for optimizing the search count
-      local function _search_count()
+      local _search_count = function()
         if vim.api.nvim_get_vvar('hlsearch') == 1 then
           local res = vim.fn.searchcount({ maxcount = 999, timeout = 500 })
           if res.total > 0 then return string.format(icons.collects.Search .. '%d/%d', res.current, res.total) end
         end
         return ''
       end
-      local function _macro_reg() return vim.fn.reg_recording() end
+      local _macro_reg = function() return vim.fn.reg_recording() end
       local git_blame = require('gitblame')
       local opts = {
         options = {
@@ -1398,7 +1399,7 @@ run['Folding'] = {
     dependencies = { 'kevinhwang91/promise-async' },
     config = function()
       -- vim.o.foldcolumn = '1'
-      local handler = function(virtText, lnum, endLnum, width, truncate)
+      local _handler = function(virtText, lnum, endLnum, width, truncate)
         local new_virt_text = {}
         local suffix = ('  %d '):format(endLnum - lnum)
         local suf_width = vim.fn.strdisplaywidth(suffix)
@@ -1426,7 +1427,7 @@ run['Folding'] = {
         return new_virt_text
       end
       local opts = {
-        fold_virt_text_handler = handler,
+        fold_virt_text_handler = _handler,
         open_fold_hl_timeout = 100,
         -- provider_selector = function(bufnr, filetype, buftype)
         --   return {'treesitter', 'indent'}
@@ -1845,7 +1846,7 @@ run['C++'] = {
   ['Civitasv/cmake-tools.nvim'] = {
     ft = { 'c', 'cpp' },
     config = function()
-      require('cmake-tools').setup({
+      local opts = {
         cmake_command = 'cmake',
         cmake_build_directory = '',
         cmake_build_directory_prefix = 'cmake_build_', -- when cmake_build_directory is "", this option will be activated
@@ -1860,7 +1861,8 @@ run['C++'] = {
           short = { show = true },
           long = { show = true, max_length = 40 },
         },
-      })
+      }
+      require('cmake-tools').setup(opts)
     end,
   },
 }
@@ -1892,7 +1894,7 @@ run['LSP VIF'] = {
   ['DNLHC/glance.nvim'] = {
     cmd = { 'Glance' },
     config = function()
-      require('glance').setup({
+      local opts = {
         border = {
           enable = true,
           top_char = '―',
@@ -1907,7 +1909,8 @@ run['LSP VIF'] = {
             end
           end,
         },
-      })
+      }
+      require('glance').setup(opts)
     end,
   },
   ['jackguo380/vim-lsp-cxx-highlight'] = {
@@ -1923,7 +1926,8 @@ run['LSP VIF'] = {
       vim.cmd([[highlight FidgetTitle ctermfg=110 guifg=#0887c7]])
       vim.cmd([[highlight FidgetTask ctermfg=110 guifg=#0887c7]])
       local icons = require('module.options').icons
-      require('fidget').setup({ text = { done = icons.collects.Tomatoes }, window = { blend = 0 } })
+      local opts = { text = { done = icons.collects.Tomatoes }, window = { blend = 0 } }
+      require('fidget').setup(opts)
     end,
   },
   ['ray-x/lsp_signature.nvim'] = {
@@ -2029,7 +2033,7 @@ run['LSP VIF'] = {
       local icons = require('module.options').icons
       require('lsp-status').status()
       require('lsp-status').register_progress()
-      require('lsp-status').config({
+      local opts = {
         indicator_errors = '✗',
         indicator_warnings = '⚠',
         indicator_info = '',
@@ -2040,7 +2044,8 @@ run['LSP VIF'] = {
         select_symbol = nil,
         update_interval = 100,
         status_symbol = icons.collects.Tomatoes,
-      })
+      }
+      require('lsp-status').config(opts)
     end,
   },
   ['kosayoda/nvim-lightbulb'] = {
@@ -2149,7 +2154,7 @@ run['Network'] = {
     cmd = { 'Ship' },
     dependencies = { 'charkuils/nvim-spinetta' },
     config = function()
-      require('ship').setup({
+      local opts = {
         request = {
           timeout = 30,
           autosave = true,
@@ -2165,7 +2170,8 @@ run['Network'] = {
           override = true,
           folder = 'output',
         },
-      })
+      }
+      require('ship').setup(opts)
     end,
   },
 }

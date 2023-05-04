@@ -107,7 +107,7 @@ end
 local _lsp_lightbulb = function()
   local _hl_group = function() return 'LightBulb' end
   local _is_codeaction = function()
-    for _, client in pairs(vim.lsp.buf_get_clients()) do
+    for _, client in pairs(vim.lsp.get_active_clients()) do
       if client and client.supports_method('textDocument/codeAction') then return true end
     end
     return false
@@ -151,7 +151,7 @@ local _lsp_lightbulb = function()
   end
   local _render_bulb = function(buffer)
     if not _is_codeaction() then return end
-    require('plenary.async').run(_send_request)
+    require('plenary.async').run(_send_request, nil)
   end
   local _autocmd = function()
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -209,16 +209,16 @@ local _mason = function()
   }
   require('mason').setup(opts)
   local mr = require('mason-registry')
-  local function ensure_installed()
+  local _ensure_installed = function()
     for _, tool in ipairs(opts.ensure_installed) do
       local p = mr.get_package(tool)
       if not p:is_installed() then p:install() end
     end
   end
   if mr.refresh then
-    mr.refresh(ensure_installed)
+    mr.refresh(_ensure_installed)
   else
-    ensure_installed()
+    _ensure_installed()
   end
   local lsp = {
     ensure_installed = {
