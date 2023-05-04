@@ -255,6 +255,10 @@ https://github.com/AstroNvim/AstroNvim/blob/cf624ae5870ea5fcf98ff1e2f6354f6a57df
 https://vi.stackexchange.com/questions/38508/paste-command-to-command-mode-instead-of-insert-mode
 https://github.com/kristijanhusak/vim-dadbod-ui/issues/133
 https://superuser.com/questions/212257/how-do-i-open-a-blank-new-file-in-a-split-in-vim
+https://www.bearer.com/blog/tips-for-using-tree-sitter-queries
+https://zignar.net/2022/09/02/a-tree-sitting-in-your-editor/
+https://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
+https://en.wikipedia.org/wiki/S-expression
 
 Lua
 ---

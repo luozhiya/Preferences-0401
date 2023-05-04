@@ -17,21 +17,19 @@ local list = {
   { 'nvimdev/dashboard-nvim' },
   { 'echasnovski/mini.starter' },
   { 'goolord/alpha-nvim' },
-  -- Bars And Lines
+  -- Columns And Lines
   { 'petertriho/nvim-scrollbar' },
   { 'dstein64/nvim-scrollview' },
   { 'lewis6991/satellite.nvim' },
-  { 'nvim-lualine/lualine.nvim' },
   { 'luukvbaal/statuscol.nvim' },
+  { 'yaocccc/nvim-foldsign' },
   { 'utilyre/barbecue.nvim' },
-  { 'SmiteshP/nvim-navic' },
   { 'b0o/incline.nvim' },
+  { 'nvim-lualine/lualine.nvim' },
   { 'archibate/lualine-time' },
   { 'nanozuki/tabby.nvim' },
   { 'akinsho/bufferline.nvim' },
   { 'romgrk/barbar.nvim' },
-  { 'ziontee113/neo-minimap' },
-  { 'yaocccc/nvim-foldsign' },
   -- Colorschemes
   { 'folke/tokyonight.nvim' },
   { 'gosukiwi/vim-atom-dark' },
@@ -43,7 +41,7 @@ local list = {
   { 'Yazeed1s/minimal.nvim' },
   -- Icon
   { 'nvim-tree/nvim-web-devicons' },
-  -- Builtin UI Improved
+  -- Builtin UI Improved (notify/input/select/quick)
   { 'stevearc/dressing.nvim' },
   { 'CosmicNvim/cosmic-ui' },
   { 'rcarriga/nvim-notify' },
@@ -97,6 +95,7 @@ local list = {
   { 'cljoly/telescope-repo.nvim' },
   { 'junegunn/fzf' },
   { 'junegunn/fzf.vim' },
+  { 'romgrk/fzy-lua-native' },
   -- Bindings Management
   { 'folke/which-key.nvim' },
   { 'linty-org/key-menu.nvim' },
@@ -118,6 +117,7 @@ local list = {
   { 'RRethy/nvim-treesitter-textsubjects' },
   { 'RRethy/nvim-treesitter-endwise' },
   { 'nvim-treesitter/playground' },
+  { 'ziontee113/neo-minimap' },
   -- Editing Motion Support
   { 'fedepujol/move.nvim' },
   { 'andymass/vim-matchup' },
@@ -188,6 +188,7 @@ local list = {
   -- C++
   { 'p00f/godbolt.nvim' },
   { 'Xertes0/cppdoc.nvim' },
+  { 'Civitasv/cmake-tools.nvim' },
   -- Diagnostics
   { 'folke/trouble.nvim' },
   -- LSP Functional
@@ -218,6 +219,7 @@ local list = {
   { name = 'lsp_lines.nvim', url = 'https://git.sr.ht/~whynothugo/lsp_lines.nvim' },
   { 'nvim-lua/lsp-status.nvim' },
   { 'kosayoda/nvim-lightbulb' },
+  { 'SmiteshP/nvim-navic' },
   -- Performance
   { 'dstein64/vim-startuptime' },
   -- Job
@@ -226,20 +228,15 @@ local list = {
   { 'charkuils/nvim-ship' },
   -- Dev
   { name = 'lualine-osv', dir = '~/Code/me/lualine-osv' },
-}
-
-local kernel = {
   -- DAP VIF
   { 'mfussenegger/nvim-dap' },
   { 'theHamsta/nvim-dap-virtual-text' },
   { 'rcarriga/nvim-dap-ui' },
   { 'Weissle/persistent-breakpoints.nvim' },
   { 'jbyuki/one-small-step-for-vimkind' },
-  -- C++
-  { 'Civitasv/cmake-tools.nvim' },
-  -- Fuzzy Finder
-  { 'romgrk/fzy-lua-native' },
 }
+
+local kernel = {}
 
 -- Debug Mode Docker
 local docker = function()

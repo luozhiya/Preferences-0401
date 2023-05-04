@@ -351,6 +351,133 @@ M.ts = function()
   return opts
 end
 
+M.marks = function()
+  local mappings = {
+    set = 'm',
+    set_next = 'm,',
+    toggle = 'm;',
+    next = 'm]',
+    prev = 'm[',
+    preview = 'm:',
+    next_bookmark = 'm}',
+    prev_bookmark = 'm{',
+    delete = 'dm',
+    delete_line = 'dm-',
+    delete_bookmark = 'dm=',
+    delete_buf = 'dm<space>',
+  }
+  for i = 0, 9 do
+    mappings['set_bookmark' .. i] = 'm' .. tostring(i)
+    mappings['delete_bookmark' .. i] = 'dm' .. tostring(i)
+  end
+  for cmd, key in pairs(mappings) do
+    -- print(vim.inspect(cmd))
+    M.map({ 'n', 'x' }, key, " <cmd>lua require'marks'." .. cmd .. '()<cr>', cmd .. ' (marks.nvim)')
+  end
+end
+
+M.neo_minimap = function(nm)
+  -- Lua
+  nm.set({ 'zi', 'zo', 'zu' }, '*.lua', {
+    events = { 'BufEnter' },
+    query = {
+      [[
+              ;; query
+              ;; ((function_declaration name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+              ;; ((function_call name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+              ;; ((dot_index_expression field: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
+              ((function_declaration) @cap)
+              ((assignment_statement(expression_list((function_definition) @cap))))
+              ]],
+      1,
+      [[
+              ;; query
+              ((function_declaration) @cap)
+              ((assignment_statement(expression_list((function_definition) @cap))))
+              ((field (identifier) @cap) (#eq? @cap "keymaps"))
+              ]],
+      [[
+              ;; query
+              ((for_statement) @cap)
+              ((function_declaration) @cap)
+              ((assignment_statement(expression_list((function_definition) @cap))))
+  
+              ((function_call (identifier)) @cap (#vim-match? @cap "^__*" ))
+              ((function_call (dot_index_expression) @field (#eq? @field "vim.keymap.set")) @cap)
+              ]],
+      [[
+              ;; query
+              ((for_statement) @cap)
+              ((function_declaration) @cap)
+              ((assignment_statement(expression_list((function_definition) @cap))))
+              ]],
+    },
+    regex = {
+      {},
+      { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+      { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
+      {},
+    },
+    search_patterns = {
+      { 'function', '<c-j>', true },
+      { 'function', '<c-k>', false },
+      { 'keymap', '<a-j>', true },
+      { 'keymap', '<a-k>', false },
+    },
+    -- auto_jump = false,
+    -- open_win_opts = { border = "double" },
+    win_opts = { scrolloff = 1 },
+    disable_indentaion = true,
+  })
+  -- C++
+  nm.set({ 'zi', 'zo', 'zu' }, { '*.cpp', '*.h', '*.c' }, {
+    events = { 'BufEnter' },
+    query = {
+      [[
+        ;; query
+        ((function_definition) @cap)
+      ]],
+      -- [[
+      --   ;; query
+      --   (class_specifier
+      --   name: (type_identifier) @cap
+      --   ) @cap
+      -- ]],
+    },
+    search_patterns = {
+      { 'class', '<a-j>', true },
+      { 'class', '<a-k>', false },
+    },
+    win_opts = { scrolloff = 1 },
+    disable_indentaion = true,
+  })
+  -- Rust
+  nm.set({ 'zi', 'zo' }, '*.rs', {
+    events = { 'BufEnter' },
+    query = {
+      [[
+        ;; query
+        (enum_item (type_identifier) @cap)
+        (trait_item (type_identifier) @cap)
+        (struct_item (type_identifier) @cap)
+        ;; (impl_item (type_identifier) @cap)
+        ((impl_item) @cap)
+        (function_item (identifier) @cap)
+        (mod_item (identifier) @cap)
+        (macro_definition (identifier) @cap)
+      ]],
+      1,
+    },
+    regex = {},
+    search_patterns = {
+      { 'impl', '<C-j>', true },
+      { 'impl', '<C-k>', false },
+      { 'mod', '<C-l>', false },
+    },
+    height_toggle = { 20, 25 },
+  })
+end
+
 M.wk = function(wk)
   local function _any_toggle(cmd)
     local run = require('toggleterm.terminal').Terminal:new({
@@ -1127,10 +1254,10 @@ M.setup_code = function()
   -- M.map('n', '<c-down>', '<cmd>resize -2<cr>', 'Decrease window height')
   -- M.map('n', '<c-left>', '<cmd>vertical resize -2<cr>', 'Decrease window width')
   -- M.map('n', '<c-right>', '<cmd>vertical resize +2<cr>', 'Increase window width')
-  M.map('n', '<c-left>', require('smart-splits').resize_left, 'Increase window width')
-  M.map('n', '<c-right>', require('smart-splits').resize_right, 'Decrease window width')
-  M.map('n', '<c-down>', require('smart-splits').resize_down, 'Increase window height')
-  M.map('n', '<c-up>', require('smart-splits').resize_up, 'Decrease window height')
+  M.map('n', '<c-left>', function() require('smart-splits').resize_left() end, 'Increase window width')
+  M.map('n', '<c-right>', function() require('smart-splits').resize_right() end, 'Decrease window width')
+  M.map('n', '<c-down>', function() require('smart-splits').resize_down() end, 'Increase window height')
+  M.map('n', '<c-up>', function() require('smart-splits').resize_up() end, 'Decrease window height')
   -- Window Move
   M.map('n', '<s-left>', M.cmd('WinShift left'), 'Move Window To Left ')
   M.map('n', '<s-right>', M.cmd('WinShift right'), 'Move Window To Right')
@@ -1539,7 +1666,10 @@ M.setup_autocmd = function()
     callback = function() end,
   })
   -- Check if we need to reload the file when it changed
-  vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI', 'TermClose', 'TermLeave' }, {
+  local chengd_event = { 'FocusGained', 'CursorHold', 'CursorHoldI', 'TermClose', 'TermLeave' }
+  -- local chengd_event = { 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI', 'TermClose', 'TermLeave' }
+  -- Bug: neo-minimap conficts 'BufEnter' checktime
+  vim.api.nvim_create_autocmd(chengd_event, {
     group = augroup('checktime'),
     pattern = '*',
     command = 'checktime',
@@ -1636,19 +1766,20 @@ M.setup_autocmd = function()
     once = true,
     callback = function() end,
   })
-  -- vim.api.nvim_create_autocmd('BufEnter', {
-  --   group = augroup('hijack_directories'),
-  --   pattern = '*',
-  --   callback = function(args)
-  --     local info = vim.loop.fs_stat(args.file)
-  --     if info and info.type == 'directory' then
-  --       -- require('module.settings').config('nvim-neo-tree/neo-tree.nvim')()
-  --       vim.cmd('Neotree position=current ' .. args.file)
-  --       vim.api.nvim_exec_autocmds('User', { pattern = 'HijackDirectories', modeline = false })
-  --     end
-  --   end,
-  --   desc = 'Hijack Directories',
-  -- })
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = augroup('hijack_directories'),
+    pattern = '*',
+    callback = function(args)
+      local info = vim.loop.fs_stat(args.file)
+      if info and info.type == 'directory' then
+        vim.cmd('Neotree position=current ' .. args.file)
+        -- vim.cmd('NvimTreeOpen ' .. args.file)
+        -- require('nvim-tree.api').tree.open({ path = args.file })
+        vim.api.nvim_exec_autocmds('User', { pattern = 'HijackDirectories', modeline = false })
+      end
+    end,
+    desc = 'Hijack Directories',
+  })
   -- auto show hydra on nvimtree focus
   local function _show_hydra_on_nvimtree_focus()
     local function change_root_to_global_cwd()

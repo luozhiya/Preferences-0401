@@ -126,7 +126,7 @@ function M.before()
     clipboard = 'unnamedplus', -- Allows neovim to access the system clipboard
     -- Appearance
     termguicolors = true, -- True color support
-    shortmess = 'oOcCIFW', -- See https://neovim.io/doc/user/options.html#'shortmess'
+    shortmess = 'oOcCIFWS', -- See https://neovim.io/doc/user/options.html#'shortmess'
     showmode = false, -- Dont show mode since we have a statusline
     laststatus = 3, -- Status line style
     cmdheight = 0, -- Command-line.
@@ -158,7 +158,7 @@ function M.before()
     foldlevel = 99,
     foldlevelstart = 99,
     foldenable = true,
-    foldcolumn = '0',
+    foldcolumn = '1',
     foldmethod = 'expr',
     foldexpr = 'nvim_treesitter#foldexpr()',
     -- Split Windows

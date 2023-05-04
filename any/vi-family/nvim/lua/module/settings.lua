@@ -149,13 +149,13 @@ run['Start Screen'] = {
   },
 }
 
-run['Bars And Lines'] = {
+run['Columns And Lines'] = {
   ['luukvbaal/statuscol.nvim'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       vim.opt.foldcolumn = '1'
       local builtin = require('statuscol.builtin')
-      require('statuscol').setup({
+      local opts = {
         ft_ignore = { 'NvimTree', 'Outline' },
         segments = {
           { text = { '%s' }, click = 'v:lua.ScSa' },
@@ -166,16 +166,31 @@ run['Bars And Lines'] = {
             click = 'v:lua.ScFa',
           },
         },
-      })
+      }
+      require('statuscol').setup(opts)
     end,
   },
+  -- Display folding info on sign column
+  ['yaocccc/nvim-foldsign'] = {
+    config = function()
+      local opts = {
+        offset = -2,
+        foldsigns = {
+          open = '-', -- mark the beginning of a fold
+          close = '+', -- show a closed fold
+          seps = { '│', '┃' }, -- open fold middle marker
+        },
+      }
+      require('nvim-foldsign').setup(opts)
+    end,
+  },  
   ['petertriho/nvim-scrollbar'] = {
     enabled = false,
     event = { 'User NeXT' },
     config = function()
       local scrollbar = require('scrollbar')
       local colors = require('tokyonight.colors').setup()
-      scrollbar.setup({
+      local opts = {
         handle = { color = colors.green2 },
         excluded_filetypes = { 'prompt', 'TelescopePrompt', 'noice', 'notify' },
         marks = {
@@ -186,7 +201,8 @@ run['Bars And Lines'] = {
           Hint = { color = colors.hint },
           Misc = { color = colors.purple },
         },
-      })
+      }
+      scrollbar.setup(opts)
     end,
   },
   ['lewis6991/satellite.nvim'] = {
@@ -207,7 +223,8 @@ run['Bars And Lines'] = {
     end,
   },
   ['nvim-lualine/lualine.nvim'] = {
-    event = { 'User NeXT' },
+    -- event = { 'User NeXT' },
+    event = { 'User AlphaClosed', 'BufNewFile', 'BufReadPost', 'BufNew', 'User HijackDirectories' },
     config = function()
       local icons = require('module.options').icons
       local function _lsp_active()
@@ -337,17 +354,17 @@ run['Bars And Lines'] = {
           },
           lualine_z = { _location },
         },
-        extensions = { 'neo-tree', 'lazy' },
+        extensions = { 'neo-tree', 'nvim-tree', 'lazy' },
       }
       require('lualine').setup(opts)
     end,
   },
   ['utilyre/barbecue.nvim'] = {
     -- event = { 'User NeXT' },
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local opts = {
-        show_dirname = false,
+        -- show_dirname = false,
         -- show_basename = false,
       }
       require('barbecue').setup(opts)
@@ -355,7 +372,7 @@ run['Bars And Lines'] = {
   },
   ['b0o/incline.nvim'] = {
     -- enabled = false,
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       -- local colors = require('tokyonight.colors').setup()
       local opts = {
@@ -419,97 +436,6 @@ run['Bars And Lines'] = {
     end,
   },
   ['romgrk/barbar.nvim'] = {},
-  ['SmiteshP/nvim-navic'] = {
-    config = function()
-      vim.g.navic_silence = true
-      require('base').on_attach(function(client, buffer)
-        if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, buffer) end
-      end)
-      local opts = {
-        separator = ' ',
-        highlight = true,
-        depth_limit = 5,
-        icons = require('module.options').icons.kinds,
-      }
-      require('nvim-navic').setup(opts)
-    end,
-  },
-  ['ziontee113/neo-minimap'] = {
-    event = { 'BufReadPost' },
-    config = function()
-      local nm = require('neo-minimap')
-      nm.setup_defaults({
-        -- height_toggle = { 12, 25 },
-        height_toggle = { 20, 25 },
-        hl_group = 'DiagnosticWarn',
-      })
-      -- Lua
-      nm.set({ 'zi', 'zo', 'zu' }, '*.lua', {
-        events = { 'BufEnter' },
-        query = {
-          [[
-            ;; query
-            ;; ((function_declaration name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
-            ;; ((function_call name: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
-            ;; ((dot_index_expression field: ((identifier) @name (#eq? @name "{cursorword}"))) @cap)
-            ((function_declaration) @cap)
-            ((assignment_statement(expression_list((function_definition) @cap))))
-            ]],
-          1,
-          [[
-            ;; query
-            ((function_declaration) @cap)
-            ((assignment_statement(expression_list((function_definition) @cap))))
-            ((field (identifier) @cap) (#eq? @cap "keymaps"))
-            ]],
-          [[
-            ;; query
-            ((for_statement) @cap)
-            ((function_declaration) @cap)
-            ((assignment_statement(expression_list((function_definition) @cap))))
-
-            ((function_call (identifier)) @cap (#vim-match? @cap "^__*" ))
-            ((function_call (dot_index_expression) @field (#eq? @field "vim.keymap.set")) @cap)
-            ]],
-          [[
-            ;; query
-            ((for_statement) @cap)
-            ((function_declaration) @cap)
-            ((assignment_statement(expression_list((function_definition) @cap))))
-            ]],
-        },
-        regex = {
-          {},
-          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
-          { [[^\s*---*\s\+\w\+]], [[--\s*=]] },
-          {},
-        },
-        search_patterns = {
-          { 'function', '<C-j>', true },
-          { 'function', '<C-k>', false },
-          { 'keymap', '<A-j>', true },
-          { 'keymap', '<A-k>', false },
-        },
-        -- auto_jump = false,
-        -- open_win_opts = { border = "double" },
-        win_opts = { scrolloff = 1 },
-        disable_indentaion = true,
-      })
-    end,
-  },
-  ['yaocccc/nvim-foldsign'] = {
-    config = function()
-      local opts = {
-        offset = -2,
-        foldsigns = {
-          open = '-', -- mark the beginning of a fold
-          close = '+', -- show a closed fold
-          seps = { '│', '┃' }, -- open fold middle marker
-        },
-      }
-      require('nvim-foldsign').setup(opts)
-    end,
-  },
 }
 
 run['Colorschemes'] = {
@@ -551,7 +477,7 @@ run['Builtin UI Improved'] = {
   ['stevearc/dressing.nvim'] = {
     event = { 'User NeXT' },
     config = function()
-      require('dressing').setup({
+      local opts = {
         input = {
           enabled = true,
           prompt_align = 'center',
@@ -560,7 +486,8 @@ run['Builtin UI Improved'] = {
           win_options = { winblend = 0 },
         },
         select = { enabled = true, backend = { 'telescope' } },
-      })
+      }
+      require('dressing').setup(opts)
     end,
   },
   ['CosmicNvim/cosmic-ui'] = {
@@ -580,7 +507,7 @@ run['Builtin UI Improved'] = {
       local notfiy = require('notify')
       notfiy.setup(opts)
       -- vim.notify = notfiy
-      require('telescope').load_extension('notify')
+      -- require('telescope').load_extension('notify')
     end,
   },
   ['folke/noice.nvim'] = {
@@ -673,7 +600,7 @@ run['Builtin UI Improved'] = {
     end,
   },
   ['kevinhwang91/nvim-bqf'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     dependencies = { 'junegunn/fzf' },
     config = function()
       local opts = {}
@@ -690,7 +617,7 @@ run['Sudo'] = {
 
 run['File Explorer'] = {
   ['nvim-tree/nvim-tree.lua'] = {
-    lazy = false,
+    -- lazy = false,
     dependencies = { 'anuvyklack/hydra.nvim' },
     -- event = 'VeryLazy',
     -- cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
@@ -714,7 +641,7 @@ run['File Explorer'] = {
   ['obaland/vfiler.vim'] = {
     cmd = { 'VFiler' },
     config = function()
-      require('vfiler/config').setup({
+      local opts = {
         options = {
           auto_cd = true,
           auto_resize = true,
@@ -724,7 +651,8 @@ run['File Explorer'] = {
           width = 30,
           columns = 'indent,icon,name',
         },
-      })
+      }
+      require('vfiler/config').setup(opts)
     end,
   },
   ['nvim-neo-tree/neo-tree.nvim'] = {
@@ -818,7 +746,7 @@ run['Window Management'] = {
 
 run['Project'] = {
   ['ahmedkhalf/project.nvim'] = {
-    -- event = { 'BufReadPost' },
+    -- event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     -- event = { 'VeryLazy' },
     config = function()
       require('project_nvim').setup({
@@ -830,36 +758,34 @@ run['Project'] = {
     cmd = { 'ProjectOpen', 'ProjectNew' },
   },
   ['gnikdroy/projections.nvim'] = {
-    event = 'VeryLazy',
+    -- event = 'VeryLazy',
     config = function()
       local opts = {
         workspaces = { -- Default workspaces to search for
           -- { "~/Documents/dev", { ".git" } },        Documents/dev is a workspace. patterns = { ".git" }
+          { 'E:\\DataCenter', {} },
           { '~/Code', {} }, -- An empty pattern list indicates that all subdirectories are considered projects
           { '~/Code/me', {} }, -- An empty pattern list indicates that all subdirectories are considered projects
           -- "~/dev",                                  dev is a workspace. default patterns is used (specified below)
         },
         store_hooks = {
           pre = function()
-              -- nvim-tree
-              local nvim_tree_present, api = pcall(require, "nvim-tree.api")
-              if nvim_tree_present then api.tree.close() end
-              -- neo-tree
-              if pcall(require, "neo-tree") then vim.cmd [[Neotree action=close]] end
-          end
-      }        
+            -- nvim-tree
+            local nvim_tree_present, api = pcall(require, 'nvim-tree.api')
+            if nvim_tree_present then api.tree.close() end
+            -- neo-tree
+            if pcall(require, 'neo-tree') then vim.cmd([[Neotree action=close]]) end
+          end,
+        },
       }
       require('projections').setup(opts)
-
       -- Bind <leader>fp to Telescope projections
       require('telescope').load_extension('projections')
-
       -- Autostore session on VimExit
       local Session = require('projections.session')
       vim.api.nvim_create_autocmd({ 'VimLeavePre' }, {
         callback = function() Session.store(vim.loop.cwd()) end,
       })
-
       -- Switch to project if vim was started in a project dir
       local switcher = require('projections.switcher')
       vim.api.nvim_create_autocmd({ 'VimEnter' }, {
@@ -873,7 +799,7 @@ run['Project'] = {
 
 run['Todo'] = {
   ['folke/todo-comments.nvim'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function() require('todo-comments').setup() end,
   },
 }
@@ -895,7 +821,7 @@ run['Session'] = {
     config = function()
       require('auto-session').setup({
         -- log_level = "error",
-        auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+        auto_session_suppress_dirs = { '~/', '/' },
       })
     end,
   },
@@ -905,7 +831,7 @@ run['Session'] = {
   },
   ['vladdoster/remember.nvim'] = {
     -- enabled = false,
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function() require('remember') end,
   },
   ['ethanholz/nvim-lastplace'] = {
@@ -935,7 +861,7 @@ run['View'] = {
 
 run['Git'] = {
   ['lewis6991/gitsigns.nvim'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile' },
     config = function()
       local opts = {
         signs = {
@@ -956,11 +882,8 @@ run['Git'] = {
   },
   ['f-person/git-blame.nvim'] = {
     -- enabled = false,
-    event = 'BufReadPost',
-    config = function()
-      vim.g.gitblame_display_virtual_text = 0
-      vim.o.shortmess = vim.o.shortmess .. 'S' -- this is for the search_count function so lua can know this is `lua expression`
-    end,
+    event = { 'BufReadPost', 'BufNewFile' },
+    config = function() vim.g.gitblame_display_virtual_text = 0 end,
   },
   ['TimUntersberger/neogit'] = {
     cmd = { 'Neogit' },
@@ -1055,24 +978,39 @@ run['Fuzzy Finder'] = {
     -- build = function() vim.fn['fzf#install']() end,
   },
   ['junegunn/fzf.vim'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
   },
 }
 
 run['Bindings Management'] = {
   ['folke/which-key.nvim'] = {
-    -- keys = { { ',' }, { 'g' } },
-    event = { 'VeryLazy' },
+    keys = { { ',' }, { 'g' } },
+    -- event = { 'VeryLazy' },
+    -- lazy = false,
+    -- Bug: handle marks.nvim m
     config = function()
       local wk = require('which-key')
       wk.setup()
       bindings.wk(wk)
     end,
   },
+  --  Key mapping hints in a floating window
   ['linty-org/key-menu.nvim'] = {
-    enabled = false,
-    event = { 'VeryLazy' },
-    config = function() end,
+    -- enabled = false,
+    -- event = { 'VeryLazy' },
+    -- keys = { { 'm' } },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
+    config = function()
+      -- pop up a hint window
+      require('key-menu').set(
+        'n', -- in Normal mode
+        'm'
+      )
+      -- require('key-menu').set(
+      --   'n', -- in Normal mode
+      --   'd'
+      -- )
+    end,
   },
   ['mrjones2014/legendary.nvim'] = {
     config = function()
@@ -1218,11 +1156,26 @@ run['Syntax'] = {
   ['nvim-treesitter/playground'] = {
     --
   },
+  -- Create your own "minimap" from Treesitter Queries or Vim Regex.
+  ['ziontee113/neo-minimap'] = {
+    -- enabled = false,
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
+    config = function()
+      local nm = require('neo-minimap')
+      nm.setup_defaults({
+        height_toggle = { 20, 25 },
+        width = 80,
+        height = 18,
+        hl_group = 'DiagnosticWarn',
+      })
+      bindings.neo_minimap(nm)
+    end,
+  },
 }
 
 run['Editing Motion Support'] = {
   ['andymass/vim-matchup'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function() vim.g.matchup_matchparen_offscreen = { method = 'status_manual' } end,
   },
   ['echasnovski/mini.pairs'] = {
@@ -1233,12 +1186,13 @@ run['Editing Motion Support'] = {
     cmd = { 'MoveLine', 'MoveBlock', 'MoveHChar', 'MoveHBlock' },
   },
   ['m4xshen/autoclose.nvim'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function() require('autoclose').setup() end,
   },
   ['nacro90/numb.nvim'] = {
-    -- keys = { { ';' } },
-    event = 'VeryLazy',
+    keys = { { ':' } },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
+    -- event = 'VeryLazy',
     config = function() require('numb').setup() end,
   },
   ['folke/twilight.nvim'] = {
@@ -1304,13 +1258,13 @@ run['Editing Motion Support'] = {
     end,
   },
   ['haya14busa/vim-asterisk'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
   },
   ['mg979/vim-visual-multi'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
   },
   ['anuvyklack/vim-smartword'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
   },
 }
 
@@ -1331,7 +1285,7 @@ run['Comment'] = {
   },
   ['JoosepAlviste/nvim-ts-context-commentstring'] = {},
   ['echasnovski/mini.comment'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local opts = {
         hooks = {
@@ -1348,7 +1302,7 @@ run['Comment'] = {
 
 run['Yank'] = {
   ['gbprod/yanky.nvim'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local opts = {
         highlight = {
@@ -1366,7 +1320,7 @@ run['Yank'] = {
 
 run['Search'] = {
   ['kevinhwang91/nvim-hlslens'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       require('hlslens').setup({
         build_position_cb = function(plist, _, _, _) require('scrollbar.handlers.search').handler.show(plist.start_pos) end,
@@ -1380,7 +1334,9 @@ run['Search'] = {
     config = function() require('spectre').setup() end,
   },
   ['cshuaimin/ssr.nvim'] = {
-    keys = { { '<leader>sR' } },
+    keys = {
+      { '<leader>sR' },
+    },
     config = function() require('ssr').setup({}) end,
   },
 }
@@ -1394,11 +1350,12 @@ run['Undo'] = {
 run['Marks'] = {
   ['chentoast/marks.nvim'] = {
     -- lazy = false,
-    event = { 'VeryLazy' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
+    init = function() bindings.marks() end, -- MUST Register key in init
     config = function()
       local opts = {
         -- whether to map keybinds or not. default true
-        default_mappings = true,
+        default_mappings = false,
         -- which builtin marks to show. default {}
         builtin_marks = { '.', '<', '>', '^' },
         -- whether movements cycle back to the beginning/end of buffer. default true
@@ -1437,10 +1394,10 @@ run['Marks'] = {
 
 run['Folding'] = {
   ['kevinhwang91/nvim-ufo'] = {
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     dependencies = { 'kevinhwang91/promise-async' },
     config = function()
-      vim.o.foldcolumn = '1'
+      -- vim.o.foldcolumn = '1'
       local handler = function(virtText, lnum, endLnum, width, truncate)
         local new_virt_text = {}
         local suffix = ('  %d '):format(endLnum - lnum)
@@ -1503,34 +1460,26 @@ run['Folding'] = {
           },
         },
         fill_char = '•',
-
         remove_fold_markers = true,
-
         -- Keep the indentation of the content of the fold string.
         keep_indentation = true,
-
         -- Possible values:
         -- "delete" : Delete all comment signs from the fold string.
         -- "spaces" : Replace all comment signs with equal number of spaces.
         -- false    : Do nothing with comment signs.
         process_comment_signs = 'spaces',
-
         -- Comment signs additional to the value of `&commentstring` option.
         comment_signs = {},
-
         -- List of patterns that will be removed from content foldtext section.
         stop_words = {
           '@brief%s*', -- (for C++) Remove '@brief' and all spaces after.
         },
-
         add_close_pattern = true, -- true, 'last_line' or false
-
         matchup_patterns = {
           { '{', '}' },
           { '%(', ')' }, -- % to escape lua pattern char
           { '%[', ']' }, -- % to escape lua pattern char
         },
-
         ft_ignore = { 'neorg' },
       }
       require('pretty-fold').setup()
@@ -1549,46 +1498,48 @@ run['Editing Visual Formatting'] = {
   ['mhartington/formatter.nvim'] = {
     cmd = { 'FormatWriteLock' },
     config = function()
-      local unix_ff = function() vim.cmd([[set ff=unix]]) end
+      -- local unix_ff = function() vim.cmd([[set ff=unix]]) end
       require('formatter').setup({
         logging = false,
         filetype = {
           lua = { require('formatter.filetypes.lua').stylua },
           ['*'] = {
             require('formatter.filetypes.any').remove_trailing_whitespace,
-            unix_ff,
+            -- unix_ff,
           },
         },
       })
     end,
   },
   ['lukas-reineke/indent-blankline.nvim'] = {
-    event = { 'BufReadPost', 'BufNewFile' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
-      require('indent_blankline').setup({
+      local opts = {
         char = '│',
         filetype_exclude = { 'help', 'alpha', 'dashboard', 'neo-tree', 'NvimTree', 'Trouble', 'lazy' },
         show_trailing_blankline_indent = false,
         -- show_current_context = true,
-      })
+      }
+      require('indent_blankline').setup(opts)
     end,
   },
   ['HiPhish/nvim-ts-rainbow2'] = {
     -- enabled = false,
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
-      require('nvim-treesitter.configs').setup({
+      local opts = {
         rainbow = {
           enable = { 'c', 'cpp' },
           query = 'rainbow-parens',
           strategy = require('ts-rainbow').strategy['local'],
         },
-      })
+      }
+      require('nvim-treesitter.configs').setup(opts)
     end,
   },
   ['echasnovski/mini.indentscope'] = {
     -- enabled = false,
-    event = { 'BufReadPost', 'BufNewFile' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'help', 'alpha', 'dashboard', 'neo-tree', 'NvimTree', 'Trouble', 'lazy', 'mason' },
@@ -1611,7 +1562,7 @@ run['Editing Visual Formatting'] = {
     end,
   },
   ['NvChad/nvim-colorizer.lua'] = {
-    event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local opts = {
         filetypes = { 'css', 'html', 'lua' },
@@ -1619,8 +1570,9 @@ run['Editing Visual Formatting'] = {
       require('colorizer').setup(opts)
     end,
   },
+  -- automatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
   ['RRethy/vim-illuminate'] = {
-    event = { 'BufReadPost', 'BufNewFile' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local opts = { delay = 200 }
       require('illuminate').configure(opts)
@@ -1660,20 +1612,23 @@ run['Editing Action'] = {
     -- Java and sxiv are required to be installed in order to use this plugin.
     -- plantuml is optional to be installed or used in jar format.
     config = function()
-      require('soil').setup({
+      local opts = {
         image = {
           darkmode = false, -- Enable or disable darkmode
           format = 'png', -- Choose between png or svg
         },
-      })
+      }
+      require('soil').setup(opts)
     end,
   },
   ['chrishrb/gx.nvim'] = {
-    event = { 'BufEnter' },
+    -- event = { 'BufEnter' },
+    keys = { { 'gx' } },
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       local opts = {
-        open_browser_app = 'xdg-open', -- specify your browser app; default for macos is "open" and for linux "xdg-open"
+        -- open_browser_app = 'xdg-open', -- specify your browser app; default for macos is "open" and for linux "xdg-open"
+        -- open_browser_args = { },
         handlers = {
           plugin = true, -- open plugin links in lua (e.g. packer, lazy, ..)
           github = true, -- open github issues
@@ -1693,7 +1648,7 @@ run['Editing Action'] = {
   },
   ['jbyuki/venn.nvim'] = {
     -- cmd = { 'VBox' },
-    event = { 'BufReadPost' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function() end,
   },
 }
@@ -1813,15 +1768,16 @@ run['Completion'] = {
       --   mapping = cmp.mapping.preset.cmdline(),
       --   sources = { { name = 'buffer' } },
       -- })
-      cmp.event:on('confirm_done', function(evt)
-        local cxxindent = { 'public:', 'private:', 'protected:' }
-        if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<cr>', true, true, true), 'i', true)
-          -- local keymap = require('cmp.utils.keymap')
-          -- vim.api.nvim_feedkeys(keymap.t('<cr>'), 'i', true)
-          -- vim.api.nvim_feedkeys('<cr>', 'i', true)
-        end
-      end)
+      -- C++ fix indent
+      -- cmp.event:on('confirm_done', function(evt)
+      --   local cxxindent = { 'public:', 'private:', 'protected:' }
+      --   if vim.tbl_contains(cxxindent, evt.entry:get_word()) then
+      --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<cr>', true, true, true), 'i', true)
+      --     -- local keymap = require('cmp.utils.keymap')
+      --     -- vim.api.nvim_feedkeys(keymap.t('<cr>'), 'i', true)
+      --     -- vim.api.nvim_feedkeys('<cr>', 'i', true)
+      --   end
+      -- end)
     end,
   },
   ['gelguy/wilder.nvim'] = {
@@ -1973,7 +1929,8 @@ run['LSP VIF'] = {
   ['ray-x/lsp_signature.nvim'] = {
     -- enabled = false,
     -- event = { 'LspAttach' },
-    event = { 'VeryLazy' },
+    -- event = { 'VeryLazy' },
+    event = { 'BufReadPost', 'BufNewFile', 'BufNew' },
     config = function()
       local icons = require('module.options').icons
       local opts = {
@@ -2145,6 +2102,21 @@ run['LSP VIF'] = {
       }
       -- Showing defaults
       require('nvim-lightbulb').setup(opts)
+    end,
+  },
+  ['SmiteshP/nvim-navic'] = {
+    config = function()
+      vim.g.navic_silence = true
+      require('base').on_attach(function(client, buffer)
+        if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, buffer) end
+      end)
+      local opts = {
+        separator = ' ',
+        highlight = true,
+        depth_limit = 5,
+        icons = require('module.options').icons.kinds,
+      }
+      require('nvim-navic').setup(opts)
     end,
   },
 }
